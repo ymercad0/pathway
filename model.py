@@ -83,8 +83,23 @@ def validate_date(date:str)->None:
         raise ValueError("Incorrect date format. Should be MM-DD-YYYY")
 
 class Company:
-    def __init__(self, name:str, comp_cat:str, logo_img:str, description:str="", banner_img:str="")->None:
-        pass
+    def __init__(self, name:str, category:str, logo_img:str, description:str="", banner_img:str="")->None:
+        if type(name) is not str:
+            raise TypeError(f"Error: Company name must a string. Given type '{type(name)}'.")
+
+        if type(category) is not str:
+            raise TypeError(f"Error: Company category must be a string. Given type '{type(category)}'.")
+        if type(logo_img) is not str:
+            raise TypeError(f"Error: Company logo_img must be a string. Given type '{type(logo_img)}'.")
+        if type(description) is not str:
+            raise TypeError(f"Error: Company description must be a string. Given type '{type(description)}'.")
+        if type(banner_img) is not str:
+            raise TypeError(f"Error: Company banner_img must be a string. Given type '{type(banner_img)}'.")
+        self.name = name 
+        self.category = category
+        self.logo_img = logo_img
+        self.description = description
+        self.banner_img = banner_img
 
 class User:
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
