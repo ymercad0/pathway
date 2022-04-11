@@ -10,6 +10,7 @@ class TestCompany(unittest.TestCase):
 			logo_img="https://bit.ly/3uWfYzK",
 			banner_img="https://bit.ly/3xfolJs"
 			)
+
 		self.company2 = Company(
 			name="Google",
 			category="Software",
@@ -33,11 +34,83 @@ class TestCompany(unittest.TestCase):
 
 class TestReviews(unittest.TestCase):
 	def setUp(self):
-		pass
+		self.comp1 = Company("Amazon", "Software", "http://somelink.com")
+		self.comp2 = Company("McDonald's", "Restaurant", "http://somelink.com")
 
 	def test_init_required(self):
 		'Type Errors'
-		self.assertRaises(TypeError, )
+		self.assertRaises(TypeError, Review, ['Boeing'], "Title", 'Software Engineering',
+		                 "Position",  4, "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp1, {"Title"}, 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title",
+						'Software Engineering', None, 4, "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", ['Software Engineering'],
+						"Position", 4, "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+						["Position"], 4, "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+						"Position", hex(4), "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+						"Position", 3.90, "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+						"Position", 0.30, "M.S.", "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+						"Position", 4, ord("M"), "Interview", 4)
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+						"Position", 4, "M.S.", ["Review"], 4)
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+						"Position", 4, "M.S.", "Review", hex(4))
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+						 "Position", 4, "M.S.", "Review", 4.90)
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+						 "Position", 4, "M.S.", "Review", 3.50)
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+					    "Position", 4, "M.S.", "Review", float(2))
+		'Value Errors'
+		self.assertRaises(ValueError, Review, self.comp1, "", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp1, "Title", 'Software Engineering',
+		                  "", 4, "M.S.", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp1, "Title", 'SWE', "Position", 4, "M.S.", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp1, "Title", '', "Position", 4, "M.S.", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp1, "Title", 'Software Engineering',
+		                  "Position", 10, "M.S.", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp1, "Title", 'Software Engineering',
+						  "Position", -1, "M.S.", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title",  'Software Engineering',
+		                "Position",  4, "A degree", "Review", 4)
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+						"Position", 4, "M.S.", "", 4)
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                  "Position", 4, "M.S.", "Review", -3)
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                  "Position", 4, "M.S.", "Review", 6)
 
 	def test_init_optional(self):
 		pass

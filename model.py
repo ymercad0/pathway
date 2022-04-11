@@ -1,6 +1,5 @@
 from dataclasses import dataclass, asdict
 from datetime import datetime
-from typing import Type
 
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                       "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
@@ -121,7 +120,7 @@ class Company:
             raise ValueError("Error: Company category cannot be empty.")
         if not is_url(logo_img):
             raise ValueError("Error: Invalid URL given for company logo.")
-        if not is_url(banner_img):
+        if not is_url(banner_img) and banner_img != "":
             raise ValueError("Error: Invalid URL given for banner image.")
 
         self.name = name
@@ -142,13 +141,19 @@ class User:
         pass
 
 class Review:
-    def __init__(self, company:'Company', job_cat:str, position:str, company_rating:int, education:str,
+    def __init__(self, company:'Company', title:str, job_cat:str, position:str, company_rating:int, education:str,
                 interview_desc:str, interview_rat:int, offer:bool=False, accepted:bool=False,
                 start_date:str="", intern_desc:str="", work_rat:int=None, culture_rat:int=None,
-                location:tuple=(), pay:float=None, bonuses:str="")->None:
+                location:tuple=None, pay:float=None, bonuses:str="")->None:
 
         if type(company) != Company:
             raise TypeError("Company to review must be a company object!")
+
+        if type(title) != str:
+            raise TypeError("Review title must be a string!")
+
+        if not title:
+            raise ValueError("Review title cannot be empty!")
 
         if type(job_cat) != str:
             raise TypeError("Job category must be a string!")
@@ -159,6 +164,9 @@ class Review:
         if type(position) != str:
             raise TypeError("Position within the company must be a string!")
 
+        if not position:
+            raise ValueError("Position held at the company cannot be empty!")
+
         for words in position.split():
             if not words.isalpha():
                 raise ValueError("Special or empty characters cannot be present in the position title!")
@@ -166,7 +174,7 @@ class Review:
         if type(company_rating) != int:
             raise TypeError("Company rating must be an integer!")
 
-        if company_rating > 5 or company_rating < 0:
+        if company_rating < 0 or company_rating > 5:
             raise ValueError("Cannot rate a company more than the max or min allowed score.")
 
         if type(education) != str:
@@ -187,6 +195,7 @@ class Review:
         if interview_rat < 0 or interview_rat > 5:
             raise ValueError("Cannot rate an interview more than the max or min allowed score.")
 
+        # optional params
         if type(offer) != bool:
             raise TypeError("An offer must be a boolean!")
 
@@ -204,38 +213,42 @@ class Review:
         if type(intern_desc) != str:
             raise TypeError("Internship description must be a string!")
 
-        if type(work_rat) != int and work_rat != None:
-            raise TypeError("Internship rating must be an integer!")
+        if work_rat != None:
+            if type(work_rat) != int:
+                raise TypeError("Internship rating must be an integer!")
 
-        if work_rat < 0 or work_rat > 5:
-            raise ValueError("Work rating cannot be lower or greater than the allowed min or max values.")
+            if work_rat < 0 or work_rat > 5:
+                raise ValueError("Work rating cannot be lower or greater than the allowed min or max values.")
 
-        if type(culture_rat) != int and culture_rat != None:
-            raise TypeError("Culture rating must be an integer!")
+        if culture_rat != None:
+            if type(culture_rat) != int:
+                raise TypeError("Culture rating must be an integer!")
 
-        if culture_rat < 0 or culture_rat > 5:
-            raise ValueError("Culture rating cannot be lower or greater than the allowed min or max values.")
+            if culture_rat < 0 or culture_rat > 5:
+                raise ValueError("Culture rating cannot be lower or greater than the allowed min or max values.")
 
-        if type(location) != tuple:
-            raise TypeError("Internship location must be formatted as a tuple!")
+        if location != None:
+            if type(location) != tuple:
+                raise TypeError("Internship location must be formatted as a tuple!")
 
-        if len(tuple) != 2:
-            raise ValueError("Tuple must only contain a city and a state.")
+            if len(tuple) != 2:
+                raise ValueError("Tuple must only contain a city and a state.")
 
-        state, city = location
+            state, city = location
 
-        if state not in states:
-            raise ValueError("Invalid state! States must not be abbreviated.")
+            if state not in states:
+                raise ValueError("Invalid state! States must not be abbreviated.")
 
-        for words in city.split():
-            if not words.isalpha():
-                raise ValueError("City must only contain alphabetical characters.")
+            for words in city.split():
+                if not words.isalpha():
+                    raise ValueError("City must only contain alphabetical characters.")
 
-        if type(pay) not in [int, float] and pay != None:
-            raise TypeError("Hourly pay must be a numerical value!")
+        if pay != None:
+            if type(pay) not in [int, float]:
+                raise TypeError("Hourly pay must be a numerical value!")
 
-        if pay < 0:
-            raise ValueError("Hourly pay cannot be negative!")
+            if pay < 0:
+                raise ValueError("Hourly pay cannot be negative!")
 
         if type(bonuses) != str:
             raise TypeError("Any additional info on bonuses must be a string!")
