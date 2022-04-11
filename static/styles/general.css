@@ -4,3 +4,29 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+#navbar-search { 
+    margin-right: 0%;
+    margin-left: auto;
+    padding-right: 3%;
+}
+
+ul {
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+ul li {
+    display: inline-block;
+    float: none;
+}
+
+.card-text { 
+    /* overflow-x:scroll; */
+    white-space: normal;
+}
+
+.card { 
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
