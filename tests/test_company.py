@@ -24,13 +24,13 @@ class TestCompany(unittest.TestCase):
 		self.assertRaises(TypeError, Company, "Home Depot", "software", [], self.valid_link)
 		self.assertRaises(TypeError, Company, "Netflix", "software", self.valid_link, None)
 		self.assertRaises(TypeError, Company, "Netflix", "software", self.valid_link, self.valid_link,
-			description=333)
+						 description=333)
 
 	def test_values(self):
 		self.assertRaises(ValueError, Company, "", "software", self.valid_link, self.valid_link)
 		self.assertRaises(ValueError, Company, "Netfix", "", self.valid_link, self.valid_link)
 		self.assertRaises(ValueError, Company, "Netflix", "software", "htp/broken_link", self.valid_link)
-		self.assertRaises(ValueError, Company, "Netflix", "software", self.valid_link, "")
+		self.assertRaises(ValueError, Company, "Netflix", "software", self.valid_link, "desc", "link")
 
 class TestReviews(unittest.TestCase):
 	def setUp(self):
@@ -39,7 +39,7 @@ class TestReviews(unittest.TestCase):
 
 	def test_init_required(self):
 		'Type Errors'
-		self.assertRaises(TypeError, Review, ['Boeing'], "Title", 'Software Engineering',
+		self.assertRaises(TypeError, Review, 'Boeing', "Title", 'Software Engineering',
 		                 "Position",  4, "M.S.", "Interview", 4)
 
 		self.assertRaises(TypeError, Review, self.comp1, {"Title"}, 'Software Engineering',
@@ -113,11 +113,107 @@ class TestReviews(unittest.TestCase):
 		                  "Position", 4, "M.S.", "Review", 6)
 
 	def test_init_optional(self):
-		pass
+		'Type Errors'
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=0, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=None,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date=["05", "23", "2022"], intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc=None, work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat="10",
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=hex(20), location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=["San Francisco", "California"],
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay="23.64", bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses=32.40)
+
+		'Value Errors'
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="23-05-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="2022-05-23", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=-4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=10,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=-4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "Some State"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=-35.25, bonuses="Bonus")
 
 	def test_score_values(self):
 		pass
 
-	if __name__ == "__main__":
-		#failFast set to false in order to see all failing tests in one run
-		unittest.main(failFast=False)
+if __name__ == "__main__":
+	#failFast set to false in order to see all failing tests in one run
+	unittest.main(failFast=False)

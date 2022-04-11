@@ -1,13 +1,11 @@
-from dataclasses import dataclass, asdict
-from datetime import datetime
-
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                       "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
 
 job_categories = ["Software Engineering", "Computer Science", "Information Technology", "System Administrator",
-                  "Computer Engineering", "Eletrical Engineering", "Data Science", "Security Engineering"]
+                  "Computer Engineering", "Eletrical Engineering", "Data Science", "Security Engineering",
+                  "Other"]
 
-degrees = ["B.S.", "B.A.", "M.S.", "M.A.", "Ph.D."]
+degrees = ["B.S.", "B.A.", "M.S.", "M.A.", "Ph.D.", "Other"]
 
 states = {
     'Alaska': 'AK',
@@ -93,6 +91,7 @@ def validate_date(date:str)->None:
         ValueError: Raised if the given date isn't in the requested
                     month, day, year format.
     """
+    from datetime import datetime
     try:
         datetime.strptime(date, '%m-%d-%Y')
 
@@ -116,10 +115,13 @@ class Company:
         #value checks
         if len(name) == 0:
             raise ValueError("Error: Company name cannot be empty.")
+
         if len(category) == 0:
             raise ValueError("Error: Company category cannot be empty.")
+
         if not is_url(logo_img):
             raise ValueError("Error: Invalid URL given for company logo.")
+
         if not is_url(banner_img) and banner_img != "":
             raise ValueError("Error: Invalid URL given for banner image.")
 
@@ -231,10 +233,10 @@ class Review:
             if type(location) != tuple:
                 raise TypeError("Internship location must be formatted as a tuple!")
 
-            if len(tuple) != 2:
+            if len(location) != 2:
                 raise ValueError("Tuple must only contain a city and a state.")
 
-            state, city = location
+            city, state = location
 
             if state not in states:
                 raise ValueError("Invalid state! States must not be abbreviated.")
@@ -309,11 +311,12 @@ class Review:
 
         for num_scores in num_reviews:
             # can be None because None simply means that field wasn't completed
-            if type(num_scores) != int and num_scores != None:
-                raise TypeError("The number of new scores must be an integer!")
+            if num_scores != None:
+                if type(num_scores) != int:
+                    raise TypeError("The number of new scores must be an integer!")
 
-            if num_scores < 1 and num_scores != None:
-                raise ValueError("Must have a negative or nonzero number of reviews in any category.")
+                if num_scores < 1:
+                    raise ValueError("Must have a negative or nonzero number of reviews in any category.")
 
         for index, num_scores in enumerate(num_reviews):
             # for when the first review is submitted
@@ -339,4 +342,3 @@ class Review:
                                                              num_scores, self.culture_rating)
 
 local_companies = {Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")}
-
