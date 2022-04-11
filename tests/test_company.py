@@ -1,5 +1,5 @@
-import unittest 
 from model import Company
+import unittest
 
 class TestCompany(unittest.TestCase):
 	def setUp(self):
@@ -18,7 +18,7 @@ class TestCompany(unittest.TestCase):
 			)
 
 	def test_types(self):
-		self.assertRaises(TypeError, Company, None, "software", self.valid_link,self.valid_link)	
+		self.assertRaises(TypeError, Company, None, "software", self.valid_link,self.valid_link)
 		self.assertRaises(TypeError, Company, "Netflix", 2, self.valid_link, self.valid_link)
 		self.assertRaises(TypeError, Company, "Home Depot", "software", [], self.valid_link)
 		self.assertRaises(TypeError, Company, "Netflix", "software", self.valid_link, None)
@@ -30,6 +30,19 @@ class TestCompany(unittest.TestCase):
 		self.assertRaises(ValueError, Company, "Netfix", "", self.valid_link, self.valid_link)
 		self.assertRaises(ValueError, Company, "Netflix", "software", "htp/broken_link", self.valid_link)
 		self.assertRaises(ValueError, Company, "Netflix", "software", self.valid_link, "")
+
+class TestReviews(unittest.TestCase):
+	def setUp(self):
+		pass
+
+	def test_init_required(self):
+		pass
+
+	def test_init_optional(self):
+		pass
+
+	def test_score_values(self):
+		pass
 
 	if __name__ == "__main__":
 		#failFast set to false in order to see all failing tests in one run

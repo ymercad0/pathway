@@ -122,17 +122,24 @@ class Company:
             raise ValueError("Error: Invalid URL given for company logo.")
         if not is_url(banner_img):
             raise ValueError("Error: Invalid URL given for banner image.")
-        self.name = name 
+
+        self.name = name
         self.category = category
         self.logo_img = logo_img
         self.description = description
         self.banner_img = banner_img
+        # None simply means that no scores have been
+        # added. There must be a way to distinguish a
+        # company from having a score of 0 and a
+        # company that has no ratings
+        self.company_rat = None
+        self.work_rat = None
+        self.culture_rat = None
 
 class User:
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
         pass
 
-@dataclass
 class Review:
     def __init__(self, company:str, job_cat:str, position:str, company_rating:int, education:str,
                 interview_desc:str, interview_rat:int, offer:bool=False, accepted:bool=False,
@@ -251,6 +258,52 @@ class Review:
         self.location = location
         self.pay = pay
         self.bonuses = bonuses
+
+    def update_scores(self, old_score:float, new_score:int, num_reviews:int)->float:
+        """Once a review is posted, updates the scores of the reviewed
+           company. Returns the average of the company's new score.
+           Prevents the need to store every score entered and recalculate
+           the new average.
+
+        Args:
+            old_score (float): The average of the company's scores prior to the new review's submission.
+            new_score (int): The new score entered after submitting the review.
+            num_reviews (int): The total number of reviews entered for that company category.
+
+        Raises:
+            TypeError: If any of the arguments don't correspond to the expected types.
+            ValueError: If the arguments go outside their expected ranges for the max
+                        or min score quantities (less 0 or greater than 5).
+
+        Returns:
+            float: The new average of the scores in the reviewed categories.
+        """
+        if type(old_score) not in [int, float] and old_score != None:
+            raise TypeError("The average of the old scores must be a float.")
+
+        if old_score != None and old_score < 0 or old_score > 5:
+            raise ValueError("Average of the old scores outside of the min or max allowed.")
+
+        if type(new_score) != int:
+            raise TypeError("The new score must be an integer!")
+
+        if new_score < 0 or new_score > 5:
+            raise ValueError("New score outside of the min or max allowed.")
+
+        if type(num_reviews) != int and num_reviews != None:
+            raise TypeError("The number of reviews added so far must be an integer.")
+
+        if num_reviews < 0:
+            raise ValueError("Cannot have a negative number of reviews in any category.")
+
+        if old_score == None:
+            old_score = 0
+
+        if num_reviews == None:
+            num_reviews = 0
+
+        return ((old_score * num_reviews) + new_score)/(num_reviews + 1)
+
 
 local_companies = {Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")}
 
