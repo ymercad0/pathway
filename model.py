@@ -63,6 +63,23 @@ states = {
     'Wyoming': 'WY',
     }
 
+def is_url(url:str)->bool:
+    """
+    Uses urrlib library to parse URL, then checks if parsed url is valid.
+    Taken from https://bit.ly/3ObxIjB
+
+    Args:
+        url (str): The url to validate
+    Returns:
+        bool indicating validity
+    """
+    from urllib.parse import urlparse
+    try:
+        result = urlparse(url)
+        return all([result.scheme, result.netloc])
+    except:
+        return False
+
 def validate_date(date:str)->None:
     """Validates a given date. Raises
        a value error if the date isn't
@@ -83,8 +100,33 @@ def validate_date(date:str)->None:
         raise ValueError("Incorrect date format. Should be MM-DD-YYYY")
 
 class Company:
-    def __init__(self, name:str, comp_cat:str, logo_img:str, description:str="", banner_img:str="")->None:
-        pass
+    def __init__(self, name:str, category:str, logo_img:str, description:str="", banner_img:str="")->None:
+        #type checks
+        if type(name) is not str:
+            raise TypeError(f"Error: Company name must a string. Given type '{type(name)}'.")
+        if type(category) is not str:
+            raise TypeError(f"Error: Company category must be a string. Given type '{type(category)}'.")
+        if type(logo_img) is not str:
+            raise TypeError(f"Error: Company logo_img must be a string. Given type '{type(logo_img)}'.")
+        if type(description) is not str:
+            raise TypeError(f"Error: Company description must be a string. Given type '{type(description)}'.")
+        if type(banner_img) is not str:
+            raise TypeError(f"Error: Company banner_img must be a string. Given type '{type(banner_img)}'.")
+
+        #value checks
+        if len(name) == 0:
+            raise ValueError("Error: Company name cannot be empty.")
+        if len(category) == 0:
+            raise ValueError("Error: Company category cannot be empty.")
+        if not is_url(logo_img):
+            raise ValueError("Error: Invalid URL given for company logo.")
+        if not is_url(banner_img):
+            raise ValueError("Error: Invalid URL given for banner image.")
+        self.name = name 
+        self.category = category
+        self.logo_img = logo_img
+        self.description = description
+        self.banner_img = banner_img
 
 class User:
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
@@ -211,3 +253,4 @@ class Review:
         self.bonuses = bonuses
 
 local_companies = {Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")}
+
