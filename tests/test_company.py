@@ -1,4 +1,4 @@
-from model import Company
+from model import Company, Review
 import unittest
 
 class TestCompany(unittest.TestCase):
@@ -36,7 +36,8 @@ class TestReviews(unittest.TestCase):
 		pass
 
 	def test_init_required(self):
-		pass
+		'Type Errors'
+		self.assertRaises(TypeError, )
 
 	def test_init_optional(self):
 		pass

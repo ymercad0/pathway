@@ -1,5 +1,6 @@
 from dataclasses import dataclass, asdict
 from datetime import datetime
+from typing import Type
 
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                       "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
@@ -141,16 +142,13 @@ class User:
         pass
 
 class Review:
-    def __init__(self, company:str, job_cat:str, position:str, company_rating:int, education:str,
+    def __init__(self, company:'Company', job_cat:str, position:str, company_rating:int, education:str,
                 interview_desc:str, interview_rat:int, offer:bool=False, accepted:bool=False,
                 start_date:str="", intern_desc:str="", work_rat:int=None, culture_rat:int=None,
                 location:tuple=(), pay:float=None, bonuses:str="")->None:
 
-        if type(company) != str:
-            raise TypeError("Company to review must be a string!")
-
-        if not company:
-            raise ValueError("Company must not be an empty string!")
+        if type(company) != Company:
+            raise TypeError("Company to review must be a company object!")
 
         if type(job_cat) != str:
             raise TypeError("Job category must be a string!")
@@ -253,57 +251,79 @@ class Review:
         self.accepted = accepted
         self.start_date = start_date
         self.intern_desc = intern_desc
-        self.work_rat = work_rat
-        self.culture_rat = culture_rat
+        self.work_rating = work_rat
+        self.culture_rating = culture_rat
         self.location = location
         self.pay = pay
         self.bonuses = bonuses
 
-    def update_scores(self, old_score:float, new_score:int, num_reviews:int)->float:
+    def update_scores(self, num_reviews:list)->None:
         """Once a review is posted, updates the scores of the reviewed
-           company. Returns the average of the company's new score.
-           Prevents the need to store every score entered and recalculate
-           the new average.
+           company of the category rated.
 
         Args:
-            old_score (float): The average of the company's scores prior to the new review's submission.
-            new_score (int): The new score entered after submitting the review.
-            num_reviews (int): The total number of reviews entered for that company category.
+            reviews (list): A list containing the number of reviews in each category.
+                            The first index contains the number of reviews submitted
+                            for the company rating, the second the number of reviews
+                            for the workplace ratings, and the third and last index
+                            contains the amount of reviews for that company's culture.
 
         Raises:
             TypeError: If any of the arguments don't correspond to the expected types.
-            ValueError: If the arguments go outside their expected ranges for the max
-                        or min score quantities (less 0 or greater than 5).
-
-        Returns:
-            float: The new average of the scores in the reviewed categories.
+            ValueError: If the reviews list isn't of the expected size or its contents
+                        aren't integers.
         """
-        if type(old_score) not in [int, float] and old_score != None:
-            raise TypeError("The average of the old scores must be a float.")
 
-        if old_score != None and old_score < 0 or old_score > 5:
-            raise ValueError("Average of the old scores outside of the min or max allowed.")
+        def score_formula(old_score:float, num_reviews:int, new_score:int)->float:
+            """Returns the updated rating of any previously rated field without
+               having to re-calculate the previous averages.
 
-        if type(new_score) != int:
-            raise TypeError("The new score must be an integer!")
+            Args:
+                old_score (float): The previous average of the scores.
+                num_reviews (int): The number of reviews submitted for that category.
+                new_score (int): The new score to be entered into the average calculation.
 
-        if new_score < 0 or new_score > 5:
-            raise ValueError("New score outside of the min or max allowed.")
+            Returns:
+                str: The final orders' total in pennies, as a string.
+            """
+            return ((old_score * num_reviews) + new_score)/(num_reviews + 1)
 
-        if type(num_reviews) != int and num_reviews != None:
-            raise TypeError("The number of reviews added so far must be an integer.")
+        if type(num_reviews) != list:
+            raise TypeError("The number of reviews for each category must be a list!")
 
-        if num_reviews < 0:
-            raise ValueError("Cannot have a negative number of reviews in any category.")
+        if len(num_reviews) != 3:
+            raise ValueError("Review score's list cannot be empty.")
 
-        if old_score == None:
-            old_score = 0
+        for num_scores in num_reviews:
+            # can be None because None simply means that field wasn't completed
+            if type(num_scores) != int and num_scores != None:
+                raise TypeError("The number of new scores must be an integer!")
 
-        if num_reviews == None:
-            num_reviews = 0
+            if num_scores < 1 and num_scores != None:
+                raise ValueError("Must have a negative or nonzero number of reviews in any category.")
 
-        return ((old_score * num_reviews) + new_score)/(num_reviews + 1)
+        for index, num_scores in enumerate(num_reviews):
+            # for when the first review is submitted
+            if num_scores is None:
+                num_scores = 0
 
+            match index:
+                case 0:
+                    # updates the company rating, this is always filled out
+                    self.company.company_rat = score_formula(self.company.company_rat,
+                                                             num_scores, self.company_rating)
+
+                case 1:
+                    # this indicates the user rated this field
+                    if self.work_rating is not None:
+                        self.company.work_rat = score_formula(self.company.work_rat,
+                                                             num_scores, self.work_rating)
+
+                case 2:
+                    # this indicates the user rated this field
+                    if self.culture_rating is not None:
+                        self.company.culture_rat = score_formula(self.company.culture_rat,
+                                                             num_scores, self.culture_rating)
 
 local_companies = {Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")}
 
