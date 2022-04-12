@@ -325,19 +325,35 @@ class Review:
 
             match index:
                 case 0:
-                    # updates the company rating, this is always filled out
+                    # this indicates the user rated this field
+                    if self.company.company_rat is None:
+                        # this is initially None.
+                        # it sets the old score avg to 0
+                        # in order to calculate the initial
+                        # avg. Remember there is a distinction
+                        # between a company with a review avg of 0
+                        # and no reviews
+                        self.company.company_rat = 0
+
+                    # this field must always be reviewed
                     self.company.company_rat = score_formula(self.company.company_rat,
-                                                             num_scores, self.company_rating)
+                                                            num_scores, self.company_rating)
 
                 case 1:
-                    # this indicates the user rated this field
                     if self.work_rating is not None:
+                        # first time work is reviewed
+                        if self.company.work_rat is None:
+                            self.company.work_rat = 0
+
                         self.company.work_rat = score_formula(self.company.work_rat,
                                                              num_scores, self.work_rating)
 
                 case 2:
-                    # this indicates the user rated this field
                     if self.culture_rating is not None:
+                        # first time culture is reviewed
+                        if self.company.culture_rat is None:
+                            self.company.culture_rat = 0
+
                         self.company.culture_rat = score_formula(self.company.culture_rat,
                                                              num_scores, self.culture_rating)
 
