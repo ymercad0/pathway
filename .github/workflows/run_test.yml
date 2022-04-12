@@ -1,7 +1,9 @@
 name: Run Unit tests
 
-on: ['push']
-
+on:
+  push:
+    paths:
+      - 'model.py'
 
 jobs:
   build:
