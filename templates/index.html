@@ -15,19 +15,32 @@
     <p class="lead">
         Read Reviews on top companies from fellow students.
     </p>
-
+    
     <div id="recent-reviews">
         <ul>
           {% for review in recent_reviews %}
           <li>
-            <div class="card shadow-sm" style="width: 18rem;">
-                <img src={{review.company.logo_img}} class="card-img-top" alt="...">
-                <div class="card-body">
-                  <h5 class="card-title">{{review.company.name}}</h5>
-                  <p class="card-text">{{review.interview_desc}}</p>
-                  <a href="#" class="btn btn-primary">Read more</a>
+            <div class="card mb-3 shadow-sm" style="max-width: 30rem;">
+              <div class="row g-0">
+                <div class="col-md-4">
+                  <img src={{review.company.logo_img}} class="img-fluid rounded-start" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{review.company.name}}</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">{{review.position}}</h6>
+                    <p class="card-text">{{review.interview_desc}}</p>
+                  </div>
                 </div>
               </div>
+              <div class="card-footer">
+                {% if review.offer %}
+                  <span class="badge bg-success">Offer</span>  
+                {% else %}
+                  <span class="badge bg-danger">No offer</span>
+                {% endif %}
+              </div>
+            </div>
           </li>
           {% endfor %}
         </ul>
