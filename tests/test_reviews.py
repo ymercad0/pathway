@@ -144,6 +144,25 @@ class TestReviews(unittest.TestCase):
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses=32.40)
 
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", 333),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=(33, "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=(33, True),
+						 pay=35.25, bonuses="Bonus")
+
 		'Value Errors'
 		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
@@ -154,6 +173,12 @@ class TestReviews(unittest.TestCase):
 		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="2022-05-23", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("San Francisco", "California"),
+						 pay=35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=False, accepted=True,
+						 start_date="05-22-2023", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
@@ -186,6 +211,12 @@ class TestReviews(unittest.TestCase):
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=-35.25, bonuses="Bonus")
+
+		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
+						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
+						 culture_rat=4, location=("Some c1t5", "California"),
+						 pay=35.25, bonuses="Bonus")
 
 	def test_score_params(self):
 		'Type Errors'

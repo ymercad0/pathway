@@ -61,6 +61,7 @@ states = {
     'Wisconsin': 'WI',
     'West Virginia': 'WV',
     'Wyoming': 'WY',
+    'Remote': 'N/A'
     }
 
 def is_url(url:str)->bool:
@@ -144,10 +145,63 @@ class User:
         pass
 
 class Review:
+    """Represents a review posted to a specific company.
+       Contains information pertaining to the user's intern
+       experience at the company reviewed along with the date
+       the review was posted. Affects the company's score
+       based on what the user rated.
+
+        Attributes:
+            company: The Company object of the company to be rated by the user.
+            job_cat: The general job category the internship falls under, as a string.
+            position: A string representing the position the user had at the company.
+            company_rating: An integer denoting the overall company rating.
+            education: A string representing the current level of education pursued by the user.
+            interview_desc: The review description, as a string, of the company's interview process and more.
+            interview_rat: An integer, denoting the interview process experience at the company.
+            offer: A boolean, indicating whether the user was presented with an offer from the company.
+            accepted: A boolean, indicating whether the user accepted an offer at the company.
+            start_date: The internship start date, as a string.
+            intern_desc: The internship experience description, as a string.
+            work_rating: An integer denoting whether the company's work culture was good or not.
+            culture_rating: An integer quantifying the company's culture, enviroment, and values.
+            location: A tuple of strings in city, state format containing the internship location.
+            pay: The internship pay per hour, as a float.
+            bonuses: A string of any extra bonuses the company might offer at the internship.
+            date_posted: A datetime object, representing the date the internship was posted.
+    """
     def __init__(self, company:'Company', title:str, job_cat:str, position:str, company_rating:int, education:str,
                 interview_desc:str, interview_rat:int, offer:bool=False, accepted:bool=False,
                 start_date:str="", intern_desc:str="", work_rat:int=None, culture_rat:int=None,
-                location:tuple=None, pay:float=None, bonuses:str="")->None:
+                location:tuple=("None", "Remote"), pay:float=None, bonuses:str="")->None:
+
+        """Initializes a Review object based on the parameters passed;
+           the fields the user decides to fill out.
+
+        Args:
+            company (Company): The company to rate.
+            job_cat (str): The general job category the internship falls under.
+            position (str): The position held at the company.
+            company_rating (int): The overall company rating.
+            education (str): The degree currently pursued by the user.
+            interview_desc (str): A description of the interview process.
+            interview_rat (int): The interview process rating.
+            offer (bool, optional): Whether the company presented an offer to the user.
+            accepted (bool, optional): Whether the user accepted the offer.
+            start_date (str, optional): The internship start date.
+            intern_desc (str, optional): The internship description.
+            work_rating (int, optional): The company's work culture rating.
+            culture_rating (int, optional): The company's culture, enviroment, and values rating.
+            location (tuple, optional): The location of the internship in city, state format.
+            pay (float, optional): The internship pay per hour.
+            bonuses (str, optional): Any bonuses granted by the company to the user not mentioned
+                                     in any of the previous categories.
+
+        Raises:
+            TypeError: Raised if any of the arguments don't match the expected types.
+            ValueError: Raised if the arguments are of the correct types but aren't supported
+                        by the website.
+        """
 
         if type(company) != Company:
             raise TypeError("Company to review must be a company object!")
@@ -205,6 +259,9 @@ class Review:
         if type(accepted) != bool:
             raise TypeError("Accepting an offer must be a boolean!")
 
+        if not offer and accepted:
+            raise ValueError("Cannot accept an offer without having an offer.")
+
         if type(start_date) != str:
             raise TypeError("Start date must be formatted as a string!")
 
@@ -230,21 +287,26 @@ class Review:
             if culture_rat < 0 or culture_rat > 5:
                 raise ValueError("Culture rating cannot be lower or greater than the allowed min or max values.")
 
-        if location != None:
-            if type(location) != tuple:
+        if type(location) != tuple:
                 raise TypeError("Internship location must be formatted as a tuple!")
 
-            if len(location) != 2:
-                raise ValueError("Tuple must only contain a city and a state.")
+        if len(location) != 2:
+            raise ValueError("Tuple must only contain a city and a state.")
 
-            city, state = location
+        city, state = location
 
-            if state not in states:
-                raise ValueError("Invalid state! States must not be abbreviated.")
+        if type(city) != str:
+            raise TypeError("City must be a string!")
 
-            for words in city.split():
-                if not words.isalpha():
-                    raise ValueError("City must only contain alphabetical characters.")
+        if type(state) != str:
+            raise TypeError("State must be a string!")
+
+        if state not in states:
+            raise ValueError("Invalid state! States must not be abbreviated.")
+
+        for words in city.split():
+            if not words.isalpha():
+                raise ValueError("City must only contain alphabetical characters.")
 
         if pay != None:
             if type(pay) not in [int, float]:
@@ -292,16 +354,16 @@ class Review:
         """
 
         def score_formula(old_score:float, num_reviews:int, new_score:int)->float:
-            """Returns the updated rating of any previously rated field without
-               having to re-calculate the previous averages.
+            """Returns the updated rating of any field without having to re-calculate
+               the previous averages.
 
             Args:
                 old_score (float): The previous average of the scores.
-                num_reviews (int): The number of reviews submitted for that category.
+                num_reviews (int): The number of reviews submitted for the category to be rated.
                 new_score (int): The new score to be entered into the average calculation.
 
             Returns:
-                str: The final orders' total in pennies, as a string.
+                float: The updated average of the company's reviews.
             """
             return ((old_score * num_reviews) + new_score)/(num_reviews + 1)
 
