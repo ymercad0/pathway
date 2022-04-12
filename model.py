@@ -139,6 +139,13 @@ class Company:
         self.company_rat = None
         self.work_rat = None
         self.culture_rat = None
+        # number of reviews in each category,
+        # prevents the need to have to query
+        # and search through the whole database
+        # each time
+        self.num_company_reviews = 0
+        self.num_work_reviews = 0
+        self.num_culture_reviews = 0
 
 class User:
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
@@ -336,21 +343,12 @@ class Review:
         self.bonuses = bonuses
         self.date_posted = datetime.now()
 
-    def update_scores(self, num_reviews:list)->None:
+    def update_scores(self)->None:
         """Once a review is posted, updates the scores of the reviewed
-           company of the category rated.
-
-        Args:
-            reviews (list): A list containing the number of reviews in each category.
-                            The first index contains the number of reviews submitted
-                            for the company rating, the second the number of reviews
-                            for the workplace ratings, and the third and last index
-                            contains the amount of reviews for that company's culture.
-
-        Raises:
-            TypeError: If any of the arguments don't correspond to the expected types.
-            ValueError: If the reviews list isn't of the expected size or its contents
-                        aren't integers.
+           company of the category rated. The algorithm to update
+           each company's score runs in constant space and time
+           and only modifies that company's attributes. The scores
+           submitted by the user are kept in the review object.
         """
 
         def score_formula(old_score:float, num_reviews:int, new_score:int)->float:
@@ -367,26 +365,11 @@ class Review:
             """
             return ((old_score * num_reviews) + new_score)/(num_reviews + 1)
 
-        if type(num_reviews) != list:
-            raise TypeError("The number of reviews for each category must be a list!")
-
-        if len(num_reviews) != 3:
-            raise ValueError("Review score's list cannot be empty.")
-
-        for num_scores in num_reviews:
-            # can be None because None simply means that field wasn't completed
-            if num_scores != None:
-                if type(num_scores) != int:
-                    raise TypeError("The number of new scores must be an integer!")
-
-                if num_scores < 1:
-                    raise ValueError("Must have a negative or nonzero number of reviews in any category.")
+        # number of reviews in each category
+        num_reviews = [self.company.num_company_reviews, self.company.num_work_reviews,
+                      self.company.num_culture_reviews]
 
         for index, num_scores in enumerate(num_reviews):
-            # for when the first review is submitted
-            if num_scores is None:
-                num_scores = 0
-
             match index:
                 case 0:
                     # this indicates the user rated this field
@@ -399,9 +382,11 @@ class Review:
                         # and no reviews
                         self.company.company_rat = 0
 
-                    # this field must always be reviewed
+                    # this field must always be reviewed. Not optional in the
+                    # Review class constructor
                     self.company.company_rat = score_formula(self.company.company_rat,
                                                             num_scores, self.company_rating)
+                    self.company.num_company_reviews += 1
 
                 case 1:
                     if self.work_rating is not None:
@@ -412,6 +397,9 @@ class Review:
                         self.company.work_rat = score_formula(self.company.work_rat,
                                                              num_scores, self.work_rating)
 
+                        self.company.num_work_reviews += 1
+
+
                 case 2:
                     if self.culture_rating is not None:
                         # first time culture is reviewed
@@ -420,5 +408,8 @@ class Review:
 
                         self.company.culture_rat = score_formula(self.company.culture_rat,
                                                              num_scores, self.culture_rating)
+
+                        self.company.num_culture_reviews += 1
+
 
 local_companies = {Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")}

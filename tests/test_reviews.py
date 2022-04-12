@@ -218,38 +218,30 @@ class TestReviews(unittest.TestCase):
 						 culture_rat=4, location=("Some c1t5", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-	def test_score_params(self):
-		'Type Errors'
-		self.assertRaises(TypeError, self.review1.update_scores, {})
-		self.assertRaises(TypeError, self.review1.update_scores, None)
-		self.assertRaises(TypeError, self.review1.update_scores, [10.32, 15, 20])
-		self.assertRaises(TypeError, self.review1.update_scores, [10, "15", 20])
-		'Value Errors'
-		self.assertRaises(ValueError, self.review1.update_scores, [])
-		self.assertRaises(ValueError, self.review1.update_scores, [32, 10])
-		self.assertRaises(ValueError, self.review1.update_scores, [10, 15, -20])
-
 	def test_score_equality(self):
 		#the first time a score is entered
-		self.review1.update_scores([None, None, None])
+		self.review1.update_scores()
 		self.assertAlmostEqual(self.comp1.company_rat, 4, places=1)
 		#work is now being rated
+		self.review1.company_rating = 4
 		self.review1.work_rating = 2
-		self.review1.update_scores([1, None, None])
+		self.review1.culture_rating = None
+		self.review1.update_scores()
 		self.assertAlmostEqual(self.comp1.company_rat, 4, places=1)
 		self.assertAlmostEqual(self.comp1.work_rat, 2, places=1)
 		# drop down the scores
 		self.review1.company_rating = 3
 		self.review1.work_rating = 4
-		self.review1.update_scores([1, 1, None])
-		self.assertAlmostEqual(self.comp1.company_rat, 3.5, places=1)
+		self.review1.culture_rating = None
+		self.review1.update_scores()
+		self.assertAlmostEqual(self.comp1.company_rat, 3.7, places=1)
 		self.assertAlmostEqual(self.comp1.work_rat, 3, places=1)
 		# introduce the final score category
 		self.review1.company_rating = 1
 		self.review1.work_rating = 1
 		self.review1.culture_rating = 5
-		self.review1.update_scores([2, 2, None])
-		self.assertAlmostEqual(self.comp1.company_rat, 2.7, places=1)
+		self.review1.update_scores()
+		self.assertAlmostEqual(self.comp1.company_rat, 3, places=1)
 		self.assertAlmostEqual(self.comp1.work_rat, 2.3, places=1)
 		self.assertAlmostEqual(self.comp1.culture_rat, 5, places=1)
 		# updating all categories once more to make sure
@@ -257,15 +249,26 @@ class TestReviews(unittest.TestCase):
 		self.review1.company_rating = 5
 		self.review1.work_rating = 3
 		self.review1.culture_rating = 3
-		self.review1.update_scores([3, 3, 1])
+		self.review1.update_scores()
+		self.assertAlmostEqual(self.comp1.company_rat, 3.4, places=1)
+		self.assertAlmostEqual(self.comp1.work_rat, 2.5, places=1)
+		self.assertAlmostEqual(self.comp1.culture_rat, 4, places=1)
 		# updating culture with only one of two values
 		self.review1.company_rating = 3
 		self.review1.work_rating = None
-		self.review1.culture_rating = 4
-		self.review1.update_scores([4, 4, 2])
-		self.assertAlmostEqual(self.comp1.company_rat, 3.2, places=1)
+		self.review1.culture_rating = None
+		self.review1.update_scores()
+		self.assertAlmostEqual(self.comp1.company_rat, 3.3, places=1)
 		self.assertAlmostEqual(self.comp1.work_rat, 2.5, places=1)
 		self.assertAlmostEqual(self.comp1.culture_rat, 4, places=1)
+		# one None
+		self.review1.company_rating = 4
+		self.review1.work_rating = None
+		self.review1.culture_rating = 3
+		self.review1.update_scores()
+		self.assertAlmostEqual(self.comp1.company_rat, 3.4, places=1)
+		self.assertAlmostEqual(self.comp1.work_rat, 2.5, places=1)
+		self.assertAlmostEqual(self.comp1.culture_rat, 3.7, places=1)
 
 if __name__ == "__main__":
 	unittest.main(failFast=True)
