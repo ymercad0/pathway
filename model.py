@@ -146,6 +146,10 @@ class Company:
         self.num_company_reviews = 0
         self.num_work_reviews = 0
         self.num_culture_reviews = 0
+        # the total amount of reviews
+        # the previous entries dont count
+        # as individual reviews
+        self.total_reviews = 0
 
 class User:
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
@@ -387,6 +391,9 @@ class Review:
                     self.company.company_rat = score_formula(self.company.company_rat,
                                                             num_scores, self.company_rating)
                     self.company.num_company_reviews += 1
+                    # any review needs at least the company attribute
+                    # rated
+                    self.company.total_reviews += 1
 
                 case 1:
                     if self.work_rating is not None:
