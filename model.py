@@ -1,3 +1,5 @@
+from datetime import datetime
+
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                       "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
 
@@ -91,7 +93,6 @@ def validate_date(date:str)->None:
         ValueError: Raised if the given date isn't in the requested
                     month, day, year format.
     """
-    from datetime import datetime
     try:
         datetime.strptime(date, '%m-%d-%Y')
 
@@ -271,6 +272,7 @@ class Review:
         self.location = location
         self.pay = pay
         self.bonuses = bonuses
+        self.date_posted = datetime.now()
 
     def update_scores(self, num_reviews:list)->None:
         """Once a review is posted, updates the scores of the reviewed
