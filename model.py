@@ -73,8 +73,9 @@ def is_url(url:str)->bool:
 
     Args:
         url (str): The url to validate
+
     Returns:
-        bool indicating validity
+        bool: Indicates URL validity
     # """
     regex = ("((http|https)://)(www.)?" + "[a-zA-Z0-9@:%._\\+~#?&//=]" + "{2,256}\\.[a-z]" +
             "{2,6}\\b([-a-zA-Z0-9@:%" + "._\\+~#?&//=]*)")
@@ -113,14 +114,55 @@ def validate_date(date:str)->None:
     except ValueError:
         raise ValueError("Incorrect date format. Should be MM-DD-YYYY")
 
-def validate_email(email:str):
+def validate_email(email:str)->bool:
+    """Validates an email.
+
+    Args:
+        email (str): The email string to validate.
+
+    Returns:
+        bool: A boolean indicating whether the email, passed in as a parameter, is valid.
+    """
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     if re.fullmatch(regex,email):
         return True
     return False
 
 class Company:
+    """Represents an existing and reviewable company.
+        Contains internal information on the amount
+        of reviews submitted to that company as well
+        as the company's status on Pathway.
+
+        Attributes:
+            name: A string, representing the company's name.
+            category: A string, representing the category the company belongs to.
+            logo_img:
+            description: A string, representing the company's description.
+            banner_img:
+            company_rat: The average of the company's overall rating, as a float.
+            work_rat: The average of the company's workplace reviews, as a float.
+            culture_rat: A float denoting the average of the company's culture reviews.
+            num_company_reviews: The total number of ratings under the overall rating category, as an integer.
+            num_work_reviews: The total number of workplace reviews, as an integer.
+            num_culture_reviews: An integer denoting the total number of work culture reviews.
+            total_reviews: An integer representing the overall, singular number of reviews.
+            status: A string representing the company's status. Must be a valid CSS color keyword.
+    """
     def __init__(self, name:str, category:str, logo_img:str, description:str="", banner_img:str="")->None:
+        """Initializes a reviewable Company.
+
+        Args:
+            name (str): The company's name.
+            category (str): The category the company falls under.
+            logo_img (str):
+            description (str, optional): A description on the current company.
+            banner_img (str, optional):
+
+        Raises:
+            TypeError: Raised if any of the arguments aren't of the expected types.
+            ValueError: Raised if the company's name, categories, and more are of the correct types but not supported.
+        """
         #type checks
         if type(name) is not str:
             raise TypeError(f"Error: Company name must a string. Given type '{type(name)}'.")
@@ -179,6 +221,14 @@ class Company:
         self.status = "grey"
 
     def update_status(self)->None:
+        """Updates the company's status. A company
+           status is a color indicating whether the
+           company has had favorable reviews or not.
+           This manifests around the company logo's
+           circumference on the front end. Changes
+           based on what numerical ranges the company's
+           overall reviews fall under.
+        """
         if self.company_rat is not None:
             if self.company_rat == 5:
                 self.status = "green"
@@ -197,7 +247,30 @@ class Company:
                 self.status = "black"
 
 class User:
+    """Represents a user class. Contains the user's information such as
+       their username, email, password, and more.
+
+        Attributes:
+            username: A string, representing the user's username.
+            email: The user's email, as a string.
+            password: The user's confirmed password, as plaintext. Hashed once the account is created.
+            profile_pic:
+            creation_time: A datetime object, containing the time the user account was created.
+    """
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
+        """Initializes a user given the information
+           the user decides to input.
+
+        Args:
+            username (str): The user's username.
+            email (str): The user's email.
+            pswd (str): The user's password, as plaintext.
+            profile_pic (str, optional):
+
+        Raises:
+            TypeError: Raised if none of the parameters match the expected types.
+            ValueError: Raised if the parameters match the expected types but fail any validation checks.
+        """
         #type checks
         if type(username) is not str:
             raise TypeError(f"Error: username must a string. Given type '{type(username)}'.")
@@ -218,14 +291,23 @@ class User:
         if profile_pic != "" and not is_url(profile_pic):
             raise ValueError("Error: Profile picture URL not valid!")
 
-
         self.username = username
         self.email = email
         self.password = self.generate_password(pswd)
         self.profile_pic = profile_pic
         self.creation_time = datetime.now()
 
-    def generate_password(self,unhashed:str):
+    def generate_password(self, unhashed:str)->bytes:
+        """Generates a secure, hashed version of
+           the user's password, initially passed
+           in as plaintext, with bcrypt's methods.
+
+        Args:
+            unhashed (str): The user's password as plaintext.
+
+        Returns:
+            bytes: A hashed representation of the user's password, in bytes.
+        """
         salt = bcrypt.gensalt()
         hashed = bcrypt.hashpw(unhashed.encode("utf-8"), salt)
         return hashed
