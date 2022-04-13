@@ -12,7 +12,7 @@ app = Flask(__name__)
 def index():
     company1 = model.Company(
 			name="Microsoft",
-			category="software",
+			category="Software",
 			logo_img="https://bit.ly/3uWfYzK",
 			banner_img="https://bit.ly/3xfolJs"
 			)

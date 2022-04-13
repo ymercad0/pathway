@@ -150,7 +150,7 @@ class Company:
             raise ValueError("Error: Company category cannot be empty.")
         
         if category not in company_categories:
-            raise ValueError("Error: Invalid Job category.")
+            raise ValueError("Error: Invalid company category.")
 
         if not is_url(logo_img):
             raise ValueError("Error: Invalid URL given for company logo.")
