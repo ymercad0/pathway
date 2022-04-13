@@ -1,4 +1,6 @@
 from datetime import datetime
+import re 
+import bcrypt
 
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                       "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
@@ -100,6 +102,12 @@ def validate_date(date:str)->None:
     except ValueError:
         raise ValueError("Incorrect date format. Should be MM-DD-YYYY")
 
+def validate_email(email:str):
+    regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+    if re.fullmatch(regex,email):
+        return True 
+    return False
+
 class Company:
     def __init__(self, name:str, category:str, logo_img:str, description:str="", banner_img:str="")->None:
         #type checks
@@ -153,7 +161,46 @@ class Company:
 
 class User:
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
-        pass
+        #type checks
+        if type(username) is not str:
+            raise TypeError(f"Error: username must a string. Given type '{type(username)}'.")
+        if type(email) is not str:
+            raise TypeError(f"Error: email must a string. Given type '{type(email)}'.")
+        if type(pswd) is not str:
+            raise TypeError(f"Error: password must a string. Given type '{type(pswd)}'.")
+        if type(profile_pic) is not str: 
+            raise TypeError(f"Error: profile_pic must a string. Given type '{type(profile_pic)}'.")
+
+        #value checks 
+        if len(username) <= 3:
+            raise ValueError("Error: usernames must have more than 3 characters.")
+        if not validate_email(email):
+            raise ValueError("Error: Invalid email")
+        if len(pswd) < 8:
+            raise ValueError("Error: Password must be 6 or more characters.")
+        if not is_url(profile_pic):
+            raise ValueError("Error: Profile picture URL not valid!")
+
+    
+        self.username = username
+        self.email = email
+        self.password = self.generate_password(pswd)
+        self.profile_pic = profile_pic
+
+    def generate_password(self,unhashed:str):
+        salt = bcrypt.gensalt()
+        hashed = bcrypt.hashpw(unhashed.encode("utf-8"),salt)
+        return hashed
+    
+    def set_profile_pic(self,link:str) -> bool:
+        if type(link) is not str:
+            raise TypeError("Error: Link to profile picture must be a string.")
+        if not is_url(link):
+            return False
+        self.profile_pic = link
+        return True 
+
+
 
 class Review:
     """Represents a review posted to a specific company.
