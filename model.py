@@ -76,11 +76,8 @@ def is_url(url:str)->bool:
     Returns:
         bool indicating validity
     # """
-    regex = ("((http|https)://)(www.)?" +
-        "[a-zA-Z0-9@:%._\\+~#?&//=]" +
-        "{2,256}\\.[a-z]" +
-        "{2,6}\\b([-a-zA-Z0-9@:%" +
-        "._\\+~#?&//=]*)")
+    regex = ("((http|https)://)(www.)?" + "[a-zA-Z0-9@:%._\\+~#?&//=]" + "{2,256}\\.[a-z]" +
+            "{2,6}\\b([-a-zA-Z0-9@:%" + "._\\+~#?&//=]*)")
 
     # Compile the ReGex
     p = re.compile(regex)
@@ -96,12 +93,6 @@ def is_url(url:str)->bool:
         return True
     else:
         return False
-    # from urllib.parse import urlparse
-    # try:
-    #     result = urlparse(url)
-    #     return all([result.scheme, result.netloc])
-    # except:
-    #     return False
 
 def validate_date(date:str)->None:
     """Validates a given date. Raises
