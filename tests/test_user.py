@@ -1,5 +1,6 @@
 from model import User
-import unittest 
+import unittest
+import bcrypt
 
 class TestUser(unittest.TestCase):
     def setUp(self):
@@ -13,7 +14,6 @@ class TestUser(unittest.TestCase):
             self.valid_email1,
             self.valid_password,
             self.valid_pic)
-        
 
     def test_types(self):
         #username tests
@@ -50,23 +50,25 @@ class TestUser(unittest.TestCase):
         #password tests
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"",self.valid_pic)
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"1",self.valid_pic)
-        self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"apple",self.valid_pic)
-        self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"test12",self.valid_pic)
+        self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"aple",self.valid_pic)
         #url tests
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"test.com")
-        self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"")
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"@")
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"@gmail.com")
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"user@")
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"https://")
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"http//www.google.com")
+
     def test_set_profile_pic(self):
         self.assertTrue(self.user.set_profile_pic("https://bit.ly/3KF5IT0"))
         self.assertFalse(self.user.set_profile_pic("bit.ly/3KF5IT0"))
         self.assertEqual(self.user.profile_pic,"https://bit.ly/3KF5IT0")
         self.assertTrue(self.user.set_profile_pic("https://www.google.com"))
         self.assertEqual(self.user.profile_pic, "https://www.google.com")
-        # self.assertTrue(self.user.set_profile_pic("https://www.com"))
 
-    def test_account_creation_time(self):
-        self.assertIsNotNone(self.user.creation_time)
+    def test_pswd(self):
+        self.assertTrue(bcrypt.checkpw("password1".encode("utf-8"),
+                        self.user.password))
+
+        self.assertFalse(bcrypt.checkpw("password".encode("utf-8"),
+                        self.user.password))

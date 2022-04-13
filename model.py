@@ -1,6 +1,6 @@
-from datetime import datetime,timezone
-import re 
+from datetime import datetime
 import bcrypt
+import re
 
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                       "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
@@ -81,15 +81,15 @@ def is_url(url:str)->bool:
         "{2,256}\\.[a-z]" +
         "{2,6}\\b([-a-zA-Z0-9@:%" +
         "._\\+~#?&//=]*)")
-     
+
     # Compile the ReGex
     p = re.compile(regex)
- 
+
     # If the string is empty
     # return false
     if (url is None):
         return False
- 
+
     # Return if the string
     # matched the ReGex
     if(re.search(p, url)):
@@ -125,7 +125,7 @@ def validate_date(date:str)->None:
 def validate_email(email:str):
     regex = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
     if re.fullmatch(regex,email):
-        return True 
+        return True
     return False
 
 class Company:
@@ -148,7 +148,7 @@ class Company:
 
         if len(category) == 0:
             raise ValueError("Error: Company category cannot be empty.")
-        
+
         if category not in company_categories:
             raise ValueError("Error: Invalid company category.")
 
@@ -181,6 +181,29 @@ class Company:
         # the previous entries dont count
         # as individual reviews
         self.total_reviews = 0
+        # a company will have a color border
+        # around them depending on their rating.
+        # the status must be a supported CSS
+        # color keyword
+        self.status = "grey"
+
+    def update_status(self)->None:
+        if self.company_rat is not None:
+            if self.company_rat == 5:
+                self.status = "green"
+
+            elif self.company_rat >= 4 and self.company_rat < 5:
+                self.status = "lightgreen"
+
+            elif self.company_rat >= 3 and self.company_rat < 4:
+                self.status = "orange"
+
+            elif self.company_rat >= 2 and self.company_rat < 3:
+                self.status = "red"
+
+            # rating of 0-1.99
+            else:
+                self.status = "black"
 
 class User:
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
@@ -191,47 +214,40 @@ class User:
             raise TypeError(f"Error: email must a string. Given type '{type(email)}'.")
         if type(pswd) is not str:
             raise TypeError(f"Error: password must a string. Given type '{type(pswd)}'.")
-        if type(profile_pic) is not str: 
+        if type(profile_pic) is not str:
             raise TypeError(f"Error: profile_pic must a string. Given type '{type(profile_pic)}'.")
 
-        #value checks 
+        #value checks
         if len(username) <= 3:
             raise ValueError("Error: usernames must have more than 3 characters.")
         if not validate_email(email):
             raise ValueError("Error: Invalid email")
-        if len(pswd) < 8:
-            raise ValueError("Error: Password must be 6 or more characters.")
-        if not is_url(profile_pic):
+        if len(pswd) < 5:
+            raise ValueError("Error: Password must be 5 or more characters.")
+        if profile_pic != "" and not is_url(profile_pic):
             raise ValueError("Error: Profile picture URL not valid!")
 
-    
+
         self.username = username
         self.email = email
         self.password = self.generate_password(pswd)
         self.profile_pic = profile_pic
-        self.creation_time = self.set_creation_time()
-
-
-    def set_creation_time(self):
-        utc_now = datetime.now(timezone.utc) #gets the current time in utc
-        local_time_obj = utc_now.astimezone() #gets the specific utc timezone (from the computer system)
-        time_string = local_time_obj.strftime("%m-%d-%Y at %I:%M %p") #get current/local time as 12-hour string
-        return time_string
+        self.creation_time = datetime.now()
 
     def generate_password(self,unhashed:str):
         salt = bcrypt.gensalt()
-        hashed = bcrypt.hashpw(unhashed.encode("utf-8"),salt)
+        hashed = bcrypt.hashpw(unhashed.encode("utf-8"), salt)
         return hashed
-    
-    def set_profile_pic(self,link:str) -> bool:
+
+    def set_profile_pic(self,link:str)->bool:
         if type(link) is not str:
             raise TypeError("Error: Link to profile picture must be a string.")
+
         if not is_url(link):
             return False
+
         self.profile_pic = link
-        return True 
-
-
+        return True
 
 class Review:
     """Represents a review posted to a specific company.
@@ -241,6 +257,7 @@ class Review:
        based on what the user rated.
 
         Attributes:
+            user: A string indicating which user account created the review.
             company: The Company object of the company to be rated by the user.
             job_cat: The general job category the internship falls under, as a string.
             position: A string representing the position the user had at the company.
@@ -259,7 +276,7 @@ class Review:
             bonuses: A string of any extra bonuses the company might offer at the internship.
             date_posted: A datetime object, representing the date the internship was posted.
     """
-    def __init__(self, company:'Company', title:str, job_cat:str, position:str, company_rating:int, education:str,
+    def __init__(self, user:str, company:'Company', title:str, job_cat:str, position:str, company_rating:int, education:str,
                 interview_desc:str, interview_rat:int, offer:bool=False, accepted:bool=False,
                 start_date:str="", intern_desc:str="", work_rat:int=None, culture_rat:int=None,
                 location:tuple=("None", "Remote"), pay:float=None, bonuses:str="")->None:
@@ -268,6 +285,7 @@ class Review:
            the fields the user decides to fill out.
 
         Args:
+            user(str): The username of the account that created the review.
             company (Company): The company to rate.
             job_cat (str): The general job category the internship falls under.
             position (str): The position held at the company.
@@ -291,6 +309,11 @@ class Review:
             ValueError: Raised if the arguments are of the correct types but aren't supported
                         by the website.
         """
+        if type(user) != str:
+            raise TypeError("Username that created the review must be a string!")
+
+        if not user or len(user) <= 3:
+            raise ValueError("Invalid username!")
 
         if type(company) != Company:
             raise TypeError("Company to review must be a company object!")
@@ -407,6 +430,7 @@ class Review:
         if type(bonuses) != str:
             raise TypeError("Any additional info on bonuses must be a string!")
 
+        self.user = user
         self.company = company
         self.job_cat = job_cat
         self.position = position
