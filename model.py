@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,timezone
 import re 
 import bcrypt
 
@@ -75,13 +75,33 @@ def is_url(url:str)->bool:
         url (str): The url to validate
     Returns:
         bool indicating validity
-    """
-    from urllib.parse import urlparse
-    try:
-        result = urlparse(url)
-        return all([result.scheme, result.netloc])
-    except:
+    # """
+    regex = ("((http|https)://)(www.)?" +
+        "[a-zA-Z0-9@:%._\\+~#?&//=]" +
+        "{2,256}\\.[a-z]" +
+        "{2,6}\\b([-a-zA-Z0-9@:%" +
+        "._\\+~#?&//=]*)")
+     
+    # Compile the ReGex
+    p = re.compile(regex)
+ 
+    # If the string is empty
+    # return false
+    if (url is None):
         return False
+ 
+    # Return if the string
+    # matched the ReGex
+    if(re.search(p, url)):
+        return True
+    else:
+        return False
+    # from urllib.parse import urlparse
+    # try:
+    #     result = urlparse(url)
+    #     return all([result.scheme, result.netloc])
+    # except:
+    #     return False
 
 def validate_date(date:str)->None:
     """Validates a given date. Raises
@@ -186,6 +206,14 @@ class User:
         self.email = email
         self.password = self.generate_password(pswd)
         self.profile_pic = profile_pic
+        self.creation_time = self.set_creation_time()
+
+
+    def set_creation_time(self):
+        utc_now = datetime.now(timezone.utc) #gets the current time in utc
+        local_time_obj = utc_now.astimezone() #gets the specific utc timezone (from the computer system)
+        time_string = local_time_obj.strftime("%m-%d-%Y at %I:%M %p") #get current/local time as 12-hour string
+        return time_string
 
     def generate_password(self,unhashed:str):
         salt = bcrypt.gensalt()
