@@ -3,7 +3,7 @@ import bcrypt
 import re
 
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
-                      "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
+                    "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
 
 job_categories = ["Software Engineering", "Computer Science", "Information Technology", "System Administrator",
                   "Computer Engineering", "Eletrical Engineering", "Data Science", "Security Engineering",
@@ -129,6 +129,16 @@ def validate_email(email:str)->bool:
     return False
 
 def hash_profile_name(name:str):
+    """Helper method for hashing profile names. Used to avoid collisions in filenames 
+    when uploading profile pictures to the database. Method should generate entirely 
+    unique hashes stored both in the user object and separately by the database.
+
+    Args:
+        name (str): name to hash
+
+    Returns:
+        str: String of hashed name encoded in utf-8. 
+    """
     salt = bcrypt.gensalt()
     hashed = bcrypt.hashpw(name.encode("utf-8"),salt)
     return hashed.decode("utf-8")
@@ -327,6 +337,12 @@ class User:
         return True 
 
     def to_json(self)->dict:
+        """Generates a copy of the User object as a dictionary for use as JSON.
+
+        Returns:
+            dict: Representing the user object attributes.
+        
+        """
         return {
             "username":self.username,
             "email":self.email,

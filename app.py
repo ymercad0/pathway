@@ -11,10 +11,26 @@ pathway = db.pathway
 
 @app.route('/file/<path:filename>', methods=["GET"])
 def file(filename):
+    """Helper route for getting files from database. Functions as wrapper for 
+    mongo.send_file function.
+
+    Args:
+        filename (str): file to return
+    """
     return mongo.send_file(filename)
 
 @app.route('/create_user', methods=['POST'])
 def create_user():
+    """Helper route for creating users.Takes in form information and
+    pushes user to database. Should only be accessed from signup route. 
+
+    Args:
+        Form:
+            username (str)
+            password (str)
+            email (str)
+            profile_pic (file)
+    """
     if 'profile_image' in request.files:
         pf = request.files['profile_image']
         filename = model.hash_profile_name(pf.filename)
@@ -36,6 +52,9 @@ def signup():
 @app.route("/")
 @app.route("/index") 
 def index():
+    """Route for index page. Renders 'index.html' file. Currently has 
+    placeholder data for debugging/visualization of work.
+    """
     company1 = model.Company(
 			name="Microsoft",
 			category="Software",
