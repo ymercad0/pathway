@@ -1,17 +1,20 @@
 from flask import Flask, redirect, url_for, render_template, request, session
-# from flask_pymongo import PyMongo
 import model
 import bcrypt
-
-
 
 app = Flask(__name__)
 app.config.from_object('config')
 mongo = model.PyMongoFixed(app)
 db = mongo.db
-if "users" not in db.list_collection_names():
-    db.create_collection("users")
-    #TODO: Use save_file to store default.jpg for non-logged in users or default pic.
+
+for collection in model.collections:
+    if collection not in db.list_collection_names():
+        db.create_collection(collection)
+
+        if collection == "companies":
+            # add backup companies in case we reset
+            # a collection
+            pass
 
 
 @app.route('/file/<path:filename>', methods=["GET"])

@@ -3,6 +3,8 @@ from datetime import datetime
 import bcrypt
 import re
 
+collections = ["companies", "users", "reviews"]
+
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                     "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
 
