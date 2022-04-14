@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block htmlclass %}class="login{% endblock %}
+
+{% block head %}
+<title>Pathway - Login</title>
+{% endblock %}
+
+{% block bodyclass %}class="login"{% endblock %}
+
+{% block main %}
+    <form class="form" method="POST" action="/login">
+        <input id = "usernameField" type="text" name="username">
+        <input id="passwordField" type="password" name="password">
+        <input type="submit">
+    </form>
+{% endblock %}

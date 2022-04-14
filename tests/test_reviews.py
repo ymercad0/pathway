@@ -1,12 +1,13 @@
-from model import Company, Review
+from model import Company, Review, User
 import unittest
 
 class TestReviews(unittest.TestCase):
 	def setUp(self):
 		self.comp1 = Company("Amazon", "Software", "http://somelink.com")
 		self.comp2 = Company("McDonald's", "Restaurant", "http://somelink.com")
+		self.user = User("Test", "somemail@gmail.com", "123323456")
 
-		self.review1 = Review(self.comp1, "Title", 'Software Engineering',
+		self.review1 = Review('User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", company_rating=4, education="M.S.", interview_desc="Interview",
 						 interview_rat=4, offer=True, accepted=True, start_date="05-23-2022",
 						 intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
@@ -15,204 +16,251 @@ class TestReviews(unittest.TestCase):
 
 	def test_init_required(self):
 		'Type Errors'
-		self.assertRaises(TypeError, Review, 'Boeing', "Title", 'Software Engineering',
+		#invalid user
+		self.assertRaises(TypeError, Review, self.user, self.comp1, "Title", 'Software Engineering',
 		                 "Position",  4, "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp1, {"Title"}, 'Software Engineering',
+		self.assertRaises(TypeError, Review, ["User"], self.comp1, "Title", 'Software Engineering',
+		                 "Position",  4, "M.S.", "Interview", 4)
+
+		# not a company object
+		self.assertRaises(TypeError, Review, 'User', 'Boeing', "Title", 'Software Engineering',
+		                 "Position",  4, "M.S.", "Interview", 4)
+
+		# title is of the wrong type
+		self.assertRaises(TypeError, Review, 'User', self.comp1, {"Title"}, 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title",
+		# Position is None
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title",
 						'Software Engineering', None, 4, "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", ['Software Engineering'],
+		# job is of the wrong type
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", ['Software Engineering'],
 						"Position", 4, "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# position is of the wrong type
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 						["Position"], 4, "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# score is of the wrong type
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 						"Position", hex(4), "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# score cant be a float
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 						"Position", 3.90, "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 						"Position", 0.30, "M.S.", "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		# education is of the wrong type
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 						"Position", 4, ord("M"), "Interview", 4)
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		# description is of the wrong time
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 						"Position", 4, "M.S.", ["Review"], 4)
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		# score is of the wrong type
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 						"Position", 4, "M.S.", "Review", hex(4))
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 						 "Position", 4, "M.S.", "Review", 4.90)
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 						 "Position", 4, "M.S.", "Review", 3.50)
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 					    "Position", 4, "M.S.", "Review", float(2))
 		'Value Errors'
-		self.assertRaises(ValueError, Review, self.comp1, "", 'Software Engineering',
+		# user is empty or not the right length
+		self.assertRaises(ValueError, Review, "", self.comp1, "Title", 'Software Engineering',
+		                 "Position",  4, "M.S.", "Interview", 4)
+
+		self.assertRaises(ValueError, Review, "chr", self.comp1, "Title", 'Software Engineering',
+		                 "Position",  4, "M.S.", "Interview", 4)
+
+		# title is empty
+		self.assertRaises(ValueError, Review, 'User', self.comp1, "", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Review", 4)
 
-		self.assertRaises(ValueError, Review, self.comp1, "Title", 'Software Engineering',
+		# position is empty
+		self.assertRaises(ValueError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                  "", 4, "M.S.", "Review", 4)
+		# SWE is not a job category
+		self.assertRaises(ValueError, Review, 'User', self.comp1, "Title", 'SWE', "Position", 4, "M.S.", "Review", 4)
 
-		self.assertRaises(ValueError, Review, self.comp1, "Title", 'SWE', "Position", 4, "M.S.", "Review", 4)
+		# category is empty
+		self.assertRaises(ValueError, Review, 'User', self.comp1, "Title", '', "Position", 4, "M.S.", "Review", 4)
 
-		self.assertRaises(ValueError, Review, self.comp1, "Title", '', "Position", 4, "M.S.", "Review", 4)
-
-		self.assertRaises(ValueError, Review, self.comp1, "Title", 'Software Engineering',
+		# rating more or less than the max or min allowed
+		self.assertRaises(ValueError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                  "Position", 10, "M.S.", "Review", 4)
 
-		self.assertRaises(ValueError, Review, self.comp1, "Title", 'Software Engineering',
+		self.assertRaises(ValueError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 						  "Position", -1, "M.S.", "Review", 4)
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# invalid education
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "", "Review", 4)
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title",  'Software Engineering',
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title",  'Software Engineering',
 		                "Position",  4, "A degree", "Review", 4)
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# invalid description
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 						"Position", 4, "M.S.", "", 4)
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# rating is invalid
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                  "Position", 4, "M.S.", "Review", -3)
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                  "Position", 4, "M.S.", "Review", 6)
 
 	def test_init_optional(self):
 		'Type Errors'
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# offer not a bool
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=0, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# accepted not a bool
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=None,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# start date of the wrong type
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date=["05", "23", "2022"], intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# intern desc is None
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc=None, work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# work rating of invalid type
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat="10",
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# culture rating of invalid type
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=hex(20), location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# location not a tuple
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=["San Francisco", "California"],
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# pay is a string
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay="23.64", bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp1, "Title", 'Software Engineering',
+		# bonuses is an int
+		self.assertRaises(TypeError, Review, 'User', self.comp1, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses=32.40)
 
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		# state or city are of invalid types
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", 333),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=(33, "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(TypeError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(TypeError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=(33, True),
 						 pay=35.25, bonuses="Bonus")
 
 		'Value Errors'
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# invalid date format
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="23-05-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="2022-05-23", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# accepted an offer that wasn't given (offer = False)
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=False, accepted=True,
 						 start_date="05-22-2023", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# invalid artings
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=-4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=10,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=-4, location=("San Francisco", "California"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# invalid state
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "Some State"),
 						 pay=35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# invalid pay
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=-35.25, bonuses="Bonus")
 
-		self.assertRaises(ValueError, Review, self.comp2, "Title", 'Software Engineering',
+		# invalid city (not alphabetical)
+		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
 		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
 						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
 						 culture_rat=4, location=("Some c1t5", "California"),

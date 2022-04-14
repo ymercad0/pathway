@@ -15,7 +15,14 @@
     <p class="lead">
         Read Reviews on top companies from fellow students.
     </p>
+    <!-- TESTING -->
+    {% if user %}
+    <img alt='sample' src="{{url_for('file',filename=user.profile_pic) }}">
+    {% else %}
+    <img alt='sample' src="{{url_for('file',filename='default.jpg')}}">
+    {% endif %}
     
+    <!-- TESTING -->
     <div id="recent-reviews">
         <ul>
           {% for review in recent_reviews %}
