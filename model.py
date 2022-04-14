@@ -128,6 +128,11 @@ def validate_email(email:str):
         return True 
     return False
 
+def hash_profile_name(name:str):
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(name.encode("utf-8"),salt)
+    return hashed.decode("utf-8")
+
 class Company:
     def __init__(self, name:str, category:str, logo_img:str, description:str="", banner_img:str="")->None:
         #type checks
@@ -198,11 +203,11 @@ class User:
         if len(username) <= 3:
             raise ValueError("Error: usernames must have more than 3 characters.")
         if not validate_email(email):
-            raise ValueError("Error: Invalid email")
+            raise ValueError(f"Error: Invalid email. Given email {email} with type {type(email)} ")
         if len(pswd) < 8:
             raise ValueError("Error: Password must be 6 or more characters.")
-        if not is_url(profile_pic):
-            raise ValueError("Error: Profile picture URL not valid!")
+        if len(profile_pic) == 0:
+            raise ValueError("Error: Invalid Profile Picture name.")
 
     
         self.username = username
@@ -230,6 +235,15 @@ class User:
             return False
         self.profile_pic = link
         return True 
+
+    def to_json(self)->dict:
+        return {
+            "username":self.username,
+            "email":self.email,
+            "password":self.password,
+            "profile_pic":self.profile_pic,
+            "creation_time":self.creation_time
+        }
 
 
 
