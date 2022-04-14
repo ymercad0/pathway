@@ -48,13 +48,37 @@ class TestCompany(unittest.TestCase):
 		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="broken.com")
 		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="http://invalid")
 
-	def test_attributes(self):
-		self.assertIsNone(self.company1.culture_rat)
-		self.assertIsNone(self.company1.work_rat)
-		self.assertIsNone(self.company1.company_rat)
-		self.assertEqual(self.company1.num_company_reviews,0)
-		self.assertEqual(self.company1.num_work_reviews,0)
-		self.assertEqual(self.company1.num_culture_reviews ,0)
+	def test_equality(self):
+		# default status color
+		self.assertEqual(self.company1.status, "grey")
+		# perfect score
+		self.company1.company_rat = 5
+		self.company1.update_status()
+		self.assertEqual(self.company1.status, "green")
+		# should be lightgreen
+		self.company1.company_rat = 4.99
+		self.company1.update_status()
+		self.assertEqual(self.company1.status, "lightgreen")
+		# just at the edge of 4
+		self.company1.company_rat = 3.9
+		self.company1.update_status()
+		self.assertEqual(self.company1.status, "orange")
+		# at the edge of 3
+		self.company1.company_rat = 2.99
+		self.company1.update_status()
+		self.assertEqual(self.company1.status, "red")
+		# exact value
+		self.company1.company_rat = 2
+		self.company1.update_status()
+		self.assertEqual(self.company1.status, "red")
+		# any score less than 2
+		self.company1.company_rat = 1.99
+		self.company1.update_status()
+		self.assertEqual(self.company1.status, "black")
+		# score of 0
+		self.company1.company_rat = 0
+		self.company1.update_status()
+		self.assertEqual(self.company1.status, "black")
 
 if __name__ == "__main__":
 	unittest.main(failFast=True)
