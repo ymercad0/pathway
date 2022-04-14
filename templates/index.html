@@ -16,7 +16,12 @@
         Read Reviews on top companies from fellow students.
     </p>
     <!-- TESTING -->
-    <img alt='sample' src="{{url_for('file',filename='test.jpg') }}">
+    {% if user %}
+    <img alt='sample' src="{{url_for('file',filename=user.profile_pic) }}">
+    {% else %}
+    <img alt='sample' src="{{url_for('file',filename='default.jpg')}}">
+    {% endif %}
+    
     <!-- TESTING -->
     <div id="recent-reviews">
         <ul>
