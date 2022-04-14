@@ -51,11 +51,10 @@ class TestUser(unittest.TestCase):
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"",self.valid_pic)
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"1",self.valid_pic)
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"aple",self.valid_pic)
-        self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"apple",self.valid_pic)
-        self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"test12",self.valid_pic)
+        self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,"tes",self.valid_pic)
         #profile_pic tests
         self.assertRaises(ValueError,User,self.valid_username,self.valid_email1,self.valid_password,"")
-        
+
     def test_set_profile_pic(self):
         self.assertTrue(self.user.set_profile_pic("https://bit.ly/3KF5IT0"))
         self.assertFalse(self.user.set_profile_pic("bit.ly/3KF5IT0"))
