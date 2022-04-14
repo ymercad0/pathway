@@ -262,7 +262,7 @@ class User:
             profile_pic:
             creation_time: A datetime object, containing the time the user account was created.
     """
-    def __init__(self, username:str, email:str, pswd:str, profile_pic:str="")->None:
+    def __init__(self, username:str, email:str, pswd:str, profile_pic:str="default.jpg")->None:
         """Initializes a user given the information
            the user decides to input.
 
