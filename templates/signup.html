@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block htmlclass %}class="signup"{% endblock %}
+
+{% block head %}
+<title>Pathway - Sign up</title>
+{% endblock %}
+
+{% block bodyclass %}class="signup"{% endblock %}
+
+{% block main %}
+    <form class="form" method="POST" action="/create_user" enctype="multipart/form-data">
+        <input id = "usernameField" type="text" name="username">
+        <input id="passwordField" type="password" name="password">
+        <input id="emailField" type="text" name="email" aria-label="email">
+        <input id="imageUpload" type="file" name="profile_image">
+        <input type="submit">
+    </form>
+{% endblock %}

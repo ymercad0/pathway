@@ -128,6 +128,11 @@ def validate_email(email:str)->bool:
         return True
     return False
 
+def hash_profile_name(name:str):
+    salt = bcrypt.gensalt()
+    hashed = bcrypt.hashpw(name.encode("utf-8"),salt)
+    return hashed.decode("utf-8")
+
 class Company:
     """Represents an existing and reviewable company.
         Contains internal information on the amount
@@ -285,11 +290,11 @@ class User:
         if len(username) <= 3:
             raise ValueError("Error: usernames must have more than 3 characters.")
         if not validate_email(email):
-            raise ValueError("Error: Invalid email")
-        if len(pswd) < 5:
-            raise ValueError("Error: Password must be 5 or more characters.")
-        if profile_pic != "" and not is_url(profile_pic):
-            raise ValueError("Error: Profile picture URL not valid!")
+            raise ValueError(f"Error: Invalid email. Given email {email} with type {type(email)} ")
+        if len(pswd) < 8:
+            raise ValueError("Error: Password must be 6 or more characters.")
+        if len(profile_pic) == 0:
+            raise ValueError("Error: Invalid Profile Picture name.")
 
         self.username = username
         self.email = email
@@ -318,9 +323,17 @@ class User:
 
         if not is_url(link):
             return False
-
         self.profile_pic = link
-        return True
+        return True 
+
+    def to_json(self)->dict:
+        return {
+            "username":self.username,
+            "email":self.email,
+            "password":self.password,
+            "profile_pic":self.profile_pic,
+            "creation_time":self.creation_time
+        }
 
 class Review:
     """Represents a review posted to a specific company.
