@@ -5,7 +5,7 @@ import bcrypt
 
 
 
-app = Flask(__name__) 
+app = Flask(__name__)
 app.config.from_object('config')
 mongo = model.PyMongoFixed(app)
 db = mongo.db
@@ -16,7 +16,7 @@ if "users" not in db.list_collection_names():
 
 @app.route('/file/<path:filename>', methods=["GET"])
 def file(filename):
-    """Helper route for getting files from database. Functions as wrapper for 
+    """Helper route for getting files from database. Functions as wrapper for
     mongo.send_file function.
 
     Args:
@@ -26,7 +26,7 @@ def file(filename):
 
 @app.route('/login',methods=['GET','POST'])
 def login():
-    """Login form for users. Sends POST request to itself. If it 
+    """Login form for users. Sends POST request to itself. If it
     validates the user, redirects to index page. Taken mostly from class
     slides.
     """
@@ -48,7 +48,7 @@ def login():
 
 @app.route('/logout')
 def logout():
-    """Logging out endpoint. Clears all local 
+    """Logging out endpoint. Clears all local
     session information and redirects to index.
     """
     session.clear()
@@ -57,7 +57,7 @@ def logout():
 @app.route('/create_user', methods=['POST'])
 def create_user():
     """Helper route for creating users.Takes in form information and
-    pushes user to database. Should only be accessed from signup route. 
+    pushes user to database. Should only be accessed from signup route.
 
     Args:
         Form:
@@ -97,9 +97,9 @@ def signup():
 
 
 @app.route("/")
-@app.route("/index") 
+@app.route("/index")
 def index():
-    """Route for index page. Renders 'index.html' file. Currently has 
+    """Route for index page. Renders 'index.html' file. Currently has
     placeholder data for debugging/visualization of work.
     """
     company1 = model.Company(
@@ -134,4 +134,4 @@ def index():
             return render_template("index.html", recent_reviews=placeholder, user=None)
         return render_template("index.html", recent_reviews=placeholder, user=current_user)
     return render_template("index.html", recent_reviews=placeholder, user=None)
-        
+

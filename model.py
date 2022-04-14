@@ -1,8 +1,7 @@
+from flask_pymongo import PyMongo
 from datetime import datetime
 import bcrypt
 import re
-
-from flask_pymongo import PyMongo
 
 company_categories = ["Software", "Hardware", "Computing", "Finance", "Government", "Defense", "Aerospace",
                     "Restaurant", "Automobiles", "Aviation", "Retail", "Other"]
@@ -71,14 +70,14 @@ states = {
 def is_url(url:str)->bool:
     """
     Uses urrlib library to parse URL, then checks if parsed url is valid.
-    Taken from https://bit.ly/3ObxIjB
+    Taken from https://bit.ly/3ObxIjB.
 
     Args:
-        url (str): The url to validate
+        url (str): The url to validate.
 
     Returns:
-        bool: Indicates URL validity
-    # """
+        bool: Indicates URL validity.
+    """
     regex = ("((http|https)://)(www.)?" + "[a-zA-Z0-9@:%._\\+~#?&//=]" + "{2,256}\\.[a-z]" +
             "{2,6}\\b([-a-zA-Z0-9@:%" + "._\\+~#?&//=]*)")
 
@@ -130,19 +129,19 @@ def validate_email(email:str)->bool:
         return True
     return False
 
-def hash_profile_name(name:str):
-    """Helper method for hashing profile names. Used to avoid collisions in filenames 
-    when uploading profile pictures to the database. Method should generate entirely 
+def hash_profile_name(name:str)->str:
+    """Helper method for hashing profile names. Used to avoid collisions in filenames
+    when uploading profile pictures to the database. Method should generate entirely
     unique hashes stored both in the user object and separately by the database.
 
     Args:
         name (str): name to hash
 
     Returns:
-        str: String of hashed name encoded in utf-8. 
+        str: String of hashed name encoded in utf-8.
     """
     salt = bcrypt.gensalt()
-    hashed = bcrypt.hashpw(name.encode("utf-8"),salt)
+    hashed = bcrypt.hashpw(name.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 
 
@@ -155,9 +154,9 @@ class Company:
         Attributes:
             name: A string, representing the company's name.
             category: A string, representing the category the company belongs to.
-            logo_img:
+            logo_img: The file name of the company's logo, as string.
             description: A string, representing the company's description.
-            banner_img:
+            banner_img: The file name of the company's banner, as string.
             company_rat: The average of the company's overall rating, as a float.
             work_rat: The average of the company's workplace reviews, as a float.
             culture_rat: A float denoting the average of the company's culture reviews.
@@ -173,9 +172,9 @@ class Company:
         Args:
             name (str): The company's name.
             category (str): The category the company falls under.
-            logo_img (str):
+            logo_img (str): The filename of the company image.
             description (str, optional): A description on the current company.
-            banner_img (str, optional):
+            banner_img (str, optional): The filename of the banner image.
 
         Raises:
             TypeError: Raised if any of the arguments aren't of the expected types.
@@ -272,7 +271,7 @@ class User:
             username: A string, representing the user's username.
             email: The user's email, as a string.
             password: The user's confirmed password, as plaintext. Hashed once the account is created.
-            profile_pic:
+            profile_pic: The filename of the user's profile pic.
             creation_time: A datetime object, containing the time the user account was created.
     """
     def __init__(self, username:str, email:str, pswd:str, profile_pic:str="default.jpg")->None:
@@ -283,7 +282,7 @@ class User:
             username (str): The user's username.
             email (str): The user's email.
             pswd (str): The user's password, as plaintext.
-            profile_pic (str, optional):
+            profile_pic (str, optional): The filename of the uploaded profile picture file.
 
         Raises:
             TypeError: Raised if none of the parameters match the expected types.
@@ -302,10 +301,13 @@ class User:
         #value checks
         if len(username) <= 3:
             raise ValueError("Error: usernames must have more than 3 characters.")
+
         if not validate_email(email):
             raise ValueError(f"Error: Invalid email. Given email {email} with type {type(email)} ")
-        if len(pswd) < 8:
-            raise ValueError("Error: Password must be 6 or more characters.")
+
+        if len(pswd) < 5:
+            raise ValueError("Error: Password must be 5 or more characters.")
+
         if len(profile_pic) == 0:
             raise ValueError("Error: Invalid Profile Picture name.")
 
@@ -330,21 +332,31 @@ class User:
         hashed = bcrypt.hashpw(unhashed.encode("utf-8"), salt)
         return hashed
 
-    def set_profile_pic(self,link:str)->bool:
-        if type(link) is not str:
-            raise TypeError("Error: Link to profile picture must be a string.")
+    def set_profile_pic(self, file:str)->bool:
+        """Sets the user's profile picture.
 
-        if not is_url(link):
+        Args:
+            file (str): The filename of the new profile picture the user uploaded.
+
+        Raises:
+            TypeError: Raised if the filename is not of the expected type.
+
+        Returns:
+            bool: A boolean, indicating if the user was able to succesfully change their profile picture.
+        """
+        if type(file) is not str:
+            raise TypeError("Error: Profile pic file must be a string.")
+
+        if not is_url(file):
             return False
-        self.profile_pic = link
-        return True 
+        self.profile_pic = file
+        return True
 
     def to_json(self)->dict:
         """Generates a copy of the User object as a dictionary for use as JSON.
 
         Returns:
             dict: Representing the user object attributes.
-        
         """
         return {
             "username":self.username,
@@ -642,7 +654,7 @@ class PyMongoFixed(PyMongo):
         self.text_type = str
         self.num_type = int
 
-    
+
     def send_file(self, filename, base="fs", version=-1, cache_for=31536000):
         """Respond with a file from GridFS.
 
