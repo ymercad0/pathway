@@ -23,6 +23,6 @@
     max-height: 20rem;
 }
 
-.card-text {
-    white-space: normal;
+.review-links {
+    text-decoration: none;
 }

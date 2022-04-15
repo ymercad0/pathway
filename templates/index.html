@@ -13,38 +13,35 @@
   Find your <span class="text-muted">Pathway to success.</span>
 </h3>
 <p class="lead">
-  Read Reviews on top companies from fellow students.
+  Read reviews on top companies from fellow students. Below are some recent experiences.
 </p>
-<!-- TESTING -->
-{% if user %}
-<img alt='sample' src="{{url_for('file',filename=user.profile_pic) }}">
-{% else %}
-<img alt='sample' src="{{url_for('file',filename='default.jpg')}}">
-{% endif %}
 
-<!-- TESTING -->
+<!-- Horizontal cards -->
 <div class="reviews container-fluid py-2">
   <div class="d-flex flex-row flex-nowrap row">
     {% for review in recent_reviews %}
-    <div class="card mb-3 shadow-sm col-md-3">
+    <div class="card mb-3 shadow-sm col-lg-4">
       <div class="row g-0">
         <div class="col-md-4">
-          <img src={{review.company.logo_img}} class="img-fluid rounded-start" alt="...">
+          <img src={{review.company.logo_img}} class="card-img" alt="...">
         </div>
         <div class="col-md-8">
           <div class="card-body">
             <h5 class="card-title">{{review.company.name}}</h5>
             <h6 class="card-subtitle mb-2 text-muted">{{review.position}}</h6>
-            <p class="card-text">{{review.interview_desc}}</p>
+            <p class="card-text text-truncate">{{review.interview_desc}}</p>
           </div>
         </div>
       </div>
-      <div class="card-footer">
+      <div class="card-footer mt-auto">
         {% if review.offer %}
         <span class="badge bg-success">Offer</span>
         {% else %}
         <span class="badge bg-danger">No offer</span>
         {% endif %}
+
+        <!-- Placeholder link! -->
+        <a href="https://www.google.com/" class="review-links float-end">Read full review &#8594;</a>
       </div>
     </div>
     {% endfor %}

@@ -120,11 +120,11 @@ def index():
     review_1 = model.Review('user',company1,"Placeholder Review","Security Engineering",
         "Security Engineer Intern",company_rating=4,education="B.S.",
         interview_desc="Had a good time overall. Tasking was tough and hours were long.",
-        interview_rat=5,offer=False, accepted=False, start_date="05-23-2022",
+        interview_rat=5,offer=True, accepted=False, start_date="05-23-2022",
         intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
         pay=35.25, bonuses="Bonus")
     review_2 = model.Review('user',company2, "Title", 'Software Engineering',
-        "Position", company_rating=4, education="M.S.", interview_desc="Interview",
+        "Position", company_rating=4, education="M.S.", interview_desc="I did this x y z dsdsasddddddddddddddddddd",
         interview_rat=4, offer=False, accepted=False, start_date="05-23-2022",
         intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
         pay=35.25, bonuses="Bonus")
