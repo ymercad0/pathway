@@ -128,6 +128,7 @@ def index():
         interview_rat=4, offer=False, accepted=False, start_date="05-23-2022",
         intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
         pay=35.25, bonuses="Bonus")
+
     placeholder = [review_1 for _ in range(3)]
     placeholder.extend([review_2 for _ in range(3)])
 
@@ -137,4 +138,3 @@ def index():
             return render_template("index.html", recent_reviews=placeholder, user=None)
         return render_template("index.html", recent_reviews=placeholder, user=current_user)
     return render_template("index.html", recent_reviews=placeholder, user=None)
-

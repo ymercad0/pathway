@@ -639,11 +639,6 @@ class Review:
 
                         self.company.num_culture_reviews += 1
 
-
-local_companies = {Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")}
-
-
-
 class PyMongoFixed(PyMongo):
     """A small magic trick Class that functions as a Wrapper for PyMongo.
     Overwrites a broken flask_pymongo 2.3.0 function to fetch image data from
@@ -710,3 +705,5 @@ class PyMongoFixed(PyMongo):
         response.cache_control.public = True
         response.make_conditional(request)
         return response
+
+local_companies = [Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")]
