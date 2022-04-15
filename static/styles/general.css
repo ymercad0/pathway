@@ -1,3 +1,8 @@
+body.index,
+html.index {
+    overflow-x: hidden;
+}
+
 #navbar-title-text {
     background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
     background-size: 100%;
@@ -25,4 +30,50 @@
 
 .review-links {
     text-decoration: none;
+}
+
+.highest-rated {
+    margin-top: 3rem;
+}
+
+.highest-rated p {
+    text-align: center;
+}
+
+.company-image {
+    max-width: 100%;
+    height: auto;
+}
+
+.company-image img {
+    border-radius: 10%;
+}
+
+.company-card {
+    margin-bottom: 3rem;
+}
+
+/* For the company borders */
+.company-grey {
+    border: 3px solid grey;
+}
+
+.company-green {
+    border: 3px solid green;
+}
+
+.company-lightgreen {
+    border: 3px solid lightgreen;
+}
+
+.company-orange {
+    border: 3px solid orange;
+}
+
+.company-black {
+    border: 3px solid red;
+}
+
+.company-abysmal {
+    border: 3px solid black;
 }

@@ -47,4 +47,15 @@
     {% endfor %}
   </div>
 </div>
+
+<div class="highest-rated">
+  <p>Top five rated companies</p>
+  {% for company in companies %}
+  <div class="company-card container col-md-5">
+    <div class="company-image col-md-2">
+      <img src={{company.logo_img}} class="img-fluid company-{{company.status}}" alt="...">
+    </div>
+  </div>
+  {% endfor %}
+</div>
 {% endblock %}

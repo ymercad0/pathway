@@ -131,10 +131,11 @@ def index():
 
     placeholder = [review_1 for _ in range(3)]
     placeholder.extend([review_2 for _ in range(3)])
+    companies = [company1, company2, company1, company2]
 
     if 'username' in session:
         current_user = db.users.find_one({"username":session['username']})
         if not current_user:
-            return render_template("index.html", recent_reviews=placeholder, user=None)
-        return render_template("index.html", recent_reviews=placeholder, user=current_user)
-    return render_template("index.html", recent_reviews=placeholder, user=None)
+            return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
+        return render_template("index.html", recent_reviews=placeholder, companies=companies, user=current_user)
+    return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
