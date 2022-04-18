@@ -123,14 +123,27 @@ def index():
         interview_rat=5,offer=True, accepted=False, start_date="05-23-2022",
         intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
         pay=35.25, bonuses="Bonus")
+
+    review_1.update_scores()
     review_2 = model.Review('user',company2, "Title", 'Software Engineering',
         "Position", company_rating=4, education="M.S.", interview_desc="I did this x y z dsdsasddddddddddddddddddd",
         interview_rat=4, offer=False, accepted=False, start_date="05-23-2022",
         intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
         pay=35.25, bonuses="Bonus")
 
+    review_2.update_scores()
+
     placeholder = [review_1 for _ in range(3)]
     placeholder.extend([review_2 for _ in range(3)])
+    company1.company_rat = 5
+    company1.work_rat = 3
+    company1.culture_rat = 2.5
+
+    company1.update_status()
+    company2.company_rat = 3
+    company2.update_status()
+
+
     companies = [company1, company2, company1, company2]
 
     if 'username' in session:

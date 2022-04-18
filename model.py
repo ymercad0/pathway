@@ -146,7 +146,6 @@ def hash_profile_name(name:str)->str:
     hashed = bcrypt.hashpw(name.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 
-
 class Company:
     """Represents an existing and reviewable company.
         Contains internal information on the amount
@@ -249,11 +248,8 @@ class Company:
            overall reviews fall under.
         """
         if self.company_rat is not None:
-            if self.company_rat == 5:
+            if self.company_rat >=4 and self.company_rat <= 5:
                 self.status = "green"
-
-            elif self.company_rat >= 4 and self.company_rat < 5:
-                self.status = "lightgreen"
 
             elif self.company_rat >= 3 and self.company_rat < 4:
                 self.status = "orange"
@@ -264,6 +260,31 @@ class Company:
             # rating of 0-1.99
             else:
                 self.status = "black"
+
+    def category_badge(self, category_rat:int)->str:
+        """Given an input category, returns the
+           appropriate Bootstrap badge, depending
+           on whether the scores are favorable or
+           not.
+
+        Args:
+            category_rat (int): The rating category whose badge component will be rendered.
+
+        Returns:
+            str: A string, denoting what type of bootstrap badge to use.
+        """
+        if category_rat >= 4 and category_rat <= 5:
+            return "success"
+
+        elif category_rat >= 3 and category_rat < 4:
+            return "warning text-dark"
+
+        elif category_rat >= 2 and category_rat < 3:
+            return "danger"
+
+        # rating of 0-1.99
+        else:
+            return "dark"
 
 class User:
     """Represents a user class. Contains the user's information such as
