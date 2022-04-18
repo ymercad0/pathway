@@ -135,12 +135,12 @@ def index():
 
     placeholder = [review_1 for _ in range(3)]
     placeholder.extend([review_2 for _ in range(3)])
-    company1.company_rat = 5
+    company1.company_rat = 3.9
     company1.work_rat = 3
     company1.culture_rat = 2.5
 
     company1.update_status()
-    company2.company_rat = 3
+    company2.company_rat = 5
     company2.update_status()
 
 

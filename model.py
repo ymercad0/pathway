@@ -261,18 +261,24 @@ class Company:
             else:
                 self.status = "black"
 
-    def category_badge(self, category_rat:int)->str:
+    def category_badge(self, category_rat:float)->str:
         """Given an input category, returns the
            appropriate Bootstrap badge, depending
            on whether the scores are favorable or
            not.
 
         Args:
-            category_rat (int): The rating category whose badge component will be rendered.
+            category_rat (float): The rating category whose badge component will be rendered.
 
         Returns:
             str: A string, denoting what type of bootstrap badge to use.
         """
+        if type(category_rat) not in [float, int]:
+            raise TypeError("Category rating must be an integer!")
+
+        if category_rat > 5 or category_rat < 0:
+            raise ValueError("Category rating is outside of the min or max values permitted.")
+
         if category_rat >= 4 and category_rat <= 5:
             return "success"
 
@@ -283,8 +289,7 @@ class Company:
             return "danger"
 
         # rating of 0-1.99
-        else:
-            return "dark"
+        return "dark"
 
 class User:
     """Represents a user class. Contains the user's information such as

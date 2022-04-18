@@ -26,6 +26,9 @@ class TestCompany(unittest.TestCase):
 		self.assertRaises(TypeError, Company, "Netflix", self.valid_category, self.valid_link, None)
 		self.assertRaises(TypeError, Company, "Netflix", self.valid_category, self.valid_link, self.valid_link,
 						 description=333)
+		self.assertRaises(TypeError, self.company1.category_badge, None)
+		self.assertRaises(TypeError, self.company1.category_badge, 3+4j)
+
 
 	def test_values(self):
 		#name test
@@ -43,10 +46,18 @@ class TestCompany(unittest.TestCase):
 		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, "broken.com", self.valid_link)
 		#banner_img test
 		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="brkn")
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="http://www.")
+		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link,
+		 				  banner_img="http://www.")
+
 		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="http://")
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="broken.com")
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="http://invalid")
+		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link,
+		                  banner_img="broken.com")
+		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link,
+		                  banner_img="http://invalid")
+
+		self.assertRaises(ValueError, self.company1.category_badge, -5)
+		self.assertRaises(ValueError, self.company1.category_badge, 5.1)
+
 
 	def test_equality(self):
 		# default status color
@@ -55,30 +66,37 @@ class TestCompany(unittest.TestCase):
 		self.company1.company_rat = 5
 		self.company1.update_status()
 		self.assertEqual(self.company1.status, "green")
-		# should be lightgreen
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "success")
+		# should be green
 		self.company1.company_rat = 4.99
 		self.company1.update_status()
-		self.assertEqual(self.company1.status, "lightgreen")
+		self.assertEqual(self.company1.status, "green")
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "success")
 		# just at the edge of 4
 		self.company1.company_rat = 3.9
 		self.company1.update_status()
 		self.assertEqual(self.company1.status, "orange")
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "warning text-dark")
 		# at the edge of 3
 		self.company1.company_rat = 2.99
 		self.company1.update_status()
 		self.assertEqual(self.company1.status, "red")
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "danger")
 		# exact value
 		self.company1.company_rat = 2
 		self.company1.update_status()
 		self.assertEqual(self.company1.status, "red")
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "danger")
 		# any score less than 2
 		self.company1.company_rat = 1.99
 		self.company1.update_status()
 		self.assertEqual(self.company1.status, "black")
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "dark")
 		# score of 0
 		self.company1.company_rat = 0
 		self.company1.update_status()
 		self.assertEqual(self.company1.status, "black")
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "dark")
 
 if __name__ == "__main__":
 	unittest.main(failFast=True)
