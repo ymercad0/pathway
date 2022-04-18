@@ -1,17 +1,20 @@
 from flask import Flask, redirect, url_for, render_template, request, session
-# from flask_pymongo import PyMongo
 import model
 import bcrypt
-
-
 
 app = Flask(__name__)
 app.config.from_object('config')
 mongo = model.PyMongoFixed(app)
 db = mongo.db
-if "users" not in db.list_collection_names():
-    db.create_collection("users")
-    #TODO: Use save_file to store default.jpg for non-logged in users or default pic.
+
+for collection in model.collections:
+    if collection not in db.list_collection_names():
+        db.create_collection(collection)
+
+        if collection == "companies":
+            # add backup companies in case we reset
+            # a collection
+            pass
 
 
 @app.route('/file/<path:filename>', methods=["GET"])
@@ -117,21 +120,31 @@ def index():
     review_1 = model.Review('user',company1,"Placeholder Review","Security Engineering",
         "Security Engineer Intern",company_rating=4,education="B.S.",
         interview_desc="Had a good time overall. Tasking was tough and hours were long.",
-        interview_rat=5,offer=False, accepted=False, start_date="05-23-2022",
+        interview_rat=5,offer=True, accepted=False, start_date="05-23-2022",
         intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
         pay=35.25, bonuses="Bonus")
+
     review_2 = model.Review('user',company2, "Title", 'Software Engineering',
-        "Position", company_rating=4, education="M.S.", interview_desc="Interview",
+        "Position", company_rating=4, education="M.S.", interview_desc="I did this x y z dsdsasddddddddddddddddddd",
         interview_rat=4, offer=False, accepted=False, start_date="05-23-2022",
         intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
         pay=35.25, bonuses="Bonus")
+
+
     placeholder = [review_1 for _ in range(3)]
     placeholder.extend([review_2 for _ in range(3)])
+    company1.company_rat = 3.8
+    company1.work_rat = 3
+    company1.culture_rat = 2.5
+
+    company2.company_rat = 5
+
+
+    companies = [company1, company2, company1, company1, company2, company1, company2]
 
     if 'username' in session:
         current_user = db.users.find_one({"username":session['username']})
         if not current_user:
-            return render_template("index.html", recent_reviews=placeholder, user=None)
-        return render_template("index.html", recent_reviews=placeholder, user=current_user)
-    return render_template("index.html", recent_reviews=placeholder, user=None)
-
+            return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
+        return render_template("index.html", recent_reviews=placeholder, companies=companies, user=current_user)
+    return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
