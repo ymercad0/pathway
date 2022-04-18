@@ -99,6 +99,19 @@ def signup():
     return render_template('signup.html')
 
 
+@app.route("/user")
+@app.route("/user/<username>")
+def user():
+    """Route for user's profile page with information and account controls. 
+    If the user is not logged in, redirect to login page? 
+    """
+    users = db.users
+    reviews = db.reviews
+    user = users.find_one({"username":session["username"]})
+    user_reviews = [rev for rev in reviews.find({"user":user['username']})]
+    return render_template('user.html',user=user, reviews=user_reviews)
+
+
 @app.route("/")
 @app.route("/index")
 def index():

@@ -81,6 +81,7 @@ p {
     margin-top: 3rem;
 }
 
+
 .highest-rated h3 {
     text-align: center;
     margin-bottom: 2rem;
@@ -121,4 +122,14 @@ p {
     font-size: 1.1em;
     margin-top: 1.5rem;
     text-align: center;
+
+.card { 
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+}
+
+#userPicture { 
+    max-width: 300px;
+    max-height: 300px;
+
 }
