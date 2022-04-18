@@ -146,7 +146,6 @@ def hash_profile_name(name:str)->str:
     hashed = bcrypt.hashpw(name.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 
-
 class Company:
     """Represents an existing and reviewable company.
         Contains internal information on the amount
@@ -166,7 +165,6 @@ class Company:
             num_work_reviews: The total number of workplace reviews, as an integer.
             num_culture_reviews: An integer denoting the total number of work culture reviews.
             total_reviews: An integer representing the overall, singular number of reviews.
-            status: A string representing the company's status. Must be a valid CSS color keyword.
     """
     def __init__(self, name:str, category:str, logo_img:str, description:str="", banner_img:str="")->None:
         """Initializes a reviewable Company.
@@ -233,37 +231,40 @@ class Company:
         # the previous entries dont count
         # as individual reviews
         self.total_reviews = 0
-        # a company will have a color border
-        # around them depending on their rating.
-        # the status must be a supported CSS
-        # color keyword
-        self.status = "grey"
 
-    def update_status(self)->None:
-        """Updates the company's status. A company
-           status is a color indicating whether the
-           company has had favorable reviews or not.
-           This manifests around the company logo's
-           circumference on the front end. Changes
-           based on what numerical ranges the company's
-           overall reviews fall under.
+    def category_badge(self, category_rat:float)->str:
+        """Given an input category, returns the
+           appropriate Bootstrap badge, depending
+           on whether the input scores are favorable
+           or not.
+
+        Args:
+            category_rat (float): The rating category whose badge component will be rendered.
+
+        Returns:
+            str: A string, denoting what type of bootstrap badge to use.
         """
-        if self.company_rat is not None:
-            if self.company_rat == 5:
-                self.status = "green"
+        if category_rat is not None:
+            if type(category_rat) not in [float, int]:
+                raise TypeError("Category rating must be an integer!")
 
-            elif self.company_rat >= 4 and self.company_rat < 5:
-                self.status = "lightgreen"
+        if category_rat is None:
+            return "secondary"
 
-            elif self.company_rat >= 3 and self.company_rat < 4:
-                self.status = "orange"
+        if category_rat > 5 or category_rat < 0:
+            raise ValueError("Category rating is outside of the min or max values permitted.")
 
-            elif self.company_rat >= 2 and self.company_rat < 3:
-                self.status = "red"
+        if category_rat >= 4 and category_rat <= 5:
+            return "success"
 
-            # rating of 0-1.99
-            else:
-                self.status = "black"
+        elif category_rat >= 3 and category_rat < 4:
+            return "warning text-dark"
+
+        elif category_rat >= 2 and category_rat < 3:
+            return "danger"
+
+        # rating of 0-1.99
+        return "dark"
 
 class User:
     """Represents a user class. Contains the user's information such as

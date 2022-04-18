@@ -4,6 +4,8 @@
 
 {% block head %}
 <title>Pathway</title>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lusitana:wght@400;700&display=swap" rel="stylesheet">
 {% endblock %}
 
 {% block bodyclass %}class="index"{% endblock %}
@@ -20,14 +22,26 @@
 <div class="reviews container-fluid py-2">
   <div class="d-flex flex-row flex-nowrap row">
     {% for review in recent_reviews %}
-    <div class="card mb-3 shadow-sm col-lg-4">
+    <div class="reviews-card card mb-3 shadow-sm col-lg-4">
       <div class="row g-0">
-        <div class="col-md-4">
-          <img src={{review.company.logo_img}} class="card-img" alt="...">
+        <!-- Badge which displays a company's status -->
+        <!-- Status icon: REPLACE DUMMY LINKS-->
+        <div class="col-md-2">
+          <div class="company-scrollable-img">
+            <a href="https://www.google.com/" class="position-relative">
+              <img src={{review.company.logo_img}} class="card-img" alt="...">
+              <span class="position-absolute top-10 start-90 translate-middle p-2
+                        bg-{{review.company.category_badge(review.company.company_rat)}}
+                        border border-light rounded-circle">
+                <span class="visually-hidden">New alerts</span>
+              </span>
+            </a>
+          </div>
         </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title">{{review.company.name}}</h5>
+            <h5 class="card-title"><a href="https://www.google.com/" class="company-link">{{review.company.name}}</h5>
+            </a>
             <h6 class="card-subtitle mb-2 text-muted">{{review.position}}</h6>
             <p class="card-text text-truncate">{{review.interview_desc}}</p>
           </div>
@@ -39,7 +53,6 @@
         {% else %}
         <span class="badge bg-danger">No offer</span>
         {% endif %}
-
         <!-- Placeholder link! -->
         <a href="https://www.google.com/" class="review-links float-end">Read full review &#8594;</a>
       </div>
@@ -47,4 +60,69 @@
     {% endfor %}
   </div>
 </div>
+
+<!-- Top companies -->
+<div class="highest-rated">
+  <h3>Highest rated companies</h3>
+  <!-- Makes the rows and cols -->
+  <div class="row">
+    {%for company in companies %}
+    <div class="col-md-6">
+      <div class=" company-card container">
+        <!-- Company card -->
+        <div class="card bg-light mb-3 border border-dark company-card">
+          <div class="company-card-content">
+            <!-- Status icon: REPLACE DUMMY LINKS-->
+            <div class="row">
+              <a href="https://www.google.com/" class="btn btn-primary-outline position-relative col-md-3">
+                <img src={{company.logo_img}} class="card-img" alt="...">
+                <span class="position-absolute top-10 start-90 translate-middle p-2
+                        bg-{{company.category_badge(company.company_rat)}}
+                        border border-light rounded-circle">
+                  <span class="visually-hidden">New alerts</span>
+                </span>
+              </a>
+              <div class="col mx-auto">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <div class="company-title">
+                      <!-- Placeholder link -->
+                      <a href="https://www.google.com/" class="company-link">{{company.name}}</a>
+                    </div>
+                  </h5>
+                  <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
+
+                  <div class="col review-section-content mx-auto">
+                    <div class="review-title-row row">
+                      <div class="col mx-auto">Overall</div>
+                      <div class="col mx-auto">Work Culture </div>
+                      <div class="col mx-auto">Company Culture</div>
+                    </div>
+
+                    <!-- Each company rating -->
+                    <div class="row">
+                      {%for rating in [company.company_rat, company.work_rat, company.culture_rat] %}
+                      {% if rating != None %}
+                      <div class="col mx-auto">
+                        <span class="badge bg-{{company.category_badge(rating)}}">
+                          {{'%0.1f'| format(rating | float)}}/5.0</span>
+                      </div>
+                      {% else %}
+                      <div class="col mx-auto text-muted">No reviews</div>
+                      {% endif%}
+                      {%endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {%endfor %}
+  </div>
+</div>
 {% endblock %}
+
+{% block navbartype %}bottom{% endblock %}
