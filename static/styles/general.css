@@ -1,37 +1,127 @@
-#navbar-title-text { 
-    background-image: -webkit-linear-gradient(45deg,#40356F,#645FCE);
-    background-size:100%;
+:root {
+    --scrollbar-grey: rgb(214, 214, 214);
+    --highlight-grey: rgb(129, 129, 129)
+}
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 3px black;
+    box-shadow: inset 0 0 3px black;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: var(--scrollbar-grey);
+    -webkit-box-shadow: inset 0 0 6px grey;
+    box-shadow: inset 0 0 6px grey;
+}
+
+body.index,
+html.index {
+    overflow-x: hidden;
+    background: linear-gradient(0.25turn, #e2dbf5, #e9e8e8);
+}
+
+.navbar {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 1.2em;
+}
+
+p {
+    font-family: 'Bitter', serif;
+}
+
+#navbar-title-text {
+    background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
+    background-size: 100%;
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-#navbar-search { 
+#navbar-search {
     margin-right: 0%;
     margin-left: auto;
     padding-right: 3%;
 }
 
-#recent-reviews {
+.nav-bottom {
     width: 100%;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    margin-top: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-ul {
+.nav-bottom a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.reviews {
+    overflow-x: scroll;
     white-space: nowrap;
-    overflow-x: auto;
 }
 
-ul li {
-    display: inline-block;
-    float: none;
+.reviews-card {
+    margin-left: 1.5rem;
+    margin-right: 1.5rem;
+    max-width: 20rem;
+    max-height: 20rem;
 }
 
-.card-text { 
-    /* overflow-x:scroll; */
-    white-space: normal;
+.review-links {
+    text-decoration: none;
 }
+
+.highest-rated {
+    margin-top: 3rem;
+}
+
+
+.highest-rated h3 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-family: 'Merriweather', serif;
+}
+
+.company-scrollable-img {
+    margin-top: 0.5rem;
+}
+
+.company-image img {
+    border-radius: 20%;
+}
+
+.company-card {
+    max-width: 700px;
+    margin-bottom: 3rem;
+}
+
+.company-card-content {
+    margin-top: 0.5rem;
+    margin-bottom: 2rem;
+    margin-left: 0.5rem;
+}
+
+.company-link {
+    text-decoration: inherit;
+    color: inherit;
+    font-size: 1.3em;
+}
+
+.review-title-row {
+    font-family: 'Lusitana', serif;
+    margin-bottom: 1rem;
+}
+
+.review-section-content {
+    font-size: 1.1em;
+    margin-top: 1.5rem;
+    text-align: center;
 
 .card { 
     margin-left: 1.5rem;
@@ -41,4 +131,5 @@ ul li {
 #userPicture { 
     max-width: 300px;
     max-height: 300px;
+
 }
