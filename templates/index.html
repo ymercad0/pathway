@@ -24,8 +24,19 @@
     {% for review in recent_reviews %}
     <div class="card mb-3 shadow-sm col-lg-4">
       <div class="row g-0">
-        <div class="col-md-3">
-          <img src={{review.company.logo_img}} class="card-img company-{{review.company.status}}" alt="...">
+        <!-- Badge which displays a company's status -->
+        <!-- Status icon: REPLACE DUMMY LINKS-->
+        <div class="col-md-2">
+          <div class="company-scrollable-img">
+            <a href="https://www.google.com/" class="position-relative">
+              <img src={{review.company.logo_img}} class="card-img" alt="...">
+              <span class="position-absolute top-10 start-90 translate-middle p-2
+                        bg-{{review.company.category_badge(review.company.company_rat)}}
+                        border border-light rounded-circle">
+                <span class="visually-hidden">New alerts</span>
+              </span>
+            </a>
+          </div>
         </div>
         <div class="col-md-8">
           <div class="card-body">
@@ -59,10 +70,16 @@
     <!-- Compnay card -->
     <div class="card bg-light mb-3 border border-dark company-card">
       <div class="company-card-content">
+        <!-- Status icon: REPLACE DUMMY LINKS-->
         <div class="row">
-          <div class="col-md-3">
-            <img src={{company.logo_img}} class="img-fluid company-{{company.status}}" alt="...">
-          </div>
+          <a href="https://www.google.com/" class="btn btn-primary-outline position-relative col-md-3">
+            <img src={{company.logo_img}} class="card-img" alt="...">
+            <span class="position-absolute top-10 start-90 translate-middle p-2
+                        bg-{{company.category_badge(company.company_rat)}}
+                        border border-light rounded-circle">
+              <span class="visually-hidden">New alerts</span>
+            </span>
+          </a>
           <div class="col mx-auto">
             <div class="card-body">
               <h5 class="card-title">

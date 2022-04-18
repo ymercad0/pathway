@@ -26,7 +26,7 @@ class TestCompany(unittest.TestCase):
 		self.assertRaises(TypeError, Company, "Netflix", self.valid_category, self.valid_link, None)
 		self.assertRaises(TypeError, Company, "Netflix", self.valid_category, self.valid_link, self.valid_link,
 						 description=333)
-		self.assertRaises(TypeError, self.company1.category_badge, None)
+		self.assertRaises(TypeError, self.company1.category_badge, "None")
 		self.assertRaises(TypeError, self.company1.category_badge, 3+4j)
 
 
@@ -61,41 +61,27 @@ class TestCompany(unittest.TestCase):
 
 	def test_equality(self):
 		# default status color
-		self.assertEqual(self.company1.status, "grey")
+		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "secondary")
 		# perfect score
 		self.company1.company_rat = 5
-		self.company1.update_status()
-		self.assertEqual(self.company1.status, "green")
 		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "success")
 		# should be green
 		self.company1.company_rat = 4.99
-		self.company1.update_status()
-		self.assertEqual(self.company1.status, "green")
 		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "success")
 		# just at the edge of 4
 		self.company1.company_rat = 3.9
-		self.company1.update_status()
-		self.assertEqual(self.company1.status, "orange")
 		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "warning text-dark")
 		# at the edge of 3
 		self.company1.company_rat = 2.99
-		self.company1.update_status()
-		self.assertEqual(self.company1.status, "red")
 		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "danger")
 		# exact value
 		self.company1.company_rat = 2
-		self.company1.update_status()
-		self.assertEqual(self.company1.status, "red")
 		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "danger")
 		# any score less than 2
 		self.company1.company_rat = 1.99
-		self.company1.update_status()
-		self.assertEqual(self.company1.status, "black")
 		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "dark")
 		# score of 0
 		self.company1.company_rat = 0
-		self.company1.update_status()
-		self.assertEqual(self.company1.status, "black")
 		self.assertEqual(self.company1.category_badge(self.company1.company_rat), "dark")
 
 if __name__ == "__main__":

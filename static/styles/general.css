@@ -87,6 +87,10 @@ p {
     font-family: 'Merriweather', serif;
 }
 
+.company-scrollable-img {
+    margin-top: 0.5rem;
+}
+
 .company-image img {
     border-radius: 20%;
 }
@@ -117,25 +121,4 @@ p {
     font-size: 1.1em;
     margin-top: 1.5rem;
     text-align: center;
-}
-
-/* For the company borders */
-.company-grey {
-    border: 4px solid grey;
-}
-
-.company-green {
-    border: 4px solid green;
-}
-
-.company-orange {
-    border: 4px solid orange;
-}
-
-.company-red {
-    border: 4px solid red;
-}
-
-.company-black {
-    border: 4px solid black;
 }
