@@ -140,7 +140,7 @@ def index():
     company2.company_rat = 5
 
 
-    companies = [company1, company2, company1, company2]
+    companies = [company1, company2, company1, company1, company2, company1, company2]
 
     if 'username' in session:
         current_user = db.users.find_one({"username":session['username']})
