@@ -54,6 +54,7 @@ states = {
     'Oklahoma': 'OK',
     'Oregon': 'OR',
     'Pennsylvania': 'PA',
+    'Puerto Rico': 'PR',
     'Rhode Island': 'RI',
     'South Carolina': 'SC',
     'South Dakota': 'SD',
@@ -396,8 +397,8 @@ class Review:
             bonuses: A string of any extra bonuses the company might offer at the internship.
             date_posted: A datetime object, representing the date the internship was posted.
     """
-    def __init__(self, user:str, company:'Company', title:str, job_cat:str, position:str, company_rating:int, education:str,
-                interview_desc:str, interview_rat:int, offer:bool=False, accepted:bool=False,
+    def __init__(self, user:str, company:'Company', title:str, job_cat:str, position:str, company_rating:int,
+                education:str, interview_desc:str, interview_rat:int, offer:bool=False, accepted:bool=False,
                 start_date:str="", intern_desc:str="", work_rat:int=None, culture_rat:int=None,
                 location:tuple=("None", "Remote"), pay:float=None, bonuses:str="")->None:
 
