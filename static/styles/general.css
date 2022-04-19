@@ -122,8 +122,9 @@ p {
     font-size: 1.1em;
     margin-top: 1.5rem;
     text-align: center;
+}
 
-.card { 
+.user-card { 
     margin-left: 1.5rem;
     margin-right: 1.5rem;
 }
@@ -132,4 +133,27 @@ p {
     max-width: 300px;
     max-height: 300px;
 
+}
+
+#calendar-icon { 
+    max-width: 2.5rem;
+    max-height: 2.5rem;
+}
+
+.user-settings-header { 
+    margin-top: 10%;
+}
+
+.accordion-header .badge { 
+    /* max-width: 5%; */
+    margin-left: 5%;
+    font-size: large;
+}
+
+.accordion-body dt { 
+    font-size: larger;
+}
+
+.accordion-body dd { 
+    font-size: large;
 }
