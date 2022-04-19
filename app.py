@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, session
+from flask import Flask, redirect, url_for, render_template, request, session, flash
 import model
 import bcrypt
 
@@ -92,6 +92,38 @@ def create_user():
         session['username'] = user.username
         return redirect(url_for('index'))
 
+
+@app.route('/create_company', methods=['POST'])
+def create_company():
+    if 'add_comp_button' in request.form and request.form['add_comp_button'] == "clicked":
+        # save company logo image
+        logo_img = request.files['comp_logo_img']
+        logo_filename = model.hash_profile_name(logo_img.filename)
+        mongo.save_file(logo_filename, logo_img)
+
+        if 'comp_banner_img' in request.files:
+            banner_img = request.files['comp_banner_img']
+
+        else:
+            banner_img = url_for('static', filename='Images/Icons/default-banner.jpg')
+
+        banner_filename = model.hash_profile_name(banner_img.filename)
+        mongo.save_file(banner_filename, banner_img)
+
+
+        new_comp = {"name": request.form['comp_name'], "category": request.form['comp_category'],
+            "logo_img": logo_filename, "description": request.form['comp_description'],
+            "banner_img": banner_filename}
+
+        # initialize all the hidden company attributes
+        new_comp = model.Company(new_comp["name"], new_comp["category"], new_comp["logo_img"],
+                            new_comp["description"], new_comp["banner_img"])
+
+        db.companies.insert_one(new_comp.to_json())
+        flash(f"{new_comp.name} was added to the list of companies!", "success")
+
+    return render_template("company-admin.html", categories=model.company_categories)
+
 @app.route('/signup', methods=["GET"])
 def signup():
     """Endpoint for 'signup.html'
@@ -148,3 +180,7 @@ def index():
             return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
         return render_template("index.html", recent_reviews=placeholder, companies=companies, user=current_user)
     return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
+
+@app.route('/company-admin', methods=['GET', 'POST'])
+def company_admin():
+    return render_template("company-admin.html", categories=model.company_categories)

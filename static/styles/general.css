@@ -1,6 +1,8 @@
 :root {
     --scrollbar-grey: rgb(214, 214, 214);
-    --highlight-grey: rgb(129, 129, 129)
+    --highlight-grey: rgb(129, 129, 129);
+    --form-greyple: rgba(176, 150, 187, 0.342);
+    --bootstrap-grey: rgb(168, 167, 167);
 }
 
 ::-webkit-scrollbar {
@@ -21,7 +23,9 @@
 }
 
 body.index,
-html.index {
+html.index,
+body.comp-admin,
+html.comp-admin {
     overflow-x: hidden;
     background: linear-gradient(0.25turn, #e2dbf5, #e9e8e8);
 }
@@ -121,4 +125,27 @@ p {
     font-size: 1.1em;
     margin-top: 1.5rem;
     text-align: center;
+}
+
+/* Company CSS */
+.add_comp_title {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.company-form .row {
+    margin-bottom: 1rem;
+}
+
+.company-form {
+    margin-left: 2rem;
+    background-color: var(--form-greyple);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+select {
+    border: solid 2px var(--bootstrap-grey);
+    border-radius: 5px;
 }

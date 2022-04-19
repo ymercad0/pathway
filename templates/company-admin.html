@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block htmlclass %}class="comp-admin"{% endblock %}
+
+{% block head %}
+<title>Companies- Admin</title>
+{% endblock %}
+
+{% block bodyclass %}class="comp-admin"{% endblock %}
+
+{% block main %}
+<div class="add_comp_title">
+    <h2>Add a Company</h2>
+</div>
+
+<div class="company-form container col-md-6">
+    <form method="post" action="/create_company" enctype="multipart/form-data">
+        <div class="form-group row">
+            <label for="compName" class="col-md-3 col-form-label">Company Name</label>
+            <div class="col-md-6">
+                <input type="text" name="comp_name" maxlength="30" pattern="\S(.*\S)?" class="form-control"
+                    id="compName" placeholder="Enter the company name." required>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="compCategory" class="col-md-3 col-form-label">Company Category</label>
+            <div class="col-md-6">
+                <select name="comp_category" id="compCategory" required>
+                    <option value="" disabled selected>Select a category</option>
+                    {% for category in categories %}
+                    <option>{{category}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="compDescription" class="col-md-3 col-form-label">Description</label>
+            <div class="col-md-6">
+                <textarea maxlength="400" class="form-control" name="comp_description"
+                    placeholder="Enter a brief description about the company." id="compDescription" rows="3"
+                    required></textarea>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="logoImg" class="col-md-3 col-form-label">Company Logo Image</label>
+            <div class="col-md-6">
+                <input class="form-control" name="comp_logo_img" type="file" accept=".png, .jpg, .webp" id="logoImg"
+                    required>
+            </div>
+        </div>
+
+        <!-- Will display a default banner image if not selected -->
+        <div class="form-group row">
+            <label for="bannerImg" class="col-md-3 col-form-label">Company Banner Image</label>
+            <div class="col-md-6">
+                <input class="form-control" name="comp_banner_img" type="file" accept=".png, .jpg" id="bannerImg">
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label for="compSubmit" class="col-md-3 col-form-label"></label>
+            <div class="col-md-6">
+                <button type="submit" class="btn btn-primary" id="compSubmit" name="add_comp_button"
+                    value="clicked">Add</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block navbartype %}fixed-bottom{% endblock %}

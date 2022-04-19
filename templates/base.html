@@ -48,6 +48,8 @@
                 <div class="navbar-nav">
                     <a class="nav-link" href="#">Reviews</a>
                     <a class="nav-link" href="#">Companies</a>
+                    <!-- change this so that only admin accounts can access it -->
+                    <a class="nav-link" href="{{url_for('company_admin')}}">Add Companies</a>
                 </div>
                 <form id="navbar-search" class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
@@ -56,6 +58,17 @@
             </div>
         </div>
     </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{category}}" role="alert">
+        {{message}}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
     {% block main %}
     {% endblock %}
 

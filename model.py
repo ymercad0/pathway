@@ -203,12 +203,6 @@ class Company:
         if category not in company_categories:
             raise ValueError("Error: Invalid company category.")
 
-        if not is_url(logo_img):
-            raise ValueError("Error: Invalid URL given for company logo.")
-
-        if not is_url(banner_img) and banner_img != "":
-            raise ValueError("Error: Invalid URL given for banner image.")
-
         self.name = name
         self.category = category
         self.logo_img = logo_img
@@ -266,6 +260,29 @@ class Company:
 
         # rating of 0-1.99
         return "dark"
+
+    def to_json(self)->dict:
+        """Converts the Company object with its current
+        attributes into JSON format, which is then handled
+        by the database.
+
+        Returns:
+            dict: Representing the company object attributes.
+        """
+        return {
+            "name": self.name,
+            "category": self.category,
+            "logo_img": self.logo_img,
+            "description": self.description,
+            "banner_img": self.banner_img,
+            "company_rat": self.company_rat,
+            "work_rat": self.work_rat,
+            "culture_rat": self.culture_rat,
+            "num_company_reviews": self.num_company_reviews,
+            "num_work_reviews": self.num_work_reviews,
+            "num_culture_reviews": self.num_culture_reviews,
+            "total_reviews": self.total_reviews
+        }
 
 class User:
     """Represents a user class. Contains the user's information such as
