@@ -48,11 +48,22 @@
         </div>
       </div>
       <div class="card-footer mt-auto">
+        <!-- "Tag" badges -->
         {% if review.offer %}
         <span class="badge bg-success">Offer</span>
+        <!-- Only show accepted/location if an offer was presented -->
+        {% if review.accepted %}
+        <span class="badge bg-success">Accepted</span>
+        <span class="badge bg-info">{{review.location[1]}}</span>
         {% else %}
-        <span class="badge bg-danger">No offer</span>
+        <span class="badge bg-danger">Offer declined</span>
         {% endif %}
+
+        {% else %}
+        <span class="badge bg-secondary">No offer</span>
+        {% endif %}
+
+        <span class="badge bg-secondary">{{review.job_cat}}</span>
         <!-- Placeholder link! -->
         <a href="https://www.google.com/" class="review-links float-end">Read full review &#8594;</a>
       </div>
