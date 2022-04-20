@@ -15,7 +15,7 @@
 </div>
 
 {% for company in companies %}
-{% set company_obj = to_comp_obj(company) %}
+{% set company = to_comp_obj(company) %}
 <div class="company-rankings company-form container col-md-5">
     <div class="row">
         <div class="col">
@@ -24,11 +24,11 @@
                 <div class="company-card-content">
                     <!-- Status icon and new links-->
                     <div class="row">
-                        <a href={{url_for('company_page', companyID=company._id)}}
+                        <a href={{url_for('company_page', company_name=company.name.lower())}}
                             class="btn btn-primary-outline position-relative shadow-none col-md-3">
-                            <img src={{url_for('file', filename=company_obj.logo_img)}} class="card-img" alt="...">
+                            <img src={{url_for('file', filename=company.logo_img)}} class="card-img" alt="...">
                             <span class="position-absolute top-10 start-90 translate-middle p-2
-                                        bg-{{company_obj.category_badge(company_obj.company_rat)}}
+                                        bg-{{company.category_badge(company.company_rat)}}
                                         border border-light rounded-circle">
                             </span>
                         </a>
@@ -36,14 +36,14 @@
                             <div class="card-body">
                                 <h4 class="card-title">
                                     <div class="company-title">
-                                        <a href={{url_for('company_page', companyID=company._id)}}
-                                            class="company-link">{{company_obj.name}}</a>
+                                        <a href={{url_for('company_page', company_name=company.name.lower())}}
+                                            class="company-link">{{company.name}}</a>
                                     </div>
                                 </h4>
 
                                 <h5 class="card-subtitle mb-2">Ranked <span class="text-success">#{{loop.index}}</span>
                                 </h5>
-                                <h6 class="card-subtitle mb-2 text-muted">{{company_obj.category}}</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
 
                                 <div class="col review-section-content mx-auto">
                                     <div class="review-title-row row">
@@ -54,12 +54,12 @@
 
                                     <!-- Each company rating -->
                                     <div class="row">
-                                        {%for rating in [company_obj.company_rat, company_obj.work_rat,
-                                        company_obj.culture_rat]
+                                        {%for rating in [company.company_rat, company.work_rat,
+                                        company.culture_rat]
                                         %}
                                         {% if rating != None %}
                                         <div class="col mx-auto">
-                                            <span class="badge bg-{{company_obj.category_badge(rating)}}">
+                                            <span class="badge bg-{{company.category_badge(rating)}}">
                                                 {{'%0.1f'| format(rating | float)}}/5.0</span>
                                         </div>
                                         {% else %}

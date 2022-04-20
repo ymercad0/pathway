@@ -175,14 +175,14 @@ def companies():
     comps = db.companies.find().sort("company_rat", -1).limit(10)
     return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)
 
-@app.route('/companies/<companyID>', methods=['GET'])
-def company_page(companyID):
-    # ID prevents people from modifing url directly
-    try:
-        comp = db.companies.find_one({"_id": ObjectId(companyID)})
+@app.route('/companies/<company_name>', methods=['GET'])
+def company_page(company_name):
+    comp = db.companies.find_one({"name_lower": company_name})
 
-    except:
+    if not comp:
         flash("Accessed an invalid URL.", "danger")
         return redirect(url_for('index'))
 
+    # most recent reviews for the current valid company
+    #reviews = db.reviews.find({}).sort('date_posted', -1).limit(5)
     return render_template('company.html', company=model.to_company_obj(comp))

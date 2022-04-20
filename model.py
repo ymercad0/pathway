@@ -303,7 +303,8 @@ class Company:
             "num_company_reviews": self.num_company_reviews,
             "num_work_reviews": self.num_work_reviews,
             "num_culture_reviews": self.num_culture_reviews,
-            "total_reviews": self.total_reviews
+            "total_reviews": self.total_reviews,
+            "name_lower": self.name.lower()
         }
 
 class User:
