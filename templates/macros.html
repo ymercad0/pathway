@@ -100,3 +100,58 @@
     </div>
 </div>
 {% endmacro %}
+
+{% macro reviewCard(review) %}
+<div class="card  mb-3">
+    <div class="row g-0">
+        <div class="placeholder col-md-4">
+            <!-- <img src="..." class="img-fluid rounded-start"> -->
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title">test</h5>
+                <p class="card-text">
+                    <dt class="col-sm-3">Job category</dt>
+                    <dd class="col-sm-9">{{review.job_cat}}</dd>
+
+                    <dt class="col-sm-3">Role</dt>
+                    <dd class="col-sm-9"><p>{{review.position}}</p></dd>
+
+                    {% if review.pay %}
+                    <dt class="col-sm-3">Pay</dt>
+                    <dd class="col-sm-9">{{review.pay}}</dd>
+                    {% endif %} {% if review.start_date %}
+                    <dt class="col-sm-3">Start date</dt>
+                    <dd class="col-sm-9">{{review.start_date}}</dd>
+                    {% endif %} {% if review.work_rat %}
+                    <dt class="col-sm-3">Work rating</dt>
+                    <dd class="col-sm-9">{{review.work_rating}}</dd>
+                    {% endif %}
+
+                    <dt class="col-sm-3">Company Rating</dt>
+                    <dd class="col-sm-9">{{review.company_rating}}</dd>
+
+                    {% if review.culture_rating %}
+                    <dt class="col-sm-3">Culture rating</dt>
+                    <dd class="col-sm-9">{{review.culture_rating}}</dd>
+                    {% endif %} {% if review.bonuses %}
+                    <dt class="col-sm-3">Bonuses</dt>
+                    <dd class="col-sm-9">{{review.bonuses}}</dd>
+                    {% endif %}
+
+                    <dt class="col-sm-3">Description</dt>
+                    <dd class="col-sm-9">
+                        <dl class="row">
+                            <dt class="col-sm-12">{{review.interview_desc}}</dt>
+                        </dl>
+                    </dd>
+                </dl>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        test
+    </div>
+</div>
+{% endmacro %}
