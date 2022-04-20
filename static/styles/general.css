@@ -23,9 +23,7 @@
 }
 
 body.index,
-html.index,
-body.comp-admin,
-html.comp-admin {
+html.index {
     overflow-x: hidden;
     background: linear-gradient(0.25turn, #e2dbf5, #e9e8e8);
 }
@@ -63,6 +61,13 @@ p {
 .nav-bottom a {
     text-decoration: none;
     color: inherit;
+}
+
+.empty-content {
+    text-align: center;
+    color: grey;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
 }
 
 .reviews {
@@ -127,7 +132,7 @@ p {
     text-align: center;
 }
 
-/* Company CSS */
+/* Company forms */
 .add_comp_title {
     text-align: center;
     margin-top: 1rem;
@@ -148,4 +153,15 @@ p {
 select {
     border: solid 2px var(--bootstrap-grey);
     border-radius: 5px;
+}
+
+/* Company Explore page */
+.company-rankings {
+    margin-bottom: 1rem;
+}
+
+.company-rankings .company-card {
+    margin-top: 1rem;
+    margin-left: 2rem;
+    margin-right: auto;
 }

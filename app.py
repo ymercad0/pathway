@@ -1,6 +1,6 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
-import model
 import bcrypt
+import model
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -12,9 +12,8 @@ for collection in model.collections:
         db.create_collection(collection)
 
         if collection == "companies":
-            # add backup companies in case we reset
-            # a collection
-            pass
+            with app.app_context():
+                model.reset_comp_collection()
 
 
 @app.route('/file/<path:filename>', methods=["GET"])
@@ -93,34 +92,35 @@ def create_user():
         return redirect(url_for('index'))
 
 
-@app.route('/create_company', methods=['POST'])
+@app.route('/company-admin/created', methods=['POST'])
 def create_company():
     if 'add_comp_button' in request.form and request.form['add_comp_button'] == "clicked":
-        # save company logo image
-        logo_img = request.files['comp_logo_img']
-        logo_filename = model.hash_profile_name(logo_img.filename)
-        mongo.save_file(logo_filename, logo_img)
-
-        if 'comp_banner_img' in request.files:
-            banner_img = request.files['comp_banner_img']
+        comp_name = request.form['comp_name']
+        if db.companies.find_one({"name": comp_name}):
+            flash(f"{comp_name} already exists!", "danger")
 
         else:
-            banner_img = url_for('static', filename='Images/Icons/default-banner.jpg')
+            # save company logo image
+            logo_img = request.files['comp_logo_img']
+            logo_filename = model.hash_profile_name(logo_img.filename)
+            mongo.save_file(logo_filename, logo_img)
 
-        banner_filename = model.hash_profile_name(banner_img.filename)
-        mongo.save_file(banner_filename, banner_img)
+            if 'comp_banner_img' in request.files:
+                banner_img = request.files['comp_banner_img']
 
+            else:
+                # default banner img
+                banner_img = url_for('static', filename='Images/Icons/default-banner.jpg')
 
-        new_comp = {"name": request.form['comp_name'], "category": request.form['comp_category'],
-            "logo_img": logo_filename, "description": request.form['comp_description'],
-            "banner_img": banner_filename}
+            banner_filename = model.hash_profile_name(banner_img.filename)
+            mongo.save_file(banner_filename, banner_img)
 
-        # initialize all the hidden company attributes
-        new_comp = model.Company(new_comp["name"], new_comp["category"], new_comp["logo_img"],
-                            new_comp["description"], new_comp["banner_img"])
+            # initialize all the hidden company attributes
+            new_comp = model.Company(comp_name, request.form['comp_category'], logo_filename,
+                                request.form['comp_description'], banner_filename)
 
-        db.companies.insert_one(new_comp.to_json())
-        flash(f"{new_comp.name} was added to the list of companies!", "success")
+            db.companies.insert_one(new_comp.to_json())
+            flash(f"{new_comp.name} was added to the list of companies!", "success")
 
     return render_template("company-admin.html", categories=model.company_categories)
 
@@ -137,50 +137,29 @@ def index():
     """Route for index page. Renders 'index.html' file. Currently has
     placeholder data for debugging/visualization of work.
     """
-    company1 = model.Company(
-			name="Microsoft",
-			category="Software",
-			logo_img="https://bit.ly/3uWfYzK",
-			banner_img="https://bit.ly/3xfolJs"
-			)
-    company2 = model.Company(
-			name="Google",
-			category="Software",
-			logo_img="https://bit.ly/3Jvmy5t",
-			banner_img="http://somelink.com"
-			)
-    review_1 = model.Review('user',company1,"Placeholder Review","Security Engineering",
-        "Security Engineer Intern",company_rating=4,education="B.S.",
-        interview_desc="Had a good time overall. Tasking was tough and hours were long.",
-        interview_rat=5,offer=True, accepted=True, start_date="05-23-2022",
-        intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
-        pay=35.25, bonuses="Bonus")
+    if db.reviews.count_documents({}) == 0:
+        reviews = None
+    else:
+        reviews = db.reviews.find()
 
-    review_2 = model.Review('user',company2, "Title", 'Software Engineering',
-        "Position", company_rating=4, education="M.S.", interview_desc="I did this x y z dsdsasddddddddddddddddddd",
-        interview_rat=4, offer=False, accepted=False, start_date="05-23-2022",
-        intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
-        pay=35.25, bonuses="Bonus")
-
-
-    placeholder = [review_1 for _ in range(3)]
-    placeholder.extend([review_2 for _ in range(3)])
-    company1.company_rat = 3.8
-    company1.work_rat = 3
-    company1.culture_rat = 2.5
-
-    company2.company_rat = 5
-
-
-    companies = [company1, company2, company1, company1, company2, company1, company2]
-
-    if 'username' in session:
-        current_user = db.users.find_one({"username":session['username']})
-        if not current_user:
-            return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
-        return render_template("index.html", recent_reviews=placeholder, companies=companies, user=current_user)
-    return render_template("index.html", recent_reviews=placeholder, companies=companies, user=None)
+    companies = db.companies.find().sort("company_rat")
+    return render_template("index.html", recent_reviews=reviews, companies=companies, to_comp_obj=model.to_company_obj,
+                            user=None)
 
 @app.route('/company-admin', methods=['GET', 'POST'])
 def company_admin():
+    if request.method == 'POST':
+        if 'remove_comp_button' in request.form and request.form['remove_comp_button'] == "clicked":
+            to_remove = request.form['comp_remove']
+            if not db.companies.find_one_and_delete({'name': to_remove}):
+                flash(f"{to_remove} doesn't exist!", "danger")
+
+            else:
+                flash(f"{to_remove} was removed from the database!", "success")
+
     return render_template("company-admin.html", categories=model.company_categories)
+
+@app.route('/companies', methods=['GET'])
+def companies():
+    comps = db.companies.find().sort("company_rat")
+    return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)

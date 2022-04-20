@@ -18,6 +18,12 @@
   Read reviews on top companies from fellow students. Below are some recent experiences.
 </p>
 
+{% if not recent_reviews %}
+<div class="empty-content">
+  <h2>No reviews to display.</h2>
+</div>
+
+{% else %}
 <!-- Horizontal cards -->
 <div class="reviews container-fluid py-2">
   <div class="d-flex flex-row flex-nowrap row">
@@ -71,13 +77,15 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}
 
 <!-- Top companies -->
 <div class="highest-rated">
   <h3>Highest rated companies</h3>
   <!-- Makes the rows and cols -->
   <div class="row">
-    {%for company in companies %}
+    {% for company in companies %}
+    {% set company = to_comp_obj(company) %}
     <div class="col-md-6">
       <div class=" company-card container">
         <!-- Company card -->
@@ -86,7 +94,7 @@
             <!-- Status icon: REPLACE DUMMY LINKS-->
             <div class="row">
               <a href="https://www.google.com/" class="btn btn-primary-outline position-relative col-md-3">
-                <img src={{company.logo_img}} class="card-img" alt="...">
+                <img src={{url_for('file', filename=company.logo_img)}} class="card-img" alt="...">
                 <span class="position-absolute top-10 start-90 translate-middle p-2
                         bg-{{company.category_badge(company.company_rat)}}
                         border border-light rounded-circle">
@@ -120,7 +128,7 @@
                       </div>
                       {% else %}
                       <div class="col mx-auto text-muted">No reviews</div>
-                      {% endif%}
+                      {% endif %}
                       {%endfor %}
                     </div>
                   </div>
