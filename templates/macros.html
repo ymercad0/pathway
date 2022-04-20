@@ -70,16 +70,21 @@
     </div>
     <div class="offcanvas-body">
         <h4 class="user-settings-header">Profile picture</h4>
-        <form method="POST" action="">
-            <input id="imageUpload" type="file" name="profile_image" />
+        <form method="POST" action="/change_pfp/{{user.username}}" enctype="multipart/form-data">
+            <input name="profile_image" id="imageUpload" type="file" name="profile_image" />
             <button class="btn btn-warning">Change picture</button>
         </form>
         <h4 class="user-settings-header">Reset password</h4>
-        <form method="POST" action="">
-            <label for="currentPassword" class="form-label text-muted">Current password</label>
-            <input type="text" class="form-text" id="currentPassword" value="" required />
-            <label for="newPassword" class="form-label text-muted">New password</label>
-            <input type="text" class="form-text" id="newPassword" value="" required />
+        <form method="POST" action="/change_password/{{user.username}}">
+            <div class="row">
+                <label for="currentPassword" class="form-label text-muted col-sm-6">Current password</label>
+                <input type="text" name="currentPassword" class="form-text col-sm-6" id="currentPassword" value="" required />
+            </div>
+            <div class="row">
+                <label for="newPassword" class="form-label text-muted col-sm-6">New password</label>
+                <input type="text" name="newPassword" class="form-text col-sm-6" id="newPassword" value="" required />
+            </div>
+            
             <button class="btn btn-danger" type="submit">Change password</button>
         </form>
         <div class="dropdown mt-3">

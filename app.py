@@ -1,4 +1,5 @@
-from flask import Flask, redirect, url_for, render_template, request, session
+from crypt import methods
+from flask import Flask, flash, redirect, url_for, render_template, request, session
 import model
 import bcrypt
 
@@ -139,6 +140,41 @@ def user():
     user = users.find_one({"username":session["username"]})
     # user_reviews = [rev for rev in reviews.find({"user":user['username']})]
     return render_template('user.html',user=user, reviews=placeholder)
+
+@app.route("/change_password/<username>", methods=["POST"])
+def change_password(username):
+    form = request.form 
+    users = db.users
+    if session['username']:
+        pw_input = form['currentPassword'].encode('utf-8')
+        current = users.find_one({"username":session['username']})['password']
+        if bcrypt.checkpw(pw_input,current):
+            #user is valid 
+            user = {"username":username}
+            salt = bcrypt.gensalt()
+            new_pw = {
+                "$set": {"password": bcrypt.hashpw(form['newPassword'].encode('utf-8'),salt)}
+            }
+            users.update_one(user,new_pw)
+            return redirect(url_for("user"))
+    else:
+        return "Not the user!"
+
+@app.route("/change_pfp/<username>", methods=['POST'])
+def change_pfp(username):
+    users = db.users
+    if session['username']:
+        pf = request.files['profile_image']
+        filename = model.hash_profile_name(pf.filename)
+        mongo.save_file(filename,pf)
+        user = {"username":username}
+        new_pf = {
+            "$set" : {"profile_pic":filename}
+        }
+        users.update_one(user,new_pf)
+        return redirect(url_for("user"))
+    else:
+        return "Not the user!"
 
 
 @app.route("/")
