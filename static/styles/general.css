@@ -133,6 +133,10 @@ p {
 }
 
 /* Company forms */
+hr.solid {
+    border-top: 3px solid rgb(181, 112, 189);
+}
+
 .add_comp_title {
     text-align: center;
     margin-top: 1rem;

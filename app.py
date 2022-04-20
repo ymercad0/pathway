@@ -1,4 +1,5 @@
 from flask import Flask, redirect, url_for, render_template, request, session, flash
+from bson.objectid import ObjectId
 import bcrypt
 import model
 
@@ -140,15 +141,21 @@ def index():
     if db.reviews.count_documents({}) == 0:
         reviews = None
     else:
-        reviews = db.reviews.find()
+        # '.limit()' limits the amount of documents queried
+        reviews = db.reviews.find().sort('date_posted', -1).limit(5)
 
-    companies = db.companies.find().sort("company_rat")
+    if db.companies.count_documents({}) == 0:
+        model.reset_comp_collection()
+
+    # -1 sorts in descending order
+    companies = db.companies.find().sort("company_rat", -1).limit(4)
     return render_template("index.html", recent_reviews=reviews, companies=companies, to_comp_obj=model.to_company_obj,
                             user=None)
 
 @app.route('/company-admin', methods=['GET', 'POST'])
 def company_admin():
     if request.method == 'POST':
+        # remove companies
         if 'remove_comp_button' in request.form and request.form['remove_comp_button'] == "clicked":
             to_remove = request.form['comp_remove']
             if not db.companies.find_one_and_delete({'name': to_remove}):
@@ -161,5 +168,21 @@ def company_admin():
 
 @app.route('/companies', methods=['GET'])
 def companies():
-    comps = db.companies.find().sort("company_rat")
+    if db.companies.count_documents({}) == 0:
+        model.reset_comp_collection()
+
+    # displays the top 10 highest rated companies
+    comps = db.companies.find().sort("company_rat", -1).limit(10)
     return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)
+
+@app.route('/companies/<companyID>', methods=['GET'])
+def company_page(companyID):
+    # ID prevents people from modifing url directly
+    try:
+        comp = db.companies.find_one({"_id": ObjectId(companyID)})
+
+    except:
+        flash("Accessed an invalid URL.", "danger")
+        return redirect(url_for('index'))
+
+    return render_template('company.html', company=model.to_company_obj(comp))
