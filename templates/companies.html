@@ -20,7 +20,7 @@
     <div class="row">
         <div class="col">
             <!-- Company card -->
-            <div class="card bg-light mb-3 border border-dark company-card">
+            <div class="card mb-3 border border-dark company-card">
                 <div class="company-card-content">
                     <!-- Status icon and new links-->
                     <div class="row">
@@ -54,9 +54,7 @@
 
                                     <!-- Each company rating -->
                                     <div class="row">
-                                        {%for rating in [company.company_rat, company.work_rat,
-                                        company.culture_rat]
-                                        %}
+                                        {% for rating in [company.company_rat, company.work_rat, company.culture_rat] %}
                                         {% if rating != None %}
                                         <div class="col mx-auto">
                                             <span class="badge bg-{{company.category_badge(rating)}}">
@@ -65,7 +63,7 @@
                                         {% else %}
                                         <div class="col mx-auto text-muted">No reviews</div>
                                         {% endif%}
-                                        {%endfor %}
+                                        {% endfor %}
                                     </div>
                                 </div>
                             </div>

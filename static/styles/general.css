@@ -88,6 +88,8 @@ p {
 
 .highest-rated {
     margin-top: 3rem;
+    margin-left: 5%;
+    margin-right: auto;
 }
 
 .highest-rated h3 {
@@ -171,6 +173,14 @@ select {
 }
 
 /* Individual Company page */
+.comp-page-card {
+    margin-top: 0.5rem;
+}
+
+.comp-page-card p {
+    overflow: hidden;
+}
+
 .comp-img {
     float: left;
     margin-right: 3rem;
@@ -181,6 +191,7 @@ select {
     height: 15rem;
 }
 
-.comp-page-card p {
-    overflow: hidden;
+.company-to-review {
+    display: flex;
+    justify-content: space-between;
 }
