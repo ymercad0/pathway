@@ -9,7 +9,27 @@
 {% block bodyclass %}class="index"{% endblock %}
 
 {% block main %}
+<div class="comp-page-card container col-md-5">
+    <div class="card mb-3">
+        <div class="col-lg-12">
+            <img class="comp-banner img-responsive card-img-top" src={{url_for('file', filename=company.banner_img)}}
+                alt="...">
+        </div>
+        <div class="card-body">
+            <div class="comp-img col-md-2">
+                <img src={{url_for('file', filename=company.logo_img)}} class="card-img" alt="...">
+                <span class="position-absolute top-10 start-90 translate-middle p-2
+                                                                    bg-{{company.category_badge(company.company_rat)}}
+                                                                    border border-light rounded-circle">
+                </span>
+            </div>
+            <h3 class="card-title">{{company.name}}</h3>
+            <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
+            <p class="card-text">{{company.description}}</p>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
 
-{% block navbartype %}fixed-bottom{% endblock %}
+{% block navbartype %}bottom{% endblock %}

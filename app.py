@@ -106,15 +106,16 @@ def create_company():
             logo_filename = model.hash_profile_name(logo_img.filename)
             mongo.save_file(logo_filename, logo_img)
 
-            if 'comp_banner_img' in request.files:
-                banner_img = request.files['comp_banner_img']
+            # banner was not selected
+            # empty FileStorage objects evaluate as False
+            if not request.files.get('comp_banner_img', None):
+                # default banner img
+                banner_filename = "../static/Images/Backup/default-banner.jpg"
 
             else:
-                # default banner img
-                banner_img = url_for('static', filename='Images/Icons/default-banner.jpg')
-
-            banner_filename = model.hash_profile_name(banner_img.filename)
-            mongo.save_file(banner_filename, banner_img)
+                banner_img = request.files['comp_banner_img']
+                banner_filename = model.hash_profile_name(banner_img.filename)
+                mongo.save_file(banner_filename, banner_img)
 
             # initialize all the hidden company attributes
             new_comp = model.Company(comp_name, request.form['comp_category'], logo_filename,
@@ -123,7 +124,7 @@ def create_company():
             db.companies.insert_one(new_comp.to_json())
             flash(f"{new_comp.name} was added to the list of companies!", "success")
 
-    return render_template("company-admin.html", categories=model.company_categories)
+    return redirect(url_for('company_admin'))
 
 @app.route('/signup', methods=["GET"])
 def signup():
@@ -144,9 +145,6 @@ def index():
         # '.limit()' limits the amount of documents queried
         reviews = db.reviews.find().sort('date_posted', -1).limit(5)
 
-    if db.companies.count_documents({}) == 0:
-        model.reset_comp_collection()
-
     # -1 sorts in descending order
     companies = db.companies.find().sort("company_rat", -1).limit(4)
     return render_template("index.html", recent_reviews=reviews, companies=companies, to_comp_obj=model.to_company_obj,
@@ -154,6 +152,10 @@ def index():
 
 @app.route('/company-admin', methods=['GET', 'POST'])
 def company_admin():
+    # in case anyone resets all of the companies
+    if db.companies.count_documents({}) == 0:
+        model.reset_comp_collection()
+
     if request.method == 'POST':
         # remove companies
         if 'remove_comp_button' in request.form and request.form['remove_comp_button'] == "clicked":
@@ -166,11 +168,8 @@ def company_admin():
 
     return render_template("company-admin.html", categories=model.company_categories)
 
-@app.route('/companies', methods=['GET'])
+@app.route('/companies/', methods=['GET'])
 def companies():
-    if db.companies.count_documents({}) == 0:
-        model.reset_comp_collection()
-
     # displays the top 10 highest rated companies
     comps = db.companies.find().sort("company_rat", -1).limit(10)
     return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)
@@ -181,8 +180,11 @@ def company_page(company_name):
 
     if not comp:
         flash("Accessed an invalid URL.", "danger")
-        return redirect(url_for('index'))
+        return redirect(url_for('companies'))
 
-    # most recent reviews for the current valid company
-    #reviews = db.reviews.find({}).sort('date_posted', -1).limit(5)
-    return render_template('company.html', company=model.to_company_obj(comp))
+    # if db.reviews.count_documents({}) == 0:
+    #     reviews = None
+    # else:
+    #     reviews = db.reviews.find().sort('date_posted', -1).limit(5)
+
+    return render_template('company.html', company=model.to_company_obj(comp), reviews = None)

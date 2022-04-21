@@ -169,3 +169,18 @@ select {
     margin-left: 2rem;
     margin-right: auto;
 }
+
+/* Individual Company page */
+.comp-img {
+    float: left;
+    margin-right: 3rem;
+}
+
+.comp-banner {
+    object-fit: cover;
+    height: 15rem;
+}
+
+.comp-page-card p {
+    overflow: hidden;
+}
