@@ -35,14 +35,6 @@ p {
     font-family: 'Bitter', serif;
 }
 
-#navbar-title-text {
-    background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
-    background-size: 100%;
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
-
 #navbar-search {
     margin-right: 0%;
     margin-left: auto;
@@ -209,4 +201,12 @@ p {
 
 #sign-up-card { 
     border-radius: 1rem;
+}
+
+.title-text { 
+    background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
+    background-size: 100%;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
