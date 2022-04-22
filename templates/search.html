@@ -3,23 +3,27 @@
 {% block htmlclass %}class="index"{% endblock %}
 
 {% block head %}
-<title>Explore Companies</title>
+<title>Search Results</title>
 {% endblock %}
 
 {% block bodyclass %}class="index"{% endblock %}
 
 {% block main %}
 <div class="add_comp_title">
-    <h2>Highest Rated Companies</h2>
-    <hr class="solid">
+    <h2>Results for: {{query}}</h2>
 </div>
 
-{% for company in companies %}
+{% if num_queries == 0 %}
+<div class="empty-content">
+    <h2>No companies found!</h2>
+</div>
+
+{% else %}
+{% for company in results %}
 {% set company = to_comp_obj(company) %}
-<div class="company-rankings company-form container col-md-5">
+<div class="container col-md-5">
     <div class="row">
         <div class="col">
-            <!-- Company card -->
             <div class="card mb-3 border border-dark company-card">
                 <div class="company-card-content">
                     <!-- Status icon and new links-->
@@ -41,8 +45,6 @@
                                     </div>
                                 </h4>
 
-                                <h5 class="card-subtitle mb-2">Ranked <span class="text-success">#{{loop.index}}</span>
-                                </h5>
                                 <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
 
                                 <div class="col review-section-content mx-auto">
@@ -75,8 +77,14 @@
     </div>
 </div>
 {% endfor %}
-
-
+{% endif %}
 {% endblock %}
 
-{% block navbartype %}bottom{% endblock %}
+{% if num_queries < 3 %}
+{% set nav_type = 'fixed-bottom' %}
+
+{% else %}
+{% set nav_type = 'bottom' %}
+{% endif %}
+
+{% block navbartype %}{{nav_type}}{% endblock %}

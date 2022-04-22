@@ -17,7 +17,19 @@ for collection in model.collections:
                 model.reset_comp_collection()
 
 
-@app.route('/file/<path:filename>', methods=["GET"])
+@app.route('/search')
+def search():
+    query = request.args['search-field']
+    # all companies that have the search query in the name
+    # options i makes the search case insensitive
+    res = db.companies.find({'name': {'$regex': query, '$options': 'i'}})
+    # doesn't consume the cursor, checks for no valid results
+    num_queries = len(list(res.clone()))
+
+    return render_template("search.html", results=res, num_queries=num_queries,
+                            query=query, to_comp_obj=model.to_company_obj)
+
+@app.route('/file/<path:filename>')
 def file(filename):
     """Helper route for getting files from database. Functions as wrapper for
     mongo.send_file function.
@@ -126,7 +138,7 @@ def create_company():
 
     return redirect(url_for('company_admin'))
 
-@app.route('/signup', methods=["GET"])
+@app.route('/signup')
 def signup():
     """Endpoint for 'signup.html'
     """
@@ -168,13 +180,13 @@ def company_admin():
 
     return render_template("company-admin.html", categories=model.company_categories)
 
-@app.route('/companies/', methods=['GET'])
+@app.route('/companies/')
 def companies():
     # displays the top 10 highest rated companies
     comps = db.companies.find().sort("company_rat", -1).limit(10)
     return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)
 
-@app.route('/companies/<company_name>', methods=['GET'])
+@app.route('/companies/<company_name>')
 def company_page(company_name):
     comp = db.companies.find_one({"name_lower": company_name})
 

@@ -51,9 +51,10 @@
                     <!-- change this so that only admin accounts can access it -->
                     <a class="nav-link" href="{{url_for('company_admin')}}">Add Companies</a>
                 </div>
-                <form id="navbar-search" class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-success" type="submit">Search</button>
+                <form id="navbar-search" action="/search" class="d-flex" enctype="multipart/form-data">
+                    <input class="form-control" type="search" name="search-field" placeholder="Search Companies"
+                        aria-label="Search" />
+                    <button class="btn btn-success" name="search-btn" type="submit" value="clicked">Search</button>
                 </form>
             </div>
         </div>
