@@ -1,6 +1,8 @@
 :root {
     --scrollbar-grey: rgb(214, 214, 214);
-    --highlight-grey: rgb(129, 129, 129)
+    --highlight-grey: rgb(129, 129, 129);
+    --form-greyple: rgba(176, 150, 187, 0.342);
+    --bootstrap-grey: rgb(168, 167, 167);
 }
 
 ::-webkit-scrollbar {
@@ -61,6 +63,13 @@ p {
     color: inherit;
 }
 
+.empty-content {
+    text-align: center;
+    color: grey;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
 .reviews {
     overflow-x: scroll;
     white-space: nowrap;
@@ -79,6 +88,8 @@ p {
 
 .highest-rated {
     margin-top: 3rem;
+    margin-left: 5%;
+    margin-right: auto;
 }
 
 .highest-rated h3 {
@@ -121,4 +132,66 @@ p {
     font-size: 1.1em;
     margin-top: 1.5rem;
     text-align: center;
+}
+
+/* Company forms */
+hr.solid {
+    border-top: 3px solid rgb(181, 112, 189);
+}
+
+.add_comp_title {
+    text-align: center;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.company-form .row {
+    margin-bottom: 1rem;
+}
+
+.company-form {
+    margin-left: 2rem;
+    background-color: var(--form-greyple);
+    border-radius: 15px;
+    padding: 15px;
+}
+
+select {
+    border: solid 2px var(--bootstrap-grey);
+    border-radius: 5px;
+}
+
+/* Company Explore page */
+.company-rankings {
+    margin-bottom: 1rem;
+}
+
+.company-rankings .company-card {
+    margin-top: 1rem;
+    margin-left: 2rem;
+    margin-right: auto;
+}
+
+/* Individual Company page */
+.comp-page-card {
+    margin-top: 0.5rem;
+}
+
+.comp-page-card p {
+    overflow: hidden;
+}
+
+.comp-img {
+    float: left;
+    margin-right: 3rem;
+}
+
+.comp-banner {
+    object-fit: cover;
+    height: 15rem;
+}
+
+.company-to-review {
+    display: flex;
+    justify-content: space-between;
 }

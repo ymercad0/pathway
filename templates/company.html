@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block htmlclass %}class="index"{% endblock %}
+
+{% block head %}
+<title>Pathway- {{company.name}}</title>
+{% endblock %}
+
+{% block bodyclass %}class="index"{% endblock %}
+
+{% block main %}
+<div class="comp-page-card container col-md-5">
+    <div class="card mb-3 border border-dark">
+        <div class="col-lg-12">
+            <img class="comp-banner img-responsive card-img-top" src={{url_for('file', filename=company.banner_img)}}
+                alt="...">
+        </div>
+        <div class="card-body">
+            <div class="comp-img col-md-2">
+                <img src={{url_for('file', filename=company.logo_img)}} class="card-img" alt="...">
+                <span class="position-absolute top-10 start-90 translate-middle p-2
+                            bg-{{company.category_badge(company.company_rat)}} border border-light rounded-circle">
+                </span>
+            </div>
+            <div class="company-to-review">
+                <h3 class="card-title">{{company.name}}</h3>
+                <button type="button" class="btn btn-outline-success">Write a Review</button>
+
+            </div>
+            <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
+            <p class="card-text">{{company.description}}</p>
+            <!-- Scores overview -->
+            <div class="col review-section-content mx-auto">
+                <div class="review-title-row row">
+                    <div class="col mx-auto">Overall</div>
+                    <div class="col mx-auto">Work Culture </div>
+                    <div class="col mx-auto">Company Culture</div>
+                </div>
+
+                <!-- Each company rating -->
+                <div class="row">
+                    {% for rating in [company.company_rat, company.work_rat, company.culture_rat] %}
+                    {% if rating != None %}
+                    <div class="col mx-auto">
+                        <span class="badge bg-{{company.category_badge(rating)}}">
+                            {{'%0.1f'| format(rating | float)}}/5.0</span>
+                    </div>
+                    {% else %}
+                    <div class="col mx-auto text-muted">No reviews</div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if reviews != None %}
+
+{% else %}
+<div class="empty-content">
+    <h2>This company doesn't have any reviews yet. <br> Be the first to create one!</h2>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block navbartype %}bottom{% endblock %}

@@ -39,21 +39,6 @@ class TestCompany(unittest.TestCase):
 		self.assertRaises(ValueError, Company, "Netfix", "invalid", self.valid_link, self.valid_link)
 		self.assertRaises(ValueError, Company, "Netfix", "softwre", self.valid_link, self.valid_link)
 		self.assertRaises(ValueError, Company, "Netfix", "111", self.valid_link, self.valid_link)
-		#logo_img test
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, "htp/broken_link", self.valid_link)
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, "http://", self.valid_link)
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, "htp/www.broken.com", self.valid_link)
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, "broken.com", self.valid_link)
-		#banner_img test
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="brkn")
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link,
-		 				  banner_img="http://www.")
-
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link, banner_img="http://")
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link,
-		                  banner_img="broken.com")
-		self.assertRaises(ValueError, Company, "Netflix", self.valid_category, self.valid_link,
-		                  banner_img="http://invalid")
 
 		self.assertRaises(ValueError, self.company1.category_badge, -5)
 		self.assertRaises(ValueError, self.company1.category_badge, 5.1)

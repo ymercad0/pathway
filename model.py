@@ -1,3 +1,4 @@
+from flask import current_app as app
 from flask_pymongo import PyMongo
 from datetime import datetime
 import bcrypt
@@ -147,6 +148,27 @@ def hash_profile_name(name:str)->str:
     hashed = bcrypt.hashpw(name.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 
+def to_company_obj(json:dict)->'Company':
+    """Converts a JSON to a Company object
+       to facilitate processing on the website.
+
+    Args:
+        json (dict): A JSON file with dictionary-like attributes.
+
+    Returns:
+        Company: The Company object equivalent of the JSON.
+    """
+    obj = Company(json['name'], json['category'], json['logo_img'], json['description'], json['banner_img'])
+    # non instantiable public attributes must be set like this
+    obj.company_rat = json['company_rat']
+    obj.work_rat = json['work_rat']
+    obj.culture_rat = json['culture_rat']
+    obj.num_company_reviews = json['num_company_reviews']
+    obj.num_work_reviews = json['num_work_reviews']
+    obj.num_culture_reviews = json['num_culture_reviews']
+    obj.total_reviews = json['total_reviews']
+    return obj
+
 class Company:
     """Represents an existing and reviewable company.
         Contains internal information on the amount
@@ -202,12 +224,6 @@ class Company:
 
         if category not in company_categories:
             raise ValueError("Error: Invalid company category.")
-
-        if not is_url(logo_img):
-            raise ValueError("Error: Invalid URL given for company logo.")
-
-        if not is_url(banner_img) and banner_img != "":
-            raise ValueError("Error: Invalid URL given for banner image.")
 
         self.name = name
         self.category = category
@@ -266,6 +282,30 @@ class Company:
 
         # rating of 0-1.99
         return "dark"
+
+    def to_json(self)->dict:
+        """Converts the Company object with its current
+        attributes into JSON format, which is then handled
+        by the database.
+
+        Returns:
+            dict: Representing the company object attributes.
+        """
+        return {
+            "name": self.name,
+            "category": self.category,
+            "logo_img": self.logo_img,
+            "description": self.description,
+            "banner_img": self.banner_img,
+            "company_rat": self.company_rat,
+            "work_rat": self.work_rat,
+            "culture_rat": self.culture_rat,
+            "num_company_reviews": self.num_company_reviews,
+            "num_work_reviews": self.num_work_reviews,
+            "num_culture_reviews": self.num_culture_reviews,
+            "total_reviews": self.total_reviews,
+            "name_lower": self.name.lower()
+        }
 
 class User:
     """Represents a user class. Contains the user's information such as
@@ -708,4 +748,66 @@ class PyMongoFixed(PyMongo):
         response.make_conditional(request)
         return response
 
-local_companies = [Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")]
+def start_db()->"Database":
+    """Starts a connection to the
+       website's MongoDB database.
+    Returns:
+        Database: A MongoDB database object.
+    """
+    mongo = PyMongoFixed(app)
+    db = mongo.db
+    return db
+
+def reset_comp_collection()->None:
+    """Resets the Company collection by
+       clearing all its documents out
+       and re-uploading the locally stored
+       menu items.
+    """
+    #starts the db
+    db = start_db()
+    #access the menu collection
+    db_menu = db.companies
+    db_menu.delete_many({})
+
+    #inserts the menu field into the mongodb database
+    for comp_obj in local_companies:
+        db_menu.insert_one(comp_obj.to_json())
+
+local_companies = [Company("Microsoft", "Software", "../static/Images/Backup/microsoft.webp",
+                            description='''Microsoft Corporation is an American multinational technology corporation
+                                        which produces computer software, consumer electronics, personal computers,
+                                        and related services. Its best-known software products are the Microsoft
+                                        Windows line of operating systems, the Microsoft Office suite, and the
+                                        Internet Explorer and Edge web browsers.''',
+                            banner_img="../static/Images/Backup/microsoft-banner.jpg"),
+
+
+                   Company("Google", "Software", "../static/Images/Backup/google-logo.png",
+                            description='''American multinational technology company that focuses on artificial
+                                        intelligence,  search engine, online advertising, cloud computing,
+                                        computer software, quantum computing, e-commerce, and consumer electronics.
+                                        It has been referred to as the 'most powerful company in the world' and
+                                        one of the world's most valuable brands due to its market dominance,
+                                        data collection, and technological advantages in the
+                                        area of artificial intelligence.''',
+                            banner_img="../static/Images/Backup/google-banner.webp"),
+
+
+                    Company("Amazon", "Software", "../static/Images/Backup/amazon-logo.png",
+                            description='''Amazon was founded by Jeff Bezos from his garage in Bellevue, Washington,
+                                        on July 5, 1994. Initially an online marketplace for books, it has expanded
+                                        into a multitude of product categories: a strategy that has earned it the
+                                        moniker The Everything Store. It has multiple subsidiaries including
+                                        Amazon Web Services (cloud computing), Zoox (autonomous vehicles),
+                                        Kuiper Systems (satellite Internet), Amazon Lab126 (computer hardware R&D).''',
+                            banner_img="../static/Images/Backup/amazon-banner.jpg"),
+
+
+                    Company("Apple Inc.", "Software", "../static/Images/Backup/apple-logo.png",
+                            description='''Apple Inc. is an American multinational technology company that specializes
+                                        in consumer electronics, software and online services. Apple is the largest
+                                        information technology company by revenue, and, as of January 2021, it is the
+                                        world's most valuable company, the fourth-largest personal computer vendor
+                                        by unit sales and second-largest mobile phone manufacturer.''',
+                            banner_img="../static/Images/Backup/apple-banner.jpg")]
