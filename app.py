@@ -1,5 +1,6 @@
 from crypt import methods
 from flask import Flask, flash, redirect, url_for, render_template, request, session
+from bson.objectid import ObjectId
 import model
 import bcrypt
 
@@ -17,17 +18,32 @@ for collection in model.collections:
             pass
 
 company1 = model.Company(
-    name="Microsoft",
-    category="Software",
-    logo_img="https://bit.ly/3uWfYzK",
-    banner_img="https://bit.ly/3xfolJs"
-    )
+        name="Microsoft",
+        category="Software",
+        logo_img="https://bit.ly/3uWfYzK",
+        banner_img="https://bit.ly/3xfolJs"
+        )
+company2 = model.Company(
+        name="Google",
+        category="Software",
+        logo_img="https://bit.ly/3Jvmy5t",
+        banner_img="http://somelink.com"
+        )
 review_1 = model.Review('user',company1,"Placeholder Review","Security Engineering",
     "Security Engineer Intern",company_rating=4,education="B.S.",
     interview_desc="Had a good time overall. Tasking was tough and hours were long.",
     interview_rat=5,offer=True, accepted=True, start_date="05-23-2022",
     intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
     pay=35.25, bonuses="Bonus")
+
+review_2 = model.Review('user',company2, "Title", 'Software Engineering',
+    "Position", company_rating=4, education="M.S.", interview_desc="I did this x y z dsdsasddddddddddddddddddd",
+    interview_rat=4, offer=False, accepted=False, start_date="05-23-2022",
+    intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
+    pay=35.25, bonuses="Bonus")
+placeholder = [review_1 for _ in range(3)]
+placeholder.extend([review_2 for _ in range(3)])
+
 
 
 @app.route('/file/<path:filename>', methods=["GET"])
@@ -191,45 +207,15 @@ def change_pfp(username):
 
 @app.route("/reviews", methods=["GET"])
 def reviews():
-    company1 = model.Company(
-			name="Microsoft",
-			category="Software",
-			logo_img="https://bit.ly/3uWfYzK",
-			banner_img="https://bit.ly/3xfolJs"
-			)
-    company2 = model.Company(
-			name="Google",
-			category="Software",
-			logo_img="https://bit.ly/3Jvmy5t",
-			banner_img="http://somelink.com"
-			)
-    review_1 = model.Review('user',company1,"Placeholder Review","Security Engineering",
-        "Security Engineer Intern",company_rating=4,education="B.S.",
-        interview_desc="Had a good time overall. Tasking was tough and hours were long.",
-        interview_rat=5,offer=True, accepted=True, start_date="05-23-2022",
-        intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
-        pay=35.25, bonuses="Bonus")
-
-    review_2 = model.Review('user',company2, "Title", 'Software Engineering',
-        "Position", company_rating=4, education="M.S.", interview_desc="I did this x y z dsdsasddddddddddddddddddd",
-        interview_rat=4, offer=False, accepted=False, start_date="05-23-2022",
-        intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
-        pay=35.25, bonuses="Bonus")
-
-
-    placeholder = [review_1 for _ in range(3)]
-    placeholder.extend([review_2 for _ in range(3)])
-    # rev = db.reviews.find({})
-    return render_template("reviews.html",reviews=placeholder)
+    rev = db.reviews.find({})
+    return render_template("reviews.html",reviews=rev)
 
 @app.route("/reviews/<review_id>")
 def view_review(review_id):
-    review = db.reviews.find_one({"review_id":review_id})
-    print(review)
-
-    # if not review:
-    #     return redirect(url_for("reviews")) #NOTE: should redirect with flag to indicate non-existing review
-    return render_template("view_review.html",review=review_1)
+    review = db.reviews.find_one({"_id":ObjectId(review_id)})
+    if not review:
+        return redirect(url_for("reviews")) #NOTE: should redirect with flag to indicate non-existing review
+    return render_template("view_review.html",review=review)
 
 
 @app.route("/")

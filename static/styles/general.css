@@ -190,3 +190,23 @@ p {
     display: flex;
     justify-content: center;
 }
+
+.vh-100 { 
+    background-color: #94C5CC;
+}
+
+#sign-in-msg { 
+    letter-spacing: 1px;
+}
+
+#sign-in { 
+    border-radius: 1rem;
+}
+
+#sign-in-logo { 
+    border-radius: 1rem 0 0 1rem;
+}
+
+#sign-up-card { 
+    border-radius: 1rem;
+}

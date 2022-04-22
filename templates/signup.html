@@ -9,11 +9,39 @@
 {% block bodyclass %}class="signup"{% endblock %}
 
 {% block main %}
-    <form class="form" method="POST" action="/create_user" enctype="multipart/form-data">
-        <input id = "usernameField" type="text" name="username">
-        <input id="passwordField" type="password" name="password">
-        <input id="emailField" type="text" name="email" aria-label="email">
-        <input id="imageUpload" type="file" name="profile_image">
-        <input type="submit">
-    </form>
+<section class="vh-100">
+    <div class="container py-5 h-100">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div id="sing-up-card" class="card shadow-2-strong">
+            <div class="card-body p-5 text-center">
+  
+              <h3 class="mb-5">Sign in</h3>
+              <form class="form" method="POST" action="/create_user" enctype="multipart/form-data">
+                <div class="form-outline mb-4">
+                    <input name="username" type="text" id="usernameField" class="form-control form-control-lg" />
+                    <label class="form-label" for="usernameField">Username</label>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <input name="email" type="email" id="emailField" class="form-control form-control-lg" />
+                    <label class="form-label" for="emailField">Email</label>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <input name="password" type="password" id="passwordField" class="form-control form-control-lg" />
+                    <label class="form-label" for="passwordField">Password</label>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <input id="imageUpload" type="file" name="profile_image">
+                    <label class="form-label" for="imageUpload">Profile picture</label>
+                  </div>
+                  <hr class="my-4">
+                  <button class="btn btn-primary btn-lg btn-block" type="submit">Login</button> 
+              </form>           
+  
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 {% endblock %}
