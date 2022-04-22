@@ -569,6 +569,7 @@ class Review:
         self.pay = pay
         self.bonuses = bonuses
         self.date_posted = datetime.now()
+        self.review_id = hash_profile_name(user+str(self.date_posted))
 
     def update_scores(self)->None:
         """Once a review is posted, updates the scores of the reviewed
@@ -640,6 +641,40 @@ class Review:
                                                              num_scores, self.culture_rating)
 
                         self.company.num_culture_reviews += 1
+                        
+    def category_badge(self, category_rat:float)->str:
+        """Given an input category, returns the
+           appropriate Bootstrap badge, depending
+           on whether the input scores are favorable
+           or not.
+
+        Args:
+            category_rat (float): The rating category whose badge component will be rendered.
+
+        Returns:
+            str: A string, denoting what type of bootstrap badge to use.
+        """
+        if category_rat is not None:
+            if type(category_rat) not in [float, int]:
+                raise TypeError("Category rating must be an integer!")
+
+        if category_rat is None:
+            return "secondary"
+
+        if category_rat > 5 or category_rat < 0:
+            raise ValueError("Category rating is outside of the min or max values permitted.")
+
+        if category_rat >= 4 and category_rat <= 5:
+            return "success"
+
+        elif category_rat >= 3 and category_rat < 4:
+            return "warning text-dark"
+
+        elif category_rat >= 2 and category_rat < 3:
+            return "danger"
+
+        # rating of 0-1.99
+        return "dark"
 
 class PyMongoFixed(PyMongo):
     """A small magic trick Class that functions as a Wrapper for PyMongo.

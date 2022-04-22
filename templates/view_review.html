@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% from "macros.html" import reviewCard %}
+{% from "macros.html" import reviewCardContent %}
+
+{% block htmlclass %}class="view_review"{% endblock %}
+
+{% block head %}
+<title>Pathway - Reviews</title>
+{% endblock %}
+
+{% block bodyclass %}class="view_review"{% endblock %}
+
+{% block main %}
+<div class="col-md-8 offset-md-2">
+    <div class="card">
+        <div class="card-title">
+            <div class="row g-0">
+                <div class="col-md-2">
+                    <img class="review-company-logo" src={{review.company.logo_img}}>
+                </div>
+                <div class="col-md-10">
+                    <h3 class="display-1">{{review.company.name}}</h3>
+                    <h5 class="display-3 text-muted">{{review.company.category}}</h5>
+                    <div class="row">
+                        <h3 class="review-rating col-sm-4">Company Rating</h3>
+                        <h3 class="review-rating col-sm-4">Culture Rating</h3>
+                        <h3 class="review-rating col-sm-4">Work Rating</h3>
+                    </div>
+                    <div class="row">
+                        <h3 class="review-rating col-sm-4">
+                            <!-- <span class="badge bg-success">{{review.company_rating}}</span> -->
+                            <span class="badge bg-{{review.category_badge(review.company_rating)}}">
+                                {{'%0.1f'|format(review.company_rating)}}/5.0
+                            </span>
+
+                        </h3>
+                        <h3 class="review-rating col-sm-4">
+                            {% if review.culture_rating %}
+                            <!-- <span class="badge bg-warning">{{review.culture_rating}}</span> -->
+                            <span class="badge bg-{{review.category_badge(review.culture_rating)}}">
+                                {{'%0.1f'|format(review.culture_rating)}}/5.0
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">N/A</span>
+                            {% endif %}
+                        </h3>
+                        <h3 class="review-rating col-sm-4">
+                            {% if review.work_rating %}
+                            <!-- <span class="badge bg-warning">{{review.work_rating}}</span> -->
+                            <span class="badge bg-{{review.category_badge(review.work_rating)}}">
+                                {{'%0.1f'|format(review.work_rating)}}/5.0
+                            </span>
+                            {% else %}
+                            <span class="badge bg-secondary">N/A</span>
+                            {% endif %}
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-body review-card-wrapper">
+            <dl id="review-desc-row" class="row offset-md-2">
+                <dt class="col-sm-3">Written by</dt>
+                <dd class="col-sm-9">{{review.user}} </dd>
+                <dt class="col-sm-3">Job category</dt>
+                <dd class="col-sm-9">{{review.job_cat}}</dd>
+            
+                <dt class="col-sm-3">Role</dt>
+                <dd class="col-sm-9"><p>{{review.position}}</p></dd>
+            
+                {% if review.pay %}
+                <dt class="col-sm-3">Pay</dt>
+                <dd class="col-sm-9">{{review.pay}}</dd>
+                {% endif %} {% if review.start_date %}
+                <dt class="col-sm-3">Start date</dt>
+                <dd class="col-sm-9">{{review.start_date}}</dd>
+                {% endif %} 
+            
+                {% if review.bonuses %}
+                <dt class="col-sm-3">Bonuses</dt>
+                <dd class="col-sm-9">{{review.bonuses}}</dd>
+                {% endif %}
+            
+                <dt class="col-sm-3">Description</dt>
+                <dd class="col-sm-9">
+                    <dl class="row">
+                        <dd class="col-sm-12">{{review.interview_desc}}</dd>
+                    </dl>
+                </dd>
+            </dl>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -16,6 +16,19 @@ for collection in model.collections:
             # a collection
             pass
 
+company1 = model.Company(
+    name="Microsoft",
+    category="Software",
+    logo_img="https://bit.ly/3uWfYzK",
+    banner_img="https://bit.ly/3xfolJs"
+    )
+review_1 = model.Review('user',company1,"Placeholder Review","Security Engineering",
+    "Security Engineer Intern",company_rating=4,education="B.S.",
+    interview_desc="Had a good time overall. Tasking was tough and hours were long.",
+    interview_rat=5,offer=True, accepted=True, start_date="05-23-2022",
+    intern_desc="desc", work_rat=None, culture_rat=None, location=("San Francisco", "California"),
+    pay=35.25, bonuses="Bonus")
+
 
 @app.route('/file/<path:filename>', methods=["GET"])
 def file(filename):
@@ -208,6 +221,15 @@ def reviews():
     placeholder.extend([review_2 for _ in range(3)])
     # rev = db.reviews.find({})
     return render_template("reviews.html",reviews=placeholder)
+
+@app.route("/reviews/<review_id>")
+def view_review(review_id):
+    review = db.reviews.find_one({"review_id":review_id})
+    print(review)
+
+    # if not review:
+    #     return redirect(url_for("reviews")) #NOTE: should redirect with flag to indicate non-existing review
+    return render_template("view_review.html",review=review_1)
 
 
 @app.route("/")

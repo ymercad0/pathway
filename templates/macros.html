@@ -1,3 +1,43 @@
+{% macro reviewCardContent(review) %}
+<dl class="row">
+    <dt class="col-sm-3">Job category</dt>
+    <dd class="col-sm-9">{{review.job_cat}}</dd>
+
+    <dt class="col-sm-3">Role</dt>
+    <dd class="col-sm-9"><p>{{review.position}}</p></dd>
+
+    {% if review.pay %}
+    <dt class="col-sm-3">Pay</dt>
+    <dd class="col-sm-9">{{review.pay}}</dd>
+    {% endif %} {% if review.start_date %}
+    <dt class="col-sm-3">Start date</dt>
+    <dd class="col-sm-9">{{review.start_date}}</dd>
+    {% endif %} {% if review.work_rat %}
+    <dt class="col-sm-3">Work rating</dt>
+    <dd class="col-sm-9">{{review.work_rating}}</dd>
+    {% endif %}
+
+    <dt class="col-sm-3">Company Rating</dt>
+    <dd class="col-sm-9">{{review.company_rating}}</dd>
+
+    {% if review.culture_rating %}
+    <dt class="col-sm-3">Culture rating</dt>
+    <dd class="col-sm-9">{{review.culture_rating}}</dd>
+    {% endif %} {% if review.bonuses %}
+    <dt class="col-sm-3">Bonuses</dt>
+    <dd class="col-sm-9">{{review.bonuses}}</dd>
+    {% endif %}
+
+    <dt class="col-sm-3">Description</dt>
+    <dd class="col-sm-9">
+        <dl class="row">
+            <dt class="col-sm-12 text-truncate">{{review.interview_desc}}</dt>
+        </dl>
+    </dd>
+</dl>
+{% endmacro %}
+
+
 {% macro userProfileReviews(reviews) %}
 <div class="accordion" id="userReviewAccordion">
     {% for review in reviews %}
@@ -18,42 +58,7 @@
         </h2>
         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
             <div class="accordion-body">
-                <dl class="row">
-                    <dt class="col-sm-3">Job category</dt>
-                    <dd class="col-sm-9">{{review.job_cat}}</dd>
-
-                    <dt class="col-sm-3">Role</dt>
-                    <dd class="col-sm-9"><p>{{review.position}}</p></dd>
-
-                    {% if review.pay %}
-                    <dt class="col-sm-3">Pay</dt>
-                    <dd class="col-sm-9">{{review.pay}}</dd>
-                    {% endif %} {% if review.start_date %}
-                    <dt class="col-sm-3">Start date</dt>
-                    <dd class="col-sm-9">{{review.start_date}}</dd>
-                    {% endif %} {% if review.work_rat %}
-                    <dt class="col-sm-3">Work rating</dt>
-                    <dd class="col-sm-9">{{review.work_rating}}</dd>
-                    {% endif %}
-
-                    <dt class="col-sm-3">Company Rating</dt>
-                    <dd class="col-sm-9">{{review.company_rating}}</dd>
-
-                    {% if review.culture_rating %}
-                    <dt class="col-sm-3">Culture rating</dt>
-                    <dd class="col-sm-9">{{review.culture_rating}}</dd>
-                    {% endif %} {% if review.bonuses %}
-                    <dt class="col-sm-3">Bonuses</dt>
-                    <dd class="col-sm-9">{{review.bonuses}}</dd>
-                    {% endif %}
-
-                    <dt class="col-sm-3">Description</dt>
-                    <dd class="col-sm-9">
-                        <dl class="row">
-                            <dt class="col-sm-12">{{review.interview_desc}}</dt>
-                        </dl>
-                    </dd>
-                </dl>
+                {{reviewCardContent(review)}}
             </div>
         </div>
     </div>
@@ -104,54 +109,37 @@
 {% macro reviewCard(review) %}
 <div class="card  mb-3">
     <div class="row g-0">
-        <div class="placeholder col-md-4">
-            <!-- <img src="..." class="img-fluid rounded-start"> -->
+        <div class="col-md-4">
+            <img src={{review.company.logo_img}} class="img-fluid rounded-start">
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">test</h5>
+                <h5 class="card-title">{{review.company.name}}</h5>
                 <p class="card-text">
-                    <dt class="col-sm-3">Job category</dt>
-                    <dd class="col-sm-9">{{review.job_cat}}</dd>
-
-                    <dt class="col-sm-3">Role</dt>
-                    <dd class="col-sm-9"><p>{{review.position}}</p></dd>
-
-                    {% if review.pay %}
-                    <dt class="col-sm-3">Pay</dt>
-                    <dd class="col-sm-9">{{review.pay}}</dd>
-                    {% endif %} {% if review.start_date %}
-                    <dt class="col-sm-3">Start date</dt>
-                    <dd class="col-sm-9">{{review.start_date}}</dd>
-                    {% endif %} {% if review.work_rat %}
-                    <dt class="col-sm-3">Work rating</dt>
-                    <dd class="col-sm-9">{{review.work_rating}}</dd>
-                    {% endif %}
-
-                    <dt class="col-sm-3">Company Rating</dt>
-                    <dd class="col-sm-9">{{review.company_rating}}</dd>
-
-                    {% if review.culture_rating %}
-                    <dt class="col-sm-3">Culture rating</dt>
-                    <dd class="col-sm-9">{{review.culture_rating}}</dd>
-                    {% endif %} {% if review.bonuses %}
-                    <dt class="col-sm-3">Bonuses</dt>
-                    <dd class="col-sm-9">{{review.bonuses}}</dd>
-                    {% endif %}
-
-                    <dt class="col-sm-3">Description</dt>
-                    <dd class="col-sm-9">
-                        <dl class="row">
-                            <dt class="col-sm-12">{{review.interview_desc}}</dt>
-                        </dl>
-                    </dd>
-                </dl>
+                    {{reviewCardContent(review)}}
                 </p>
             </div>
         </div>
     </div>
     <div class="card-footer">
-        test
+        <!-- "Tag" badges -->
+        {% if review.offer %}
+        <span class="badge bg-success">Offer</span>
+        <!-- Only show accepted/location if an offer was presented -->
+        {% if review.accepted %}
+        <span class="badge bg-success">Accepted</span>
+        <span class="badge bg-info">{{review.location[1]}}</span>
+        {% else %}
+        <span class="badge bg-danger">Offer declined</span>
+        {% endif %}
+
+        {% else %}
+        <span class="badge bg-secondary">No offer</span>
+        {% endif %}
+
+        <span class="badge bg-secondary">{{review.job_cat}}</span>
+        <!-- Placeholder link! -->
+        <a href="https://www.google.com/" class="review-links float-end">Read full review &#8594;</a>
     </div>
 </div>
 {% endmacro %}
