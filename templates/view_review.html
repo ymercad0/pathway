@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from "macros.html" import reviewCard %}
 {% from "macros.html" import reviewCardContent %}
+{% from "macros.html" import ratingColor %}
 
 {% block htmlclass %}class="view_review"{% endblock %}
 
@@ -28,16 +29,14 @@
                     </div>
                     <div class="row">
                         <h3 class="review-rating col-sm-4">
-                            <!-- <span class="badge bg-success">{{review.company_rating}}</span> -->
-                            <span class="badge bg-{{review.category_badge(review.company_rating)}}">
+                            <span class="badge bg-{{ratingColor(review.company_rating)|trim}}">
                                 {{'%0.1f'|format(review.company_rating)}}/5.0
                             </span>
 
                         </h3>
                         <h3 class="review-rating col-sm-4">
                             {% if review.culture_rating %}
-                            <!-- <span class="badge bg-warning">{{review.culture_rating}}</span> -->
-                            <span class="badge bg-{{review.category_badge(review.culture_rating)}}">
+                            <span class="badge bg-{{ratingColor(review.culture_rating)|trim}}">
                                 {{'%0.1f'|format(review.culture_rating)}}/5.0
                             </span>
                             {% else %}
@@ -46,8 +45,7 @@
                         </h3>
                         <h3 class="review-rating col-sm-4">
                             {% if review.work_rating %}
-                            <!-- <span class="badge bg-warning">{{review.work_rating}}</span> -->
-                            <span class="badge bg-{{review.category_badge(review.work_rating)}}">
+                            <span class="badge bg-{{ratingColor(review.work_rating)|trim}}">
                                 {{'%0.1f'|format(review.work_rating)}}/5.0
                             </span>
                             {% else %}

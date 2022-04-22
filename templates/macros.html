@@ -139,7 +139,21 @@
 
         <span class="badge bg-secondary">{{review.job_cat}}</span>
         <!-- Placeholder link! -->
-        <a href="https://www.google.com/" class="review-links float-end">Read full review &#8594;</a>
+        <a href="/reviews/{{review._id}}" class="review-links float-end">Read full review &#8594;</a>
     </div>
 </div>
+{% endmacro %}
+
+{% macro ratingColor(rating) %}
+    {% if rating is none%}
+    secondary
+    {% elif rating is ge 4 %}
+    success
+    {% elif rating is ge 3 %}
+    warning text-dark
+    {% elif rating is ge 2 %}
+    danger
+    {% else %}
+    dark
+    {% endif %}
 {% endmacro %}
