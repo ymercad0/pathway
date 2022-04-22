@@ -210,3 +210,8 @@ p {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+.login-btn { 
+    background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
+    background-size: 100%;
+}
