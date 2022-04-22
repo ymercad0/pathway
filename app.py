@@ -1,4 +1,3 @@
-from crypt import methods
 from flask import Flask, flash, redirect, url_for, render_template, request, session
 from bson.objectid import ObjectId
 import model
@@ -72,11 +71,10 @@ def login():
                 session['username'] = request.form['username']
                 return redirect(url_for('index'))
             else:
-                return 'Invalid username/password combination.'
+                flash('Invalid username/password combination.', 'danger')
         else:
-            return 'User not found.'
-    else:
-        return render_template('login.html')
+            flash('User not found.', 'danger')
+    return render_template('login.html')
 
 @app.route('/logout')
 def logout():
@@ -131,8 +129,8 @@ def signup():
 @app.route("/user")
 @app.route("/user/<username>")
 def user():
-    """Route for user's profile page with information and account controls. 
-    If the user is not logged in, redirect to login page? 
+    """Route for user's profile page with information and account controls.
+    If the user is not logged in, redirect to login page?
     """
     if 'username' not in session:
         return redirect(url_for("login"))
@@ -172,13 +170,13 @@ def user():
 
 @app.route("/change_password/<username>", methods=["POST"])
 def change_password(username):
-    form = request.form 
+    form = request.form
     users = db.users
     if session['username']:
         pw_input = form['currentPassword'].encode('utf-8')
         current = users.find_one({"username":session['username']})['password']
         if bcrypt.checkpw(pw_input,current):
-            #user is valid 
+            #user is valid
             user = {"username":username}
             salt = bcrypt.gensalt()
             new_pw = {
