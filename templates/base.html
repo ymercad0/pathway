@@ -48,7 +48,11 @@
                 <div class="navbar-nav">
                     <a class="nav-link" href="/reviews">Reviews</a>
                     <a class="nav-link" href="#">Companies</a>
-                    <a class="nav-link" href="{{url_for('login')}}">Sign in</a>
+                    {% if session['username'] %}
+                        <a class="nav-link" href="{{url_for('user')}}">View Account</a>
+                    {% else %}
+                        <a class="nav-link" href="{{url_for('login')}}">Sign in</a>
+                    {% endif %}
                 </div>
                 <form id="navbar-search" class="d-flex">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
