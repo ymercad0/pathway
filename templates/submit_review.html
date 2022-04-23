@@ -1,0 +1,125 @@
+{% extends 'base.html' %} {% block htmlclass %}class="submit"{% endblock %} {% block head %}
+<title>Pathway - Submit Review</title>
+{% endblock %} {% block bodyclass %}class="submit"{% endblock %} {% block main %}
+<section class="vh-100">
+  <div class="container">
+    <div class="h-100 py-5">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+          <div class="card shadow-2-strong">
+            <div class="card-body">
+              <div class="mb-3">
+                <label for="company" class="form-label">Company</label>
+                <input type="text" class="form-control" id="company" />
+              </div>
+              <div class="mb-3">
+                <label for="positionTitle" class="form-label">Position</label>
+                <input type="text" class="form-control" id="positionTitle" />
+              </div>
+              <div class="mb-3">
+                <label for="jobCategory" class="form-label">Job Category</label>
+                <select id="jobCategory" class="form-select">
+                  {% for category in categories %}
+                  <option>{{category}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-3">
+                <label for="location" class="form-label">Work location</label>
+                <select id="location" class="form-select">
+                  {% for state in states %}
+                  <option>{{states[state]}} - {{state}}</option>
+                  {% endfor %}
+                </select>
+              </div>
+              <div class="mb-3">
+                <h5></h5>
+                <input jype="radio" class="btn-check" name="offerOptions" id="offerOption1" autocomplete="off" checked>
+                <label class="btn btn-success" for="offerOption1">Given offer</label>
+
+                <input type="radio" class="btn-check" name="offerOptions" id="offerOption2" autocomplete="off" checked>
+                <label class="btn btn-danger" for="offerOption2">No offer</label>
+              </div>
+              <!-- values like company rating, culture, etc... -->
+              <!-- company rating -->
+              <hr class="my-3">
+              <div class="mb-3">
+                <h5>Rate the Company as a whole</h5>
+                <p class="text-muted">0=Bad / 5=Fantastic</p>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="companyRatingOptions" id="companyRating1" />
+                  <label class="form-chek-label" for="companyRating1">1</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="companyRatingOptions" id="companyRating2" />
+                  <label class="form-chek-label" for="companyRating2">2</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="companyRatingOptions" id="companyRating3" />
+                  <label class="form-chek-label" for="companyRating3">3</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="companyRatingOptions" id="companyRating4" />
+                  <label class="form-chek-label" for="companyRating4">4</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="companyRatingOptions" id="companyRating5" />
+                  <label class="form-chek-label" for="companyRating5">5</label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <h5>Rate the work you did</h5>
+                <p class="text-muted">0=Boring,would not do again / 5=Engaging and impactful</p>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="workRatingOptions" id="workRating1" />
+                  <label class="form-chek-label" for="workRating1">1</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="workRatingOptions" id="workRating2" />
+                  <label class="form-chek-label" for="workRating2">2</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="workRatingOptions" id="workRating3" />
+                  <label class="form-chek-label" for="workRating3">3</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="workRatingOptions" id="workRating4" />
+                  <label class="form-chek-label" for="workRating4">4</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="workRatingOptions" id="workRating5" />
+                  <label class="form-chek-label" for="workRating5">5</label>
+                </div>
+              </div>
+              <div class="mb-3">
+                <h5>Rate the company culture</h5>
+                <p class="text-muted">0=Toxicand not welcoming / 5=Warm and welcoming</p>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="cultureRatingOptions" id="cultureRating1" />
+                  <label class="form-chek-label" for="cultureRating1">1</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="cultureRatingOptions" id="cultureRating2" />
+                  <label class="form-chek-label" for="cultureRating2">2</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="cultureRatingOptions" id="cultureRating3" />
+                  <label class="form-chek-label" for="cultureRating3">3</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="cultureRatingOptions" id="cultureRating4" />
+                  <label class="form-chek-label" for="cultureRating4">4</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="cultureRatingOptions" id="cultureRating5" />
+                  <label class="form-chek-label" for="cultureRating5">5</label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -215,6 +215,16 @@ def view_review(review_id):
         return redirect(url_for("reviews")) #NOTE: should redirect with flag to indicate non-existing review
     return render_template("view_review.html",review=review)
 
+@app.route("/submit")
+def submit_review():
+    if 'username' not in session:
+        flash('Not logged in!', 'danger')
+        return redirect(url_for('login'))
+
+    return render_template(
+        'submit_review.html',
+        states=model.states,
+        categories=model.job_categories)
 
 @app.route("/")
 @app.route("/index")
