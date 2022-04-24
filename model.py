@@ -148,6 +148,29 @@ def hash_profile_name(name:str)->str:
     hashed = bcrypt.hashpw(name.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 
+
+def to_review_obj(json:dict)->'Review':
+    review = Review(
+        user=json.get('user'),
+        company=to_company_obj(json.get('company')),
+        position=json.get('position'),
+        job_cat=json.get('job_cat'),
+        education=json.get('education'),
+        pay=json.get('pay'),
+        location=tuple(json.get('location')),
+        start_date=json.get('start_date'),
+        company_rating=json.get('company_rating'),
+        work_rat=json.get('work_rat'),
+        culture_rat=json.get('culture_rat'),
+        interview_rat=json.get('interview_rat'),
+        bonuses=json.get('bonuses'),
+        interview_desc=json.get('interview_desc'),
+        intern_desc=json.get('intern_desc'),
+        title="Title"
+        )
+
+    return review
+
 def to_company_obj(json:dict)->'Company':
     """Converts a JSON to a Company object
        to facilitate processing on the website.

@@ -242,26 +242,31 @@ def submit_review():
 
     if request.method == "POST":
         form = request.form 
+        print(form)
         review = model.Review(
             user=session['username'],
-            company=form['company'],
+            company=model.to_company_obj(db.companies.find_one({'name':form['company']})),
             position=form['position'],
             job_cat=form['jobCategory'],
             education=form['education'],
-            pay=form['payAmount'],
-            location=(form['location']),
-            start_date=form['startDate'],
-            company_rating=form['companyRatingOptions'],
-            work_rat=form['workRatingOptions'],
-            culture_rat=form['cultureRatingOptions'],
-            interview_rat=form['interviewRatingOptions'],
+            pay=float(form['payAmount']),
+            location=tuple((form['city'],form['location'])),
+            start_date=list(map(lambda x: f"{x[1]}-{x[2]}-{x[0]}", [form['startDate'].split("-")]))[0],
+            company_rating=int(form['companyRatingOptions']),
+            work_rat=int(form['workRatingOptions']),
+            culture_rat=int(form['cultureRatingOptions']),
+            interview_rat=int(form['interviewRatingOptions']),
             bonuses=form['bonusesDescription'],
             interview_desc=form['interviewDescription'],
             intern_desc=form['internshipDescription'],
-            title=""
+            title="Title"
         )
-
+        review = vars(review)
+        review['company'] = vars(review['company'])
+        db.reviews.insert_one(review)
         flash('Review submitted!', "success")
+
+        
 
 
     return render_template(
@@ -281,7 +286,7 @@ def index():
     else:
         # '.limit()' limits the amount of documents queried
         reviews = db.reviews.find().sort('date_posted', -1).limit(5)
-
+        reviews = [model.to_review_obj(rev) for rev in reviews]
     # -1 sorts in descending order
     companies = db.companies.find().sort("company_rat", -1).limit(4)
     return render_template("index.html", recent_reviews=reviews, companies=companies, to_comp_obj=model.to_company_obj,
