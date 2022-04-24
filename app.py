@@ -212,14 +212,22 @@ def reviews():
 def view_review(review_id):
     review = db.reviews.find_one({"_id":ObjectId(review_id)})
     if not review:
+        flash("Review not found!",'danger')
         return redirect(url_for("reviews")) #NOTE: should redirect with flag to indicate non-existing review
     return render_template("view_review.html",review=review)
 
-@app.route("/submit")
+@app.route("/submit", methods=["GET","POST"])
 def submit_review():
     if 'username' not in session:
         flash('Not logged in!', 'danger')
         return redirect(url_for('login'))
+
+    if request.method == "POST":
+        for thing in request.form:
+            print(thing)
+
+        flash('Review submitted!', "success")
+
 
     return render_template(
         'submit_review.html',
