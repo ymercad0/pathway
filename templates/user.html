@@ -22,8 +22,9 @@
       </div>
       <ul class="list-group list-group-flush">
         <li class="list-group-item">
+          <!-- Get only the sign up date -->
           <img id='calendar-icon' src={{url_for('static', filename='Images/Icons/calendar.jpg' )}}>
-          Account created on <br> {{user.creation_time}}
+          Account created on {{creation_day}}
         </li>
         <li class="list-group-item">
           <p class="lead"><b>Total Reviews: </b>{{reviews|length}}</p>

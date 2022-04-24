@@ -81,25 +81,26 @@
     <div class="offcanvas-body">
         <h4 class="user-settings-header">Profile picture</h4>
         <form method="POST" action="/change_pfp/{{user.username}}" enctype="multipart/form-data">
-            <input name="profile_image" id="imageUpload" type="file" class="form-control user-img-chng" />
-            <button class="btn btn-warning">Change profile pic</button>
+            <input name="profile_image" id="imageUpload" type="file" class="form-control" required />
+            <button class="btn btn-warning user-settings-btn">Change profile pic</button>
         </form>
 
         <h4 class="user-settings-header">Reset password</h4>
         <form method="POST" action="/change_password/{{user.username}}">
             <div class="row">
                 <label for="currentPassword" class="form-label text-muted col-sm-6">Current password</label>
-                <input type="text" name="currentPassword" class="form-text col-sm-6" id="currentPassword" value=""
-                    onchange="if(this.checkValidity()) form.newPassword.pattern = this.value;" minlength="5" required />
+                <input type="text" name="currentPassword" class="form-text col-sm-6 pswd_box" id="currentPassword"
+                    value="" onchange="if(this.checkValidity()) form.newPassword.pattern = this.value;" minlength="5"
+                    required />
             </div>
             <div class="row">
                 <label for="newPassword" class="form-label text-muted col-sm-6">New password</label>
-                <input type="text" name="newPassword" class="form-text col-sm-6" id="newPassword" value="" minlength="5"
+                <input type="text" name="newPassword" class="form-text col-sm-6 pswd_box" id="newPassword" value=""
+                    minlength="5"
                     onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please enter the same password as above.' : '');"
                     required />
             </div>
-
-            <button class="btn btn-danger" type="submit">Change password</button>
+            <button class="btn btn-danger user-settings-btn" type="submit">Change password</button>
         </form>
     </div>
 </div>
