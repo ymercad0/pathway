@@ -46,18 +46,23 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav">
+
                     <a class="nav-link" href="/reviews">Reviews</a>
-                    <a class="nav-link" href="#">Companies</a>
+                    <a class="nav-link" href="{{url_for('companies')}}">Companies</a>
                     {% if session['username'] %}
                         <a class="nav-link" href="{{url_for('user')}}">View Account</a>
                     {% else %}
                         <a class="nav-link" href="{{url_for('login')}}">Sign in</a>
                     {% endif %}
                     <a class="nav-link" href="/submit">Write a Review</a>
+                    <!-- change this so that only admin accounts can access it -->
+                    <a class="nav-link" href="{{url_for('company_admin')}}">Add Companies</a>
+
                 </div>
-                <form id="navbar-search" class="d-flex">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-                    <button class="btn btn-success" type="submit">Search</button>
+                <form id="navbar-search" action="/search" class="d-flex" enctype="multipart/form-data">
+                    <input class="form-control" type="search" name="search-field" placeholder="Search Companies"
+                        aria-label="Search" />
+                    <button class="btn btn-success" name="search-btn" type="submit" value="clicked">Search</button>
                 </form>
             </div>
         </div>

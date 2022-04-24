@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+
+{% block htmlclass %}class="index"{% endblock %}
+
+{% block head %}
+<title>Search Results</title>
+{% endblock %}
+
+{% block bodyclass %}class="index"{% endblock %}
+
+{% block main %}
+<div class="add_comp_title">
+    <h2>Results for: {{query}}</h2>
+</div>
+
+{% if num_queries == 0 %}
+<div class="empty-content">
+    <h2>No companies found!</h2>
+</div>
+
+{% else %}
+{% for company in results %}
+{% set company = to_comp_obj(company) %}
+<div class="container col-md-5">
+    <div class="row">
+        <div class="col">
+            <div class="card mb-3 border border-dark company-card">
+                <div class="company-card-content">
+                    <!-- Status icon and new links-->
+                    <div class="row">
+                        <a href={{url_for('company_page', company_name=company.name.lower())}}
+                            class="btn btn-primary-outline position-relative shadow-none col-md-3">
+                            <img src={{url_for('file', filename=company.logo_img)}} class="card-img" alt="...">
+                            <span class="position-absolute top-10 start-90 translate-middle p-2
+                                        bg-{{company.category_badge(company.company_rat)}}
+                                        border border-light rounded-circle">
+                            </span>
+                        </a>
+                        <div class="col mx-auto">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <div class="company-title">
+                                        <a href={{url_for('company_page', company_name=company.name.lower())}}
+                                            class="company-link">{{company.name}}</a>
+                                    </div>
+                                </h4>
+
+                                <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
+
+                                <div class="col review-section-content mx-auto">
+                                    <div class="review-title-row row">
+                                        <div class="col mx-auto">Overall</div>
+                                        <div class="col mx-auto">Work Culture </div>
+                                        <div class="col mx-auto">Company Culture</div>
+                                    </div>
+
+                                    <!-- Each company rating -->
+                                    <div class="row">
+                                        {% for rating in [company.company_rat, company.work_rat, company.culture_rat] %}
+                                        {% if rating != None %}
+                                        <div class="col mx-auto">
+                                            <span class="badge bg-{{company.category_badge(rating)}}">
+                                                {{'%0.1f'| format(rating | float)}}/5.0</span>
+                                        </div>
+                                        {% else %}
+                                        <div class="col mx-auto text-muted">No reviews</div>
+                                        {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}
+{% endblock %}
+
+{% if num_queries < 3 %}
+{% set nav_type = 'fixed-bottom' %}
+
+{% else %}
+{% set nav_type = 'bottom' %}
+{% endif %}
+
+{% block navbartype %}{{nav_type}}{% endblock %}
