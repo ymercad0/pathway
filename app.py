@@ -146,7 +146,7 @@ def company_admin():
 
             else:
                 flash(f"{to_remove} was removed from the database!", "success")
-    
+
     if 'username' in session:
         user = db.users.find_one({'username':session['username']})
     else:
@@ -354,7 +354,7 @@ def view_review(review_id):
         user = None
     return render_template("view_review.html", review=review, user=user)
 
-@app.route("/submit", methods=["GET","POST"])
+@app.route("/reviews/submit", methods=["GET","POST"])
 def submit_review():
     if 'username' not in session:
         flash('Cannnot write a review without being signed in!', 'danger')
