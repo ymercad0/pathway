@@ -77,6 +77,7 @@
     {% endfor %} {% endif %} {% endwith %} {% block main %} {% endblock %}
 
     <!-- Bottom navbar -->
+    {% block show_navbar %}
     <nav class="navbar {% block navbartype %} {% endblock %}" style="background-color: #6d078136;">
       <div class="container-fluid">
         <div class="col mx-auto nav-bottom">
@@ -90,5 +91,7 @@
         </div>
       </div>
     </nav>
-  </body>
+    {% endblock %}
+</body>
+
 </html>
