@@ -341,7 +341,7 @@ class User:
             profile_pic: The filename of the user's profile pic.
             creation_time: A datetime object, containing the time the user account was created.
     """
-    def __init__(self, username:str, email:str, pswd:str, profile_pic:str="default.jpg")->None:
+    def __init__(self, username:str, email:str, pswd:str, profile_pic:str="../static/Images/Icons/default.jpg")->None:
         """Initializes a user given the information
            the user decides to input.
 
@@ -706,7 +706,7 @@ class Review:
 
 
     def to_json(self) -> dict:
-        return { 
+        return {
             "user":self.user,
             "company":vars(self.company),
             "job_cat":self.job_cat,

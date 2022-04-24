@@ -3,6 +3,9 @@
     --highlight-grey: rgb(129, 129, 129);
     --form-greyple: rgba(176, 150, 187, 0.342);
     --bootstrap-grey: rgb(168, 167, 167);
+    --company-hr: rgb(181, 112, 189);
+    --sign-in-bg: #94C5CC;
+    --review-colors: #F7FFF6;
 }
 
 ::-webkit-scrollbar {
@@ -128,65 +131,65 @@ p {
 }
 
 
-.user-card { 
+.user-card {
     margin-left: 1.5rem;
     margin-right: 1.5rem;
 }
 
-#userPicture { 
+#userPicture {
     max-width: 300px;
     max-height: 300px;
 
 }
 
-#calendar-icon { 
+#calendar-icon {
     max-width: 2.5rem;
     max-height: 2.5rem;
 }
 
-.user-settings-header { 
+.user-settings-header {
     margin-top: 10%;
 }
 
-.accordion-header .badge { 
+.accordion-header .badge {
     /* max-width: 5%; */
     margin-left: 5%;
     font-size: large;
 }
 
-.accordion-body dt { 
+.accordion-body dt {
     font-size: larger;
 }
 
-.accordion-body dd { 
+.accordion-body dd {
     font-size: large;
 }
 
-.jumbotron { 
+.jumbotron {
     margin-bottom: 5%;
     width: 100%;
     height: auto;
     background-image: url(https://images.unsplash.com/photo-1481328101413-1eef25cc76c0?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
 }
 
-#recent-reviews-title { 
+#recent-reviews-title {
     margin-bottom: 3%;
 }
 
-.review-company-logo { 
+.review-company-logo {
     width: 100%;
     height: auto;
-    object-fit:contain;
+    object-fit: contain;
 }
 
 .review-card-wrapper {
     margin-top: 7%;
-    background-color: #F7FFF6;
-    font-size:1.5em;
+    background-color: var(--review-colors);
+    font-size: 1.5em;
 }
 
-.review-card-wrapper dt { 
-    color:#1A535C
+.review-card-wrapper dt {
+    color: #1A535C
 }
 
 .review-rating {
@@ -195,27 +198,35 @@ p {
     justify-content: center;
 }
 
-.vh-100 { 
-    background-color: #94C5CC;
+.vh-100 {
+    background-color: var(--sign-in-bg);
 }
 
-#sign-in-msg { 
+#sign-in-msg {
     letter-spacing: 1px;
 }
 
-#sign-in { 
+#sign-in {
     border-radius: 1rem;
 }
 
-#sign-in-logo { 
+#sign-in-logo {
     border-radius: 1rem 0 0 1rem;
 }
 
-#sign-up-card { 
+#sign-up-card {
     border-radius: 1rem;
 }
 
-.title-text { 
+.user-img-chng {
+    margin-bottom: 0.1rem;
+}
+
+#deleteAcc {
+    margin-top: 0.5rem;
+}
+
+.title-text {
     background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
     background-size: 100%;
     background-clip: text;
@@ -223,19 +234,19 @@ p {
     -webkit-text-fill-color: transparent;
 }
 
-.login-btn { 
-    background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
-    background-size: 100%;
+.login-btn a {
+    color: #393f81;
 }
+
 #scrollspy-example {
     position: relative;
     height: 500px;
     overflow: auto;
-  }
+}
 
 /* Company forms */
 hr.solid {
-    border-top: 3px solid rgb(181, 112, 189);
+    border-top: 3px solid var(--company-hr);
 }
 
 .add_comp_title {
@@ -294,4 +305,3 @@ select {
     display: flex;
     justify-content: space-between;
 }
-

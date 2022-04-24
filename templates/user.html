@@ -5,43 +5,46 @@
 {% block htmlclass %}class="user"{% endblock %}
 
 {% block head %}
-<title>Pathway - User</title>
+<title>User Profile- {{user.username}}</title>
 {% endblock %}
 
 {% block bodyclass %}class="user"{% endblock %}
 
 {% block main %}
 <div class="row">
-    <div class="col-md-3">
-        <div id="userProfile" class="user-card card border-light">
-            <img id="userPicture" src={{url_for('file', filename=user.profile_pic)}} 
-                class="card-img-top rounded" alt="...">
-            <div class="card-body">
-                <h3 class="card-title">{{user.username}}</h3>
-                <p class="card-text">Some user information</p>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                  <img id='calendar-icon' src={{url_for('static', filename='Images/Icons/calendar.jpg')}}>
-                  {{user.creation_time}}
-                </li>
-                <li class="list-group-item">
-                  <p class="lead"><b>Total Reviews: </b>{{reviews|length}}</p>
-                </li>
-                <li class="list-group-item">
-                  <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvasSettings" role="button" aria-controls="offcanvasSettings">
-                    Settings
-                  </a>
-                </li>
-            </ul>
-            {{userSettings(user)}}
-        </div>
+  <div class="col-md-3">
+    <div id="userProfile" class="user-card card border-light">
+      <div class="col-md-5">
+        <img id="userPicture" src={{url_for('file', filename=user.profile_pic)}} class="card-img-top rounded" alt="...">
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">{{user.username}}</h3>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <img id='calendar-icon' src={{url_for('static', filename='Images/Icons/calendar.jpg' )}}>
+          Account created on <br> {{user.creation_time}}
+        </li>
+        <li class="list-group-item">
+          <p class="lead"><b>Total Reviews: </b>{{reviews|length}}</p>
+        </li>
+        <li class="list-group-item">
+          <a class="btn btn-secondary" data-bs-toggle="offcanvas" href="#offcanvasSettings" role="button"
+            aria-controls="offcanvasSettings">
+            Settings
+          </a>
+        </li>
+      </ul>
+      {{userSettings(user)}}
     </div>
-    
-    <div class="col-md-9">
-        <h4 class="display-3">Recent Reviews</h4>
-        {{userProfileReviews(reviews)}}
-    </div>
+  </div>
+
+  <div class="col-md-9">
+    <h4 class="display-3">Recent Reviews</h4>
+    {{userProfileReviews(reviews)}}
+  </div>
 </div>
 
 {% endblock %}
+
+{% block navbartype %}bottom{% endblock %}

@@ -50,13 +50,15 @@
                     <a class="nav-link" href="/reviews">Reviews</a>
                     <a class="nav-link" href="{{url_for('companies')}}">Companies</a>
                     {% if session['username'] %}
-                        <a class="nav-link" href="{{url_for('user')}}">View Account</a>
+                    <a class="nav-link" href="{{url_for('user')}}">View Account</a>
                     {% else %}
-                        <a class="nav-link" href="{{url_for('login')}}">Sign in</a>
+                    <a class="nav-link" href="{{url_for('login')}}">Sign in</a>
                     {% endif %}
                     <a class="nav-link" href="/submit">Write a Review</a>
-                    <!-- change this so that only admin accounts can access it -->
+                    <!-- Only admins can access the company admin panel -->
+                    {% if session['username'] == 'admin_acc_manager' %}
                     <a class="nav-link" href="{{url_for('company_admin')}}">Add Companies</a>
+                    {% endif %}
 
                 </div>
                 <form id="navbar-search" action="/search" class="d-flex" enctype="multipart/form-data">

@@ -10,42 +10,46 @@
 
 {% block main %}
 <section class="vh-100">
-    <div class="container py-5 h-100">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col col-xl-10">
-          <div id="sign-in" class="card">
-            <div class="row g-0">
-              <div class="col-md-6 col-lg-5 d-none d-md-block">
-                <img id="sign-in-logo"src={{url_for('static', filename='/Images/Icons/favicon.png')}}
-                  alt="login form" class="img-fluid"/>
-              </div>
-              <div class="col-md-6 col-lg-7 d-flex align-items-center">
-                <div class="card-body p-4 p-lg-5 text-black">
-                  <form class="form" method="POST" action="/login">
-                    <div class="d-flex align-items-center mb-3 pb-1">
-                      <span class="title-text h1 fw-bold mb-0">Pathway</span>
-                    </div>
-                    <h5 id="sign-in-msg" class="title-text fw-normal mb-3 pb-3">Sign into your account</h5>
-                    <div class="form-outline mb-4">
-                      <input name="username" type="text" id="usernameField" class="form-control form-control-lg" />
-                      <label class="form-label" for="usernameField">Username</label>
-                    </div>
-                    <div class="form-outline mb-4">
-                      <input name="password" type="password" id="passwordField" class="form-control form-control-lg" />
-                      <label class="form-label" for="passwordField">Password</label>
-                    </div>
-                    <div class="pt-1 mb-4">
-                      <input type="submit" class="login-btn btn btn-dark btn-lg btn-block">
-                    </div>
-                    <p class="mb-5 pb-lg-2">Don't have an account? <a href="/signup"
-                        style="color: #393f81;">Register here</a></p>
-                  </form>
-                </div>
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <div id="sign-in" class="card">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block">
+              <img id="sign-in-logo" src={{url_for('static', filename='/Images/Icons/favicon.png' )}} alt="login form"
+                class="img-fluid" />
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-black">
+                <form class="form" method="POST" action="/login">
+                  <div class="d-flex align-items-center mb-3 pb-1">
+                    <span class="title-text h1 fw-bold mb-0">Pathway</span>
+                  </div>
+                  <h5 id="sign-in-msg" class="title-text fw-normal mb-3 pb-3">Sign into your account</h5>
+                  <div class="form-outline mb-4">
+                    <input name="username" type="text" id="usernameField" class="form-control form-control-lg"
+                      placeholder="Enter your username" required />
+                    <label class="form-label" for="usernameField">Username</label>
+                  </div>
+                  <div class="form-outline mb-4">
+                    <input name="password" type="password" id="passwordField" class="form-control form-control-lg"
+                      placeholder="Enter your password" required />
+                    <label class="form-label" for="passwordField" required>Password</label>
+                  </div>
+                  <div class="pt-1 mb-4">
+                    <input type="submit" class="login-btn btn btn-dark btn-lg btn-block" value="Login">
+                  </div>
+                  <div class="login-btn">
+                    <p class="mb-5 pb-lg-2">Don't have an account? <a href="/signup">Register
+                        here</a></p>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 {% endblock %}

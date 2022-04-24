@@ -19,19 +19,31 @@
             <form class="form" method="POST" action="/create_user" enctype="multipart/form-data">
               <div class="form-outline mb-4">
                 <label class="form-label" for="usernameField">Username</label>
-                <input name="username" type="text" id="usernameField" class="form-control form-control-lg" minlength="4"
-                  required />
+                <input name="username" placeholder="Enter a username" type="text" id="usernameField"
+                  class="form-control form-control-lg" minlength="4" required />
               </div>
 
               <div class="form-outline mb-4">
                 <label class="form-label" for="emailField">Email</label>
-                <input name="email" type="email" id="emailField" class="form-control form-control-lg" required />
+                <input name="email" placeholder="Enter a valid email" type="email" id="emailField"
+                  class="form-control form-control-lg" required />
+              </div>
+
+              <!-- Password validation -->
+              <div class="form-outline mb-4">
+                <label class="form-label" for="passwordField">Enter Password</label>
+                <input name="password" placeholder="Enter a secure password" type="password" id="passwordField"
+                  class="form-control form-control-lg"
+                  onchange="if(this.checkValidity()) form.confirm_password_input.pattern = this.value;" minlength="5"
+                  required />
               </div>
 
               <div class="form-outline mb-4">
-                <label class="form-label" for="passwordField">Password</label>
-                <input name="password" type="password" id="passwordField" class="form-control form-control-lg"
-                  minlength="5" required />
+                <label class="form-label" for="passwordField">Confirm Password</label>
+                <input name="confirm_password_input" type="password" id="passwordField"
+                  placeholder="Confirm your password" class="form-control form-control-lg" minlength="5"
+                  onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please enter the same password as above.' : '');"
+                  required />
               </div>
 
               <div class="form-group row">
@@ -39,15 +51,12 @@
                   <label class="form-label" for="imageUpload">Profile picture</label>
 
                   <input id="imageUpload" class="form-control" type="file" name="profile_image"
-                    accept=".png, .jpg, .webp" required>
+                    accept=".png, .jpg, .webp">
                 </div>
               </div>
-
-
               <hr class="my-4">
-              <button class="login-btn btn btn-dark btn-lg btn-block" type="submit">Login</button>
+              <button class="login-btn btn btn-dark btn-lg btn-block" type="submit">Sign up</button>
             </form>
-
           </div>
         </div>
       </div>
