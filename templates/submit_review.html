@@ -31,11 +31,19 @@
             <h5 id="detailsSection">Details</h5>
             <div class="mb-3">
               <label for="company" class="form-label">Company</label>
-              <input type="text" class="form-control" id="company" name="company" required />
+              <!-- If the user clicks on reviewing a company from that page -->
+              {% if company != None %}
+              <input type="text" placeholder="Company Name" class="form-control" id="company" name="company"
+                value="{{company}}" required />
+              {% else %}
+              <input type="text" placeholder="Company Name" class="form-control" id="company" name="company" required />
+              {% endif %}
+
             </div>
             <div class="mb-3">
               <label for="position" class="form-label">Position</label>
-              <input type="text" class="form-control" id="position" name="position" required />
+              <input type="text" placeholder="Job Position" class="form-control" id="position" name="position"
+                required />
             </div>
             <div class="mb-3">
               <label for="jobCategory" class="form-label">Job Category</label>
@@ -97,7 +105,7 @@
 
               <input type="radio" class="btn-check" name="acceptedOptions" id="acceptedOption2" autocomplete="off"
                 value="false" />
-              <label class="btn btn-warning" for="acceptedOption2">Denied offer</label>
+              <label class="btn btn-danger" for="acceptedOption2">Denied offer</label>
             </div>
 
             <hr class="my-3" />

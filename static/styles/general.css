@@ -32,6 +32,11 @@ html.index {
     background: linear-gradient(0.25turn, #e2dbf5, #e9e8e8);
 }
 
+body.reviews,
+html.reviews {
+    overflow-x: hidden;
+}
+
 .navbar {
     font-family: 'Josefin Sans', sans-serif;
     font-size: 1.2em;
@@ -332,6 +337,6 @@ select {
     height: 100%;
 }
 
-.nav-link { 
+.nav-link {
     font-weight: bolder;
 }

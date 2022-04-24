@@ -24,7 +24,8 @@
             </div>
             <div class="company-to-review">
                 <h3 class="card-title">{{company.name}}</h3>
-                <button type="button" class="btn btn-outline-success">Write a Review</button>
+                <a href={{url_for('submit_review', company_to_review=company.name)}} role="button"
+                    class="btn btn-outline-success shadow-none">Write a Review</a>
 
             </div>
             <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
