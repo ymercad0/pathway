@@ -1,6 +1,13 @@
-{% extends 'base.html' %} {% block htmlclass %}class="submit"{% endblock %} {% block head %}
+{% extends 'base.html' %}
+{% block htmlclass %}class="submit"{% endblock %}
+
+{% block head %}
 <title>Pathway - Submit Review</title>
-{% endblock %} {% block bodyclass %}class="submit"{% endblock %} {% block main %}
+{% endblock %}
+
+{% block bodyclass %}class="submit"{% endblock %}
+
+{% block main %}
 <div class="container">
   <div class="row d-flex justify-content-center align-items-center h-100">
     <div class="col-12 col-md-8 col-lg-6 col-xl-5">
@@ -24,11 +31,11 @@
             <h5 id="detailsSection">Details</h5>
             <div class="mb-3">
               <label for="company" class="form-label">Company</label>
-              <input type="text" class="form-control" id="company" name="company" required/>
+              <input type="text" class="form-control" id="company" name="company" required />
             </div>
             <div class="mb-3">
               <label for="position" class="form-label">Position</label>
-              <input type="text" class="form-control" id="position" name="position" required/>
+              <input type="text" class="form-control" id="position" name="position" required />
             </div>
             <div class="mb-3">
               <label for="jobCategory" class="form-label">Job Category</label>
@@ -50,17 +57,17 @@
               <label class="form-label" for="payAmount">Hourly Pay</label>
               <div class="input-group">
                 <div class="input-group-text">$</div>
-                <input type="text" class="form-control" id="payAmount" placeholder="15.00" name="payAmount" required/>
+                <input type="text" class="form-control" id="payAmount" placeholder="15.00" name="payAmount" required />
               </div>
             </div>
             <div class="mb-3">
               <div class="col-4">
-              <label for="location" class="form-label">State</label>
-              <select id="location" class="form-select" name="location" required>
-                {% for state in states %}
-                <option>{{state}}</option>
-                {% endfor %}
-              </select>
+                <label for="location" class="form-label">State</label>
+                <select id="location" class="form-select" name="location" required>
+                  {% for state in states %}
+                  <option>{{state}}</option>
+                  {% endfor %}
+                </select>
               </div>
               <div class="col-10">
                 <label for="city" class="form-label">City</label>
@@ -69,22 +76,27 @@
             </div>
             <div class="mb-3">
               <label for="startDate" class="form-label">Start date</label>
-              <input id="startDate" type="date" class="form-control" placeholder="MM/DD/YYYY" name='startDate' required/>
+              <input id="startDate" type="date" class="form-control" placeholder="MM/DD/YYYY" name='startDate'
+                required />
             </div>
             <div class="mb-3">
               <h5>Were you extended an offer to return?</h5>
-              <input type="radio" class="btn-check" name="offerOptions" id="offerOption1" autocomplete="off" checked value="true"/>
+              <input type="radio" class="btn-check" name="offerOptions" id="offerOption1" autocomplete="off" checked
+                value="true" />
               <label class="btn btn-success" for="offerOption1">Given offer</label>
 
-              <input type="radio" class="btn-check" name="offerOptions" id="offerOption2" autocomplete="off" checked value="false"/>
+              <input type="radio" class="btn-check" name="offerOptions" id="offerOption2" autocomplete="off" checked
+                value="false" />
               <label class="btn btn-danger" for="offerOption2">No offer</label>
             </div>
             <div class="mb-3">
               <h5>If you were given an offer, did you accept it?</h5>
-              <input type="radio" class="btn-check" name="acceptedOptions" id="acceptedOption1" autocomplete="off" value="true"/>
+              <input type="radio" class="btn-check" name="acceptedOptions" id="acceptedOption1" autocomplete="off"
+                value="true" />
               <label class="btn btn-success" for="acceptedOption1">Accepted offer</label>
 
-              <input type="radio" class="btn-check" name="acceptedOptions" id="acceptedOption2" autocomplete="off" value="false"/>
+              <input type="radio" class="btn-check" name="acceptedOptions" id="acceptedOption2" autocomplete="off"
+                value="false" />
               <label class="btn btn-warning" for="acceptedOption2">Denied offer</label>
             </div>
 
@@ -166,23 +178,28 @@
               <h5>Rate your interview experience</h5>
               <p class="text-muted">0=Toxic and not welcoming / 5=Warm and welcoming</p>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating1" value=1 />
+                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating1"
+                  value=1 />
                 <label class="form-check-label" for="interviewRating1">1</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating2" value=2 />
+                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating2"
+                  value=2 />
                 <label class="form-check-label" for="interviewRating2">2</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating3" value=3 />
+                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating3"
+                  value=3 />
                 <label class="form-check-label" for="interviewRating3">3</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating4" value=4 />
+                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating4"
+                  value=4 />
                 <label class="form-check-label" for="interviewRating4">4</label>
               </div>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating5" value=5 />
+                <input class="form-check-input" type="radio" name="interviewRatingOptions" id="interviewRating5"
+                  value=5 />
                 <label class="form-check-label" for="interviewRating5">5</label>
               </div>
             </div>
@@ -199,7 +216,8 @@
             </div>
             <div class="mb-3">
               <label class="form-label" for="internshipDescription">Describe your work!</label>
-              <textarea name="internshipDescription" class="form-control" id="internshipDescription" rows="3"></textarea>
+              <textarea name="internshipDescription" class="form-control" id="internshipDescription"
+                rows="3"></textarea>
             </div>
             <div class="mt-5">
               <button class="login-btn btn btn-dark btn-lg btn-block" type="submit">Submit review</button>
@@ -211,3 +229,5 @@
   </div>
 </div>
 {% endblock %}
+
+{% block navbartype %}fixed-bottom{% endblock %}

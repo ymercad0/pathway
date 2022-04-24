@@ -76,12 +76,14 @@
         <h3 class="offcanvas-title" id="offcanvasSettingsLabel">Settings for <span
                 class="text-muted">{{user.username}}</span></h3>
 
-        <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        <button type="button" class="btn-close text-reset shadow-none" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
         <h4 class="user-settings-header">Profile picture</h4>
         <form method="POST" action="/change_pfp/{{user.username}}" enctype="multipart/form-data">
-            <input name="profile_image" id="imageUpload" type="file" class="form-control" required />
+            <input name="profile_image" id="imageUpload" type="file" accept=".png, .jpg, .webp" class="form-control"
+                required />
             <button class="btn btn-warning user-settings-btn">Change profile pic</button>
         </form>
 
