@@ -354,8 +354,9 @@ def view_review(review_id):
         user = None
     return render_template("view_review.html", review=review, user=user)
 
-@app.route("/reviews/submit", methods=["GET","POST"])
-def submit_review():
+@app.route('/reviews/submit', defaults={'company_to_review': None}, methods=['GET', 'POST'])
+@app.route("/reviews/submit/<company_to_review>/", methods=["GET","POST"])
+def submit_review(company_to_review):
     if 'username' not in session:
         flash('Cannnot write a review without being signed in!', 'danger')
         # returns the current page
@@ -389,6 +390,7 @@ def submit_review():
     user = db.users.find_one({'username':session['username']})
     return render_template(
         'submit_review.html',
+        company=company_to_review,
         states=model.states,
         categories=model.job_categories,
         ed_levels=model.degrees,
