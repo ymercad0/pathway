@@ -820,6 +820,16 @@ def reset_comp_collection()->None:
     for comp_obj in local_companies:
         db_menu.insert_one(comp_obj.to_json())
 
+def reset_review_collection()->None:
+    db = start_db()
+    reviews = db.reviews
+    reviews.delete_many({})
+
+    for review in local_reviews:
+        review = vars(review)
+        review['company'] = vars(review["company"])
+        reviews.insert_one(review)
+
 local_companies = [Company("Microsoft", "Software", "../static/Images/Backup/microsoft.webp",
                             description='''Microsoft Corporation is an American multinational technology corporation
                                         which produces computer software, consumer electronics, personal computers,
@@ -857,3 +867,12 @@ local_companies = [Company("Microsoft", "Software", "../static/Images/Backup/mic
                                         world's most valuable company, the fourth-largest personal computer vendor
                                         by unit sales and second-largest mobile phone manufacturer.''',
                             banner_img="../static/Images/Backup/apple-banner.jpg")]
+
+local_reviews = [
+    Review("user1",local_companies[0],"Software Engineer","Software Engineering","Explore Intern",5,"B.S.",
+    "Interviews were tough but fair. Two rounds of approx. leetcode mediums.",4,True,True,"05-20-2021",
+    "Worked on Excel features and performance. Work was impactful and I learned a lot.",5,5,("Mountain View","California",),
+    34.00,"Free food"),
+    Review("user2",local_companies[1],"Data Scientist","Data Science","Data Science Intern",5,"B.S.",
+    "Interviews were quite difficult and required lots of practice.",3,culture_rat=5,pay=30.00)
+]    

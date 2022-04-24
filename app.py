@@ -16,7 +16,9 @@ for collection in model.collections:
         if collection == "companies":
             with app.app_context():
                 model.reset_comp_collection()
-
+        if collection == "reviews":
+            with app.app_context():
+                model.reset_review_collection()
 
 company1 = model.Company(
         name="Microsoft",
