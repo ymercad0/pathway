@@ -16,6 +16,7 @@ for collection in model.collections:
         if collection == "companies":
             with app.app_context():
                 model.reset_comp_collection()
+
         if collection == "reviews":
             with app.app_context():
                 model.reset_review_collection()
@@ -356,7 +357,7 @@ def view_review(review_id):
         user = None
     return render_template("view_review.html", review=review, user=user)
 
-@app.route('/reviews/submit', defaults={'company_to_review': None}, methods=['GET', 'POST'])
+@app.route('/reviews/submit/', defaults={'company_to_review': None}, methods=['GET', 'POST'])
 @app.route("/reviews/submit/<company_to_review>/", methods=["GET","POST"])
 def submit_review(company_to_review):
     if 'username' not in session:
@@ -366,28 +367,35 @@ def submit_review(company_to_review):
 
     if request.method == "POST":
         form = request.form
-        review = model.Review(
-            user=session['username'],
-            company=model.to_company_obj(db.companies.find_one({'name':form['company']})),
-            position=form['position'],
-            job_cat=form['jobCategory'],
-            education=form['education'],
-            pay=float(form['payAmount']),
-            location=tuple((form['city'],form['location'])),
-            start_date=list(map(lambda x: f"{x[1]}-{x[2]}-{x[0]}", [form['startDate'].split("-")]))[0],
-            company_rating=int(form['companyRatingOptions']),
-            work_rat=int(form['workRatingOptions']),
-            culture_rat=int(form['cultureRatingOptions']),
-            interview_rat=int(form['interviewRatingOptions']),
-            bonuses=form['bonusesDescription'],
-            interview_desc=form['interviewDescription'],
-            intern_desc=form['internshipDescription'],
-            title="Title"
-        )
-        review = vars(review)
-        review['company'] = vars(review['company'])
-        db.reviews.insert_one(review)
-        flash('Review submitted!', "success")
+
+        comp = db.companies.find_one({'name':form['company']})
+
+        if not comp:
+            flash(f"{comp} doesn't exist!", "danger")
+
+        else:
+            review = model.Review(
+                user=session['username'],
+                company=model.to_company_obj(),
+                position=form['position'],
+                job_cat=form['jobCategory'],
+                education=form['education'],
+                pay=float(form['payAmount']),
+                location=tuple((form['city'],form['location'])),
+                start_date=list(map(lambda x: f"{x[1]}-{x[2]}-{x[0]}", [form['startDate'].split("-")]))[0],
+                company_rating=int(form['companyRatingOptions']),
+                work_rat=int(form['workRatingOptions']),
+                culture_rat=int(form['cultureRatingOptions']),
+                interview_rat=int(form['interviewRatingOptions']),
+                bonuses=form['bonusesDescription'],
+                interview_desc=form['interviewDescription'],
+                intern_desc=form['internshipDescription'],
+                title="Title"
+            )
+            review = vars(review)
+            review['company'] = vars(review['company'])
+            db.reviews.insert_one(review)
+            flash('Review submitted!', "success")
 
     user = db.users.find_one({'username':session['username']})
     return render_template(

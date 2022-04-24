@@ -48,6 +48,7 @@
             <div class="mb-3">
               <label for="jobCategory" class="form-label">Job Category</label>
               <select id="jobCategory" class="form-select" name="jobCategory" required>
+                <option value="" disabled selected>Select a job category</option>
                 {% for category in categories %}
                 <option>{{category}}</option>
                 {% endfor %}
@@ -56,6 +57,7 @@
             <div class="mb-3">
               <label class="form-label" for="education">Level of education when you applied for the job</label>
               <select id="education" class="form-select" name="education" required>
+                <option value="" disabled selected>Select an education level</option>
                 {% for level in ed_levels %}
                 <option>{{level}}</option>
                 {% endfor %}
@@ -72,8 +74,9 @@
               <div class="col-4">
                 <label for="location" class="form-label">State</label>
                 <select id="location" class="form-select" name="location" required>
+                  <option value="" disabled selected>Select a state</option>
                   {% for state in states %}
-                  <option>{{state}}</option>
+                  <option>{{states[state]}}</option>
                   {% endfor %}
                 </select>
               </div>
