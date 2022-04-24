@@ -6,6 +6,7 @@
     --company-hr: rgb(181, 112, 189);
     --sign-in-bg: #94C5CC;
     --review-colors: #F7FFF6;
+    --purple-link: #393f81
 }
 
 ::-webkit-scrollbar {
@@ -224,15 +225,23 @@ p {
 }
 
 .sigin-btn a {
-    color: #393f81;
+    color: var(--purple-link);
 }
 
-.user-img-chng {
-    margin-bottom: 0.1rem;
+#imageUpload {
+    width: 380px;
 }
 
-#deleteAcc {
-    margin-top: 0.5rem;
+.pswd_box {
+    border: solid 1px var(--bootstrap-grey);
+    border-radius: 5px;
+}
+
+.user-settings-btn {
+    margin-top: 0.1rem;
+    margin-left: 60%;
+    margin-right: auto;
+    width: 10rem;
 }
 
 .title-text {

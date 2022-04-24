@@ -1,5 +1,6 @@
 from flask import Flask, flash, redirect, url_for, render_template, request, session
 from bson.objectid import ObjectId
+from datetime import datetime
 import bcrypt
 import model
 import re
@@ -44,6 +45,126 @@ review_2 = model.Review('user',company2, "Title", 'Software Engineering',
 placeholder = [review_1 for _ in range(3)]
 placeholder.extend([review_2 for _ in range(3)])
 
+@app.route("/")
+@app.route("/index")
+def index():
+    """Route for index page. Renders 'index.html' file. Currently has
+    placeholder data for debugging/visualization of work.
+    """
+    if db.reviews.count_documents({}) == 0:
+        reviews = None
+    else:
+        # '.limit()' limits the amount of documents queried
+        reviews = db.reviews.find().sort('date_posted', -1).limit(5)
+        reviews = [model.to_review_obj(rev) for rev in reviews]
+    # -1 sorts in descending order
+    companies = db.companies.find().sort("company_rat", -1).limit(4)
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
+    return render_template("index.html", recent_reviews=reviews, companies=companies, to_comp_obj=model.to_company_obj,
+                            user=user)
+
+
+@app.route('/signup')
+def signup():
+    """Endpoint for 'signup.html'
+    """
+    return render_template('signup.html')
+
+
+@app.route("/user", methods=['GET', 'POST'])
+@app.route("/user/<username>", methods=['GET', 'POST'])
+def user():
+    """Route for user's profile page with information and account controls.
+    If the user is not logged in, redirect to current page with a warning.
+    """
+    if 'username' not in session:
+        return redirect(url_for("login"))
+
+    users = db.users
+    reviews = db.reviews
+    user = users.find_one({"username": session["username"]})
+    # user_reviews = [rev for rev in reviews.find({"user":user['username']})]
+    formattted_date = datetime.strftime(user['creation_time'],  '%m-%d-%Y')
+    return render_template('user.html', user=user, creation_day=formattted_date, reviews=placeholder)
+
+@app.route("/change_password/<username>", methods=["POST"])
+def change_password(username):
+    form = request.form
+    users = db.users
+    if session['username']:
+        #user is valid
+        user = {"username": username}
+        salt = bcrypt.gensalt()
+        new_pw = {
+            "$set": {"password": bcrypt.hashpw(form['newPassword'].encode('utf-8'),salt)}
+        }
+        users.update_one(user, new_pw)
+        flash("Password updated!", "success")
+
+    else:
+        flash("Invalid user!", "danger")
+
+    return redirect(url_for("user"))
+
+@app.route("/change_pfp/<username>", methods=['POST'])
+def change_pfp(username):
+    users = db.users
+    if session['username']:
+        pf = request.files['profile_image']
+        filename = model.hash_profile_name(pf.filename)
+        mongo.save_file(filename,pf)
+        user = {"username":username}
+        new_pf = {
+            "$set" : {"profile_pic":filename}
+        }
+        users.update_one(user, new_pf)
+        flash("Succesfully changed profile picture!", "success")
+        return redirect(url_for("user"))
+    else:
+        flash("Invalid user!", "danger")
+    return redirect(url_for("user"))
+
+@app.route('/company-admin', methods=['GET', 'POST'])
+def company_admin():
+    # in case anyone resets all of the companies
+    if db.companies.count_documents({}) == 0:
+        model.reset_comp_collection()
+
+    if request.method == 'POST':
+        # remove companies
+        if 'remove_comp_button' in request.form and request.form['remove_comp_button'] == "clicked":
+            to_remove = request.form['comp_remove']
+            if not db.companies.find_one_and_delete({'name': to_remove}):
+                flash(f"{to_remove} doesn't exist!", "danger")
+
+            else:
+                flash(f"{to_remove} was removed from the database!", "success")
+
+    return render_template("company-admin.html", categories=model.company_categories)
+
+@app.route('/companies/')
+def companies():
+    # displays the top 10 highest rated companies
+    comps = db.companies.find().sort("company_rat", -1).limit(10)
+    return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)
+
+@app.route('/companies/<company_name>')
+def company_page(company_name):
+    comp = db.companies.find_one({"name_lower": company_name})
+
+    if not comp:
+        flash("Accessed an invalid URL.", "danger")
+        return redirect(url_for('companies'))
+
+    # if db.reviews.count_documents({}) == 0:
+    #     reviews = None
+    # else:
+    #     reviews = db.reviews.find().sort('date_posted', -1).limit(5)
+
+    return render_template('company.html', company=model.to_company_obj(comp), reviews=None)
 
 @app.route('/search')
 def search():
@@ -186,65 +307,6 @@ def create_company():
 
     return redirect(url_for('company_admin'))
 
-@app.route('/signup')
-def signup():
-    """Endpoint for 'signup.html'
-    """
-    return render_template('signup.html')
-
-
-@app.route("/user", methods=['GET', 'POST'])
-@app.route("/user/<username>", methods=['GET', 'POST'])
-def user():
-    """Route for user's profile page with information and account controls.
-    If the user is not logged in, redirect to current page with a warning.
-    """
-    if 'username' not in session:
-        return redirect(url_for("login"))
-
-    users = db.users
-    reviews = db.reviews
-    user = users.find_one({"username": session["username"]})
-    # user_reviews = [rev for rev in reviews.find({"user":user['username']})]
-    return render_template('user.html', user=user, reviews=placeholder)
-
-@app.route("/change_password/<username>", methods=["POST"])
-def change_password(username):
-    form = request.form
-    users = db.users
-    if session['username']:
-        #user is valid
-        user = {"username": username}
-        salt = bcrypt.gensalt()
-        new_pw = {
-            "$set": {"password": bcrypt.hashpw(form['newPassword'].encode('utf-8'),salt)}
-        }
-        users.update_one(user, new_pw)
-        flash("Password updated!", "success")
-
-    else:
-        flash("Invalid user!", "danger")
-
-    return redirect(url_for("user"))
-
-@app.route("/change_pfp/<username>", methods=['POST'])
-def change_pfp(username):
-    users = db.users
-    if session['username']:
-        pf = request.files['profile_image']
-        filename = model.hash_profile_name(pf.filename)
-        mongo.save_file(filename,pf)
-        user = {"username":username}
-        new_pf = {
-            "$set" : {"profile_pic":filename}
-        }
-        users.update_one(user, new_pf)
-        flash("Succesfully changed profile picture!", "success")
-        return redirect(url_for("user"))
-    else:
-        flash("Invalid user!", "danger")
-    return redirect(url_for("user"))
-
 @app.route("/reviews", methods=["GET"])
 def reviews():
     rev = db.reviews.find({})
@@ -296,63 +358,3 @@ def submit_review():
         states=model.states,
         categories=model.job_categories,
         ed_levels=model.degrees)
-
-@app.route("/")
-@app.route("/index")
-def index():
-    """Route for index page. Renders 'index.html' file. Currently has
-    placeholder data for debugging/visualization of work.
-    """
-    if db.reviews.count_documents({}) == 0:
-        reviews = None
-    else:
-        # '.limit()' limits the amount of documents queried
-        reviews = db.reviews.find().sort('date_posted', -1).limit(5)
-        reviews = [model.to_review_obj(rev) for rev in reviews]
-    # -1 sorts in descending order
-    companies = db.companies.find().sort("company_rat", -1).limit(4)
-    if 'username' in session:
-        user = db.users.find_one({'username':session['username']})
-    else:
-        user = None
-    return render_template("index.html", recent_reviews=reviews, companies=companies, to_comp_obj=model.to_company_obj,
-                            user=user)
-
-@app.route('/company-admin', methods=['GET', 'POST'])
-def company_admin():
-    # in case anyone resets all of the companies
-    if db.companies.count_documents({}) == 0:
-        model.reset_comp_collection()
-
-    if request.method == 'POST':
-        # remove companies
-        if 'remove_comp_button' in request.form and request.form['remove_comp_button'] == "clicked":
-            to_remove = request.form['comp_remove']
-            if not db.companies.find_one_and_delete({'name': to_remove}):
-                flash(f"{to_remove} doesn't exist!", "danger")
-
-            else:
-                flash(f"{to_remove} was removed from the database!", "success")
-
-    return render_template("company-admin.html", categories=model.company_categories)
-
-@app.route('/companies/')
-def companies():
-    # displays the top 10 highest rated companies
-    comps = db.companies.find().sort("company_rat", -1).limit(10)
-    return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)
-
-@app.route('/companies/<company_name>')
-def company_page(company_name):
-    comp = db.companies.find_one({"name_lower": company_name})
-
-    if not comp:
-        flash("Accessed an invalid URL.", "danger")
-        return redirect(url_for('companies'))
-
-    # if db.reviews.count_documents({}) == 0:
-    #     reviews = None
-    # else:
-    #     reviews = db.reviews.find().sort('date_posted', -1).limit(5)
-
-    return render_template('company.html', company=model.to_company_obj(comp), reviews=None)
