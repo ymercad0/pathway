@@ -71,7 +71,11 @@ def index():
 def signup():
     """Endpoint for 'signup.html'
     """
-    return render_template('signup.html')
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
+    return render_template('signup.html',user=user)
 
 
 @app.route("/user", methods=['GET', 'POST'])
@@ -142,14 +146,23 @@ def company_admin():
 
             else:
                 flash(f"{to_remove} was removed from the database!", "success")
+    
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
 
-    return render_template("company-admin.html", categories=model.company_categories)
+    return render_template("company-admin.html", categories=model.company_categories,user=user)
 
 @app.route('/companies/')
 def companies():
     # displays the top 10 highest rated companies
     comps = db.companies.find().sort("company_rat", -1).limit(10)
-    return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj)
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
+    return render_template("companies.html", companies=comps, to_comp_obj=model.to_company_obj,user=user)
 
 @app.route('/companies/<company_name>')
 def company_page(company_name):
@@ -164,7 +177,11 @@ def company_page(company_name):
     # else:
     #     reviews = db.reviews.find().sort('date_posted', -1).limit(5)
 
-    return render_template('company.html', company=model.to_company_obj(comp), reviews=None)
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
+    return render_template('company.html', company=model.to_company_obj(comp), reviews=None, user=user)
 
 @app.route('/search')
 def search():
@@ -186,8 +203,12 @@ def search():
         # doesn't consume the cursor, checks for no valid results
         num_queries = len(list(res.clone()))
 
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
     return render_template("search.html", results=res, num_queries=num_queries,
-                            query=query, to_comp_obj=model.to_company_obj)
+                            query=query, to_comp_obj=model.to_company_obj, user=user)
 
 @app.route('/file/<path:filename>')
 def file(filename):
@@ -214,7 +235,12 @@ def login():
                 flash('Invalid username/password combination.', 'danger')
         else:
             flash('User not found.', 'danger')
-    return render_template('login.html')
+
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
+    return render_template('login.html', user=user)
 
 @app.route('/logout')
 def logout():
@@ -310,7 +336,11 @@ def create_company():
 @app.route("/reviews", methods=["GET"])
 def reviews():
     rev = db.reviews.find({})
-    return render_template("reviews.html",reviews=rev)
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
+    return render_template("reviews.html",reviews=rev,user=user)
 
 @app.route("/reviews/<review_id>")
 def view_review(review_id):
@@ -318,7 +348,11 @@ def view_review(review_id):
     if not review:
         flash("Review not found!",'danger')
         return redirect(url_for("reviews")) #NOTE: should redirect with flag to indicate non-existing review
-    return render_template("view_review.html", review=review)
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
+    return render_template("view_review.html", review=review, user=user)
 
 @app.route("/submit", methods=["GET","POST"])
 def submit_review():
@@ -329,7 +363,6 @@ def submit_review():
 
     if request.method == "POST":
         form = request.form
-        print(form)
         review = model.Review(
             user=session['username'],
             company=model.to_company_obj(db.companies.find_one({'name':form['company']})),
@@ -353,8 +386,10 @@ def submit_review():
         db.reviews.insert_one(review)
         flash('Review submitted!', "success")
 
+    user = db.users.find_one({'username':session['username']})
     return render_template(
         'submit_review.html',
         states=model.states,
         categories=model.job_categories,
-        ed_levels=model.degrees)
+        ed_levels=model.degrees,
+        user=user)
