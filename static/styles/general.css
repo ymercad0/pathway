@@ -218,6 +218,15 @@ p {
     border-radius: 1rem;
 }
 
+.login-btn {
+    background-image: -webkit-linear-gradient(45deg, #40356F, #645FCE);
+    background-size: 100%;
+}
+
+.sigin-btn a {
+    color: #393f81;
+}
+
 .user-img-chng {
     margin-bottom: 0.1rem;
 }
@@ -232,10 +241,6 @@ p {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-
-.login-btn a {
-    color: #393f81;
 }
 
 #scrollspy-example {
