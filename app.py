@@ -223,8 +223,25 @@ def submit_review():
         return redirect(url_for('login'))
 
     if request.method == "POST":
-        for thing in request.form:
-            print(thing)
+        form = request.form 
+        review = model.Review(
+            user=session['username'],
+            company=form['company'],
+            position=form['position'],
+            job_cat=form['jobCategory'],
+            education=form['education'],
+            pay=form['payAmount'],
+            location=(form['location']),
+            start_date=form['startDate'],
+            company_rating=form['companyRatingOptions'],
+            work_rat=form['workRatingOptions'],
+            culture_rat=form['cultureRatingOptions'],
+            interview_rat=form['interviewRatingOptions'],
+            bonuses=form['bonusesDescription'],
+            interview_desc=form['interviewDescription'],
+            intern_desc=form['internshipDescription'],
+            title=""
+        )
 
         flash('Review submitted!', "success")
 
@@ -232,7 +249,8 @@ def submit_review():
     return render_template(
         'submit_review.html',
         states=model.states,
-        categories=model.job_categories)
+        categories=model.job_categories,
+        ed_levels=model.degrees)
 
 @app.route("/")
 @app.route("/index")
