@@ -73,11 +73,19 @@
             </div>
             <div class="mb-3">
               <h5>Were you extended an offer to return?</h5>
-              <input type="radio" class="btn-check" name="offerOptions" id="offerOption1" autocomplete="off" checked />
+              <input type="radio" class="btn-check" name="offerOptions" id="offerOption1" autocomplete="off" checked value="true"/>
               <label class="btn btn-success" for="offerOption1">Given offer</label>
 
-              <input type="radio" class="btn-check" name="offerOptions" id="offerOption2" autocomplete="off" checked />
+              <input type="radio" class="btn-check" name="offerOptions" id="offerOption2" autocomplete="off" checked value="false"/>
               <label class="btn btn-danger" for="offerOption2">No offer</label>
+            </div>
+            <div class="mb-3">
+              <h5>If you were given an offer, did you accept it?</h5>
+              <input type="radio" class="btn-check" name="acceptedOptions" id="acceptedOption1" autocomplete="off" value="true"/>
+              <label class="btn btn-success" for="acceptedOption1">Accepted offer</label>
+
+              <input type="radio" class="btn-check" name="acceptedOptions" id="acceptedOption2" autocomplete="off" value="false"/>
+              <label class="btn btn-warning" for="acceptedOption2">Denied offer</label>
             </div>
 
             <hr class="my-3" />

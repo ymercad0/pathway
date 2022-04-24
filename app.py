@@ -311,8 +311,12 @@ def index():
         reviews = [model.to_review_obj(rev) for rev in reviews]
     # -1 sorts in descending order
     companies = db.companies.find().sort("company_rat", -1).limit(4)
+    if 'username' in session:
+        user = db.users.find_one({'username':session['username']})
+    else:
+        user = None
     return render_template("index.html", recent_reviews=reviews, companies=companies, to_comp_obj=model.to_company_obj,
-                            user=None)
+                            user=user)
 
 @app.route('/company-admin', methods=['GET', 'POST'])
 def company_admin():
