@@ -77,6 +77,18 @@ p {
     margin-bottom: 5rem;
 }
 
+.empty-content-user {
+    text-align: left;
+    color: grey;
+    margin-top: 5rem;
+    margin-bottom: 5rem;
+}
+
+.empty-content-user a {
+    text-decoration: none;
+    color: var(--purple-link);
+}
+
 .reviews {
     overflow-x: scroll;
     white-space: nowrap;

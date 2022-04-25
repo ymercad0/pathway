@@ -26,6 +26,11 @@
           <img id='calendar-icon' src={{url_for('static', filename='Images/Icons/calendar.jpg' )}}>
           Account created on {{creation_day}}
         </li>
+
+        <li class="list-group-item">
+          User email: {{user.email}}
+        </li>
+
         <li class="list-group-item">
           <p class="lead"><b>Total Reviews: </b>{{reviews|length}}</p>
         </li>
@@ -42,7 +47,13 @@
 
   <div class="col-md-9">
     <h4 class="display-3">Recent Reviews</h4>
+    {% if reviews|length != 0 %}
     {{userProfileReviews(reviews)}}
+    {% else %}
+    <div class="empty-content-user">
+      <h2>No reviews yet. <a href={{url_for('submit_review')}}>Submit a review</a> and check them here!</h2>
+    </div>
+    {% endif %}
   </div>
 </div>
 
