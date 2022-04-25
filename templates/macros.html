@@ -116,7 +116,8 @@
         </div>
         <div class="col-md-8">
             <div class="card-body">
-                <h5 class="card-title">{{review.company.name}}</h5>
+                <h5 class="card-title"><a href={{url_for('company_page', company_name=review.company.name.lower())}}
+                        class="company-link">{{review.company.name}}</a></h5>
                 <p class="card-text">
                     {{reviewCardContent(review)}}
                 </p>
