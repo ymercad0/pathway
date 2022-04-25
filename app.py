@@ -148,7 +148,6 @@ def company_page(company_name):
 
     if db.reviews.count_documents({'company.name': comp['name']}) == 0:
         reviews = None
-        rev_count = None
 
     else:
         reviews = [rev for rev in db.reviews.find({'company.name': comp['name']}).sort('date_posted', -1).limit(8)]
