@@ -122,9 +122,9 @@
                     <!-- Each company rating -->
                     <div class="row">
                       {% for rating in [company.company_rat, company.work_rat, company.culture_rat] %}
-                      {% if rating != None %}
+                      {% if rating %}
                       <div class="col mx-auto">
-                        <span class="badge bg-{{company.category_badge(rating)}}">
+                        <span class="badge bg-{{ratingColor(rating)|trim}}">
                           {{'%0.1f'| format(rating | float)}}/5.0</span>
                       </div>
                       {% else %}

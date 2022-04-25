@@ -804,6 +804,15 @@ def start_db()->"Database":
     db = mongo.db
     return db
 
+def submit_review(review:Review):
+    db = start_db()
+    review.update_scores()
+    json = vars(review)
+    company_json = vars(json['company'])
+    json['company'] = company_json
+    db.reviews.insert_one(json)
+    db.companies.find_one_and_replace({"name":company_json['name']},company_json)
+
 def reset_comp_collection()->None:
     """Resets the Company collection by
        clearing all its documents out
@@ -824,11 +833,10 @@ def reset_review_collection()->None:
     db = start_db()
     reviews = db.reviews
     reviews.delete_many({})
+    companies = db.companies
 
     for review in local_reviews:
-        review = vars(review)
-        review['company'] = vars(review["company"])
-        reviews.insert_one(review)
+        submit_review(review)
 
 local_companies = [Company("Microsoft", "Software", "../static/Images/Backup/microsoft.webp",
                             description='''Microsoft Corporation is an American multinational technology corporation
