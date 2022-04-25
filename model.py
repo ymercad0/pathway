@@ -874,5 +874,13 @@ local_reviews = [
     "Worked on Excel features and performance. Work was impactful and I learned a lot.",5,5,("Mountain View","California",),
     34.00,"Free food"),
     Review("user2",local_companies[1],"Data Scientist","Data Science","Data Science Intern",5,"B.S.",
-    "Interviews were quite difficult and required lots of practice.",3,culture_rat=5,pay=30.00)
+    "Interviews were quite difficult and required lots of practice.",3,culture_rat=5,pay=30.00),
+    Review("user1",local_companies[3], "Security Engineer", "Security Engineering", "Security Engineering Intern",4,
+    "B.S.","Interviewer was nice and made the experience fun. Grand variety of questions regarding security.",5,
+    True,True,"05-20-2022","Worked on internal tooling for vulnerability research on Apple products.",5,4,
+    ("Cupertino","California"),40.00,"Paid flight and housing stipend."),
+    Review("user3",local_companies[1],"Software Engineer", "Software Engineering", "STEP Intern",5,"B.S.",
+    "Challenging but not out of this world. Managed to get optimals solutions with about 5 minutes spare.",5,True,True,
+    "08-05-2021","Full-stack web development work. Worked closely with the Youtube team for new features,",5,5,
+    ("New York City","New York"),40.00,"Paid flight and housing stipend. On campus gym and free food.")
 ]    
