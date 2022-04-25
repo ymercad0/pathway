@@ -33,10 +33,16 @@
               <label for="company" class="form-label">Company</label>
               <!-- If the user clicks on reviewing a company from that page -->
               {% if company != None %}
-              <input type="text" placeholder="Company Name" class="form-control" id="company" name="company"
+              <input type="text" placeholder={{company.name}} class="form-control" id="company" name="company"
                 value="{{company}}" required />
               {% else %}
-              <input type="text" placeholder="Company Name" class="form-control" id="company" name="company" required />
+              <input type="text" placeholder="Company Name" class="form-control" id="company" name="company" required 
+              list="companyOptions"/>
+              <datalist id="companyOptions">
+                {% for company in companies %}
+                <option value={{company.name}}></option>
+                {% endfor %}
+              </datalist>
               {% endif %}
 
             </div>
