@@ -377,3 +377,7 @@ html.user,
 body.user {
     overflow-x: hidden;
 }
+
+.profile-rev-link {
+    text-decoration: inherit;
+}

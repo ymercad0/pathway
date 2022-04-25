@@ -10,22 +10,24 @@
 
     {% if review.pay %}
     <dt class="col-sm-3">Pay</dt>
-    <dd class="col-sm-8 offset-sm-1">{{review.pay}}</dd>
+    <dd class="col-sm-8 offset-sm-1">${{'%0.2f'|format(review.pay)}}/hr</dd>
     {% endif %} {% if review.start_date %}
     <dt class="col-sm-3">Start date</dt>
     <dd class="col-sm-8 offset-sm-1">{{review.start_date}}</dd>
     {% endif %} {% if review.work_rat %}
     <dt class="col-sm-3">Work rating</dt>
-    <dd class="col-sm-8 offset-sm-1">{{review.work_rating}}</dd>
+    <dd class="col-sm-8 offset-sm-1">{{'%0.1f'|format(review.work_rating)}}/5.0</dd>
     {% endif %}
 
     <dt class="col-sm-3">Company Rating</dt>
-    <dd class="col-sm-8 offset-sm-1">{{review.company_rating}}</dd>
+    <dd class="col-sm-8 offset-sm-1">{{'%0.1f'|format(review.company_rating)}}/5.0</dd>
 
     {% if review.culture_rating %}
     <dt class="col-sm-3">Culture rating</dt>
-    <dd class="col-sm-8 offset-sm-1">{{review.culture_rating}}</dd>
-    {% endif %} {% if review.bonuses %}
+    <dd class="col-sm-8 offset-sm-1">{{'%0.1f'|format(review.culture_rating)}}/5.0</dd>
+    {% endif %}
+
+    {% if review.bonuses %}
     <dt class="col-sm-3">Bonuses</dt>
     <dd class="col-sm-8 offset-sm-1 text-truncate">{{review.bonuses}}</dd>
     {% endif %}
@@ -34,6 +36,14 @@
     <dd class="col-sm-8 offset-sm-1">
         <dl class="row">
             <dd class="col-sm-12 text-truncate">{{review.interview_desc}}</dd>
+        </dl>
+    </dd>
+
+    <dt class="col-sm-3">Read Full Review</dt>
+    <dd class="col-sm-8 offset-sm-1">
+        <dl class="row">
+            <dd class="col-sm-12 text-truncate"><a href=/reviews/{{review._id}} class="profile-rev-link">Review Link</a>
+            </dd>
         </dl>
     </dd>
 </dl>
