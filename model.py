@@ -830,10 +830,12 @@ def reset_comp_collection()->None:
         db_menu.insert_one(comp_obj.to_json())
 
 def reset_review_collection()->None:
+    """Clears out all the reviews in a collection and resets them
+       with stock reviews.
+    """
     db = start_db()
     reviews = db.reviews
     reviews.delete_many({})
-    companies = db.companies
 
     for review in local_reviews:
         submit_review(review)

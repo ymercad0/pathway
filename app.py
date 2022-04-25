@@ -148,15 +148,17 @@ def company_page(company_name):
 
     if db.reviews.count_documents({'company.name': comp['name']}) == 0:
         reviews = None
+        rev_count = None
 
     else:
-        reviews = db.reviews.find({'company.name': comp['name']}).sort('date_posted', -1).limit(8)
+        reviews = [rev for rev in db.reviews.find({'company.name': comp['name']}).sort('date_posted', -1).limit(8)]
 
     if 'username' in session:
         user = db.users.find_one({'username':session['username']})
     else:
         user = None
-    return render_template('company.html', company=model.to_company_obj(comp), reviews=reviews, user=user)
+    return render_template('company.html', company=model.to_company_obj(comp),
+                            reviews=reviews, user=user)
 
 @app.route('/search')
 def search():

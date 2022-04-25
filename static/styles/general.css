@@ -370,3 +370,10 @@ select {
 .display-3 {
     margin-left: 1.5rem;
 }
+
+.num-reviews {
+    text-align: left;
+    font-size: 1.5em;
+    color: grey;
+    margin-left: 6rem;
+}

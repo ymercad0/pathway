@@ -60,6 +60,9 @@
 {% if reviews != None %}
 <div class="comp-recent-revs container">
     <!-- Makes the rows and cols -->
+    <div class="num-reviews">
+        <p>Displaying {{reviews | length}} out of {{company.total_reviews}} company reviews. </p>
+    </div>
     <div class="row">
         {% for review in reviews %}
         <div class="reviews-card card mb-3 shadow-sm col-lg-4 offset-md-1">
