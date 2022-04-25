@@ -17,10 +17,11 @@
         <div class="card-title">
             <div class="row g-0">
                 <div class="col-md-2">
-                    <img class="review-company-logo" src={{review.company.logo_img}}>
+                    <img class="review-company-logo" src={{url_for('file', filename=review.company.logo_img)}}>
                 </div>
                 <div class="col-md-10">
-                    <h3 class="display-1">{{review.company.name}}</h3>
+                    <h3 class="display-1"><a href={{url_for('company_page', company_name=review.company.name.lower())}}
+                            class="company-link">{{review.company.name}}</a></h3>
                     <h5 class="display-3 text-muted">{{review.company.category}}</h5>
                     <div class="row">
                         <h3 class="review-rating col-sm-4">Company Rating</h3>
@@ -60,26 +61,52 @@
             <dl id="review-desc-row" class="row offset-md-2">
                 <dt class="col-sm-3">Written by</dt>
                 <dd class="col-sm-9">{{review.user}} </dd>
+                <dt class="col-sm-3">Posted</dt>
+                <dd class="col-sm-9">{{creation_date}} </dd>
                 <hr class="my-4">
                 <dt class="col-sm-3">Job category</dt>
                 <dd class="col-sm-9">{{review.job_cat}}</dd>
-            
+
                 <dt class="col-sm-3">Role</dt>
-                <dd class="col-sm-9"><p>{{review.position}}</p></dd>
-            
+                <dd class="col-sm-9">
+                    <p>{{review.position}}</p>
+                </dd>
+
+                <dt class="col-sm-3">Offer</dt>
+                {% if review.offer == True %}
+                <dd class="col-sm-9">Given</dd>
+                {% if review.accepted == True%}
+                <dt class="col-sm-3">Accepted</dt>
+                <dd class="col-sm-9">Offer accepted</dd>
+                {% endif %}
+                {% else %}
+                <dd class="col-sm-9">None</dd>
+                {% endif %}
+
+                {% if review.location %}
+                <dt class="col-sm-3">Location</dt>
+                {% if review.location[1] == 'Remote' %}
+                <dd class="col-sm-9">{{review.location[1]}}</dd>
+                {% else %}
+                <dd class="col-sm-9">{{review.location[0]}}, {{review.location[1]}}</dd>
+                {% endif %}
+                {% endif %}
+
                 {% if review.pay %}
                 <dt class="col-sm-3">Pay</dt>
-                <dd class="col-sm-9">{{review.pay}}</dd>
-                {% endif %} {% if review.start_date %}
+                <dd class="col-sm-9">${{review.pay}}/hr</dd>
+                {% endif %}
+
+                {% if review.start_date %}
                 <dt class="col-sm-3">Start date</dt>
                 <dd class="col-sm-9">{{review.start_date}}</dd>
-                {% endif %} 
-            
+                {% endif %}
+
                 {% if review.bonuses %}
                 <dt class="col-sm-3">Bonuses</dt>
                 <dd class="col-sm-9">{{review.bonuses}}</dd>
                 {% endif %}
-            
+
                 <dt class="col-sm-3">Description</dt>
                 <dd class="col-sm-9">
                     <dl class="row">

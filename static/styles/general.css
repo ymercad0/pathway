@@ -363,3 +363,8 @@ select {
 .review-form {
     margin-top: 5%;
 }
+
+.display-1,
+.display-3 {
+    margin-left: 1.5rem;
+}

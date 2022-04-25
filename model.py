@@ -538,11 +538,12 @@ class Review:
         if not interview_desc:
             raise ValueError("Interview description cannot be empty!")
 
-        if type(interview_rat) != int:
-            raise TypeError("Interview rating must be an integer!")
+        if interview_rat != None:
+            if type(interview_rat) != int:
+                raise TypeError("Interview rating must be an integer!")
 
-        if interview_rat < 0 or interview_rat > 5:
-            raise ValueError("Cannot rate an interview more than the max or min allowed score.")
+            if interview_rat < 0 or interview_rat > 5:
+                raise ValueError("Cannot rate an interview more than the max or min allowed score.")
 
         # optional params
         if type(offer) != bool:
@@ -595,10 +596,6 @@ class Review:
 
         if state not in states:
             raise ValueError("Invalid state! States must not be abbreviated.")
-
-        for words in city.split():
-            if not words.isalpha():
-                raise ValueError("City must only contain alphabetical characters.")
 
         if pay != None:
             if type(pay) not in [int, float]:

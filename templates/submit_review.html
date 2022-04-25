@@ -83,7 +83,7 @@
               </div>
               <div class="col-10">
                 <label for="city" class="form-label">City</label>
-                <input name="city" type="text" class="form-control" placeholder="San Juan">
+                <input name="city" type="text" class="form-control" pattern="^[a-zA-ZÀ-ÿ-' ]+$" placeholder="San Juan">
               </div>
             </div>
             <div class="mb-3">
@@ -118,7 +118,8 @@
               <h5>Rate the Company as a whole</h5>
               <p class="text-muted">0=Bad / 5=Fantastic</p>
               <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="companyRatingOptions" id="companyRating1" value=1 />
+                <input class="form-check-input" type="radio" name="companyRatingOptions" id="companyRating1" value=1
+                  required />
                 <label class="form-check-label" for="companyRating1">1</label>
               </div>
               <div class="form-check form-check-inline">
@@ -220,7 +221,8 @@
             <h3 id="descriptionsSection">Descriptions</h3>
             <div class="mb-3">
               <label class="form-label" for="interviewDescription">How was your interview?</label>
-              <textarea name="interviewDescription" class="form-control" id="interviewDescription" rows="2"></textarea>
+              <textarea name="interviewDescription" class="form-control" id="interviewDescription" rows="2"
+                required></textarea>
             </div>
             <div class="mb-3">
               <label class="form-label" for="bonusesDescription">Any bonuses worth mentioning?</label>

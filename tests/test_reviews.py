@@ -259,13 +259,6 @@ class TestReviews(unittest.TestCase):
 						 culture_rat=4, location=("San Francisco", "California"),
 						 pay=-35.25, bonuses="Bonus")
 
-		# invalid city (not alphabetical)
-		self.assertRaises(ValueError, Review, 'User', self.comp2, "Title", 'Software Engineering',
-		                 "Position", 4, "M.S.", "Interview", 4, offer=True, accepted=True,
-						 start_date="05-23-2022", intern_desc="desc", work_rat=4,
-						 culture_rat=4, location=("Some c1t5", "California"),
-						 pay=35.25, bonuses="Bonus")
-
 	def test_score_equality(self):
 		#the first time a score is entered
 		self.review1.update_scores()

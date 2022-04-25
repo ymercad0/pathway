@@ -31,7 +31,6 @@ def index():
     else:
         # '.limit()' limits the amount of documents queried
         reviews = db.reviews.find().sort('date_posted', -1).limit(5)
-        # reviews = [model.to_review_obj(rev) for rev in reviews]
     # -1 sorts in descending order
     companies = db.companies.find().sort("company_rat", -1).limit(4)
     if 'username' in session:
@@ -147,8 +146,9 @@ def company_page(company_name):
         flash("Accessed an invalid URL.", "danger")
         return redirect(url_for('companies'))
 
-    if db.reviews.count_documents({}) == 0:
+    if db.reviews.count_documents({'company.name': comp['name']}) == 0:
         reviews = None
+
     else:
         reviews = db.reviews.find({'company.name': comp['name']}).sort('date_posted', -1).limit(8)
 
@@ -319,7 +319,13 @@ def reviews():
 
 @app.route("/reviews/<review_id>")
 def view_review(review_id):
-    review = db.reviews.find_one({"_id":ObjectId(review_id)})
+    try:
+        review = db.reviews.find_one({"_id":ObjectId(review_id)})
+
+    except:
+        flash("Invalid URL accessed!", "danger")
+        return redirect(url_for('reviews'))
+
     if not review:
         #NOTE: should redirect with flag to indicate non-existing review
         flash("Review not found!",'danger')
@@ -328,7 +334,9 @@ def view_review(review_id):
         user = db.users.find_one({'username':session['username']})
     else:
         user = None
-    return render_template("view_review.html", review=review, user=user)
+
+    formattted_date = datetime.strftime(review['date_posted'],  '%m-%d-%Y')
+    return render_template("view_review.html", creation_date=formattted_date, review=review, user=user)
 
 @app.route('/reviews/submit/', defaults={'company_to_review': None}, methods=['GET', 'POST'])
 @app.route("/reviews/submit/<company_to_review>/", methods=["GET","POST"])
@@ -353,6 +361,25 @@ def submit_review(company_to_review):
             else:
                 location = tuple((form['city'],form['location']))
 
+            # optional review fields
+            if 'workRatingOptions' in form:
+                workRat = int(form['workRatingOptions'])
+
+            else:
+                workRat = None
+
+            if 'cultureRatingOptions' in form:
+                cultRat = int(form['cultureRatingOptions'])
+
+            else:
+                cultRat = None
+
+            if 'interviewRatingOptions' in form:
+                intRat = int(form['interviewRatingOptions'])
+
+            else:
+                intRat = None
+
             review = model.Review(
                 user=session['username'],
                 company=model.to_company_obj(comp),
@@ -363,9 +390,9 @@ def submit_review(company_to_review):
                 location=location,
                 start_date=list(map(lambda x: f"{x[1]}-{x[2]}-{x[0]}", [form['startDate'].split("-")]))[0],
                 company_rating=int(form['companyRatingOptions']),
-                work_rat=int(form['workRatingOptions']),
-                culture_rat=int(form['cultureRatingOptions']),
-                interview_rat=int(form['interviewRatingOptions']),
+                work_rat=workRat,
+                culture_rat=cultRat,
+                interview_rat=intRat,
                 bonuses=form['bonusesDescription'],
                 interview_desc=form['interviewDescription'],
                 intern_desc=form['internshipDescription'],
