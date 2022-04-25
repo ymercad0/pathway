@@ -377,3 +377,8 @@ select {
     color: grey;
     margin-left: 6rem;
 }
+
+html.user,
+body.user {
+    overflow-x: hidden;
+}
