@@ -37,6 +37,12 @@ html.reviews {
     overflow-x: hidden;
 }
 
+body.submit,
+html.submit {
+    background: linear-gradient(0.25turn, #74ebd5, #ACB6E5);
+    overflow-x: hidden;
+}
+
 .navbar {
     font-family: 'Josefin Sans', sans-serif;
     font-size: 1.2em;
@@ -339,4 +345,8 @@ select {
 
 .nav-link {
     font-weight: bolder;
+}
+
+.review-form {
+    margin-top: 5%;
 }
