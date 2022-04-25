@@ -45,8 +45,8 @@
     {% for review in reviews %}
     <div class="accordion-item">
         <h2 class="accordion-header">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
-                aria-expanded="true" aria-controls="collapseOne">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{review._id}}"
+                aria-expanded="false" aria-controls="collapse{{review._id}}">
                 <p class="col-sm-6 lead">{{review.company.name}}</p>
                 {% if review.offer %}
                 <span class="col-sm-2 badge bg-success">Offer</span>
@@ -59,7 +59,7 @@
                 {% endif %}
             </button>
         </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne"
+        <div id="collapse{{review._id}}" class="accordion-collapse collapse" aria-labelledby="headingOne"
             data-bs-parent="#accordionExample">
             <div class="accordion-body">
                 {{reviewCardContent(review)}}
