@@ -93,9 +93,9 @@ def user():
     users = db.users
     reviews = db.reviews
     user = users.find_one({"username": session["username"]})
-    # user_reviews = [rev for rev in reviews.find({"user":user['username']})]
+    user_reviews = [rev for rev in reviews.find({"user":user['username']})]
     formattted_date = datetime.strftime(user['creation_time'],  '%m-%d-%Y')
-    return render_template('user.html', user=user, creation_day=formattted_date, reviews=placeholder)
+    return render_template('user.html', user=user, creation_day=formattted_date, reviews=user_reviews)
 
 @app.route("/change_password/<username>", methods=["POST"])
 def change_password(username):
