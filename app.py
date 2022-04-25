@@ -410,7 +410,6 @@ def submit_review(company_to_review):
     user = db.users.find_one({'username':session['username']})
     return render_template(
         'submit_review.html',
-        companies=db.companies.find({}),
         company=company_to_review,
         states=model.states,
         categories=model.job_categories,

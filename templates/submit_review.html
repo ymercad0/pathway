@@ -36,13 +36,7 @@
               <input type="text" placeholder={{company.name}} class="form-control" id="company" name="company"
                 value="{{company}}" required />
               {% else %}
-              <input type="text" placeholder="Company Name" class="form-control" id="company" name="company" required 
-              list="companyOptions"/>
-              <datalist id="companyOptions">
-                {% for company in companies %}
-                <option value={{company.name}}></option>
-                {% endfor %}
-              </datalist>
+              <input type="text" placeholder="Company Name" class="form-control" id="company" name="company" required />
               {% endif %}
 
             </div>
@@ -99,7 +93,7 @@
             </div>
             <div class="mb-3">
               <h5>Were you extended an offer?</h5>
-              <input type="radio" class="btn-check" name="offerOptions" id="offerOption1" autocomplete="off" 
+              <input type="radio" class="btn-check" name="offerOptions" id="offerOption1" autocomplete="off"
                 value="true" />
               <label class="btn btn-success" for="offerOption1">Given offer</label>
 
