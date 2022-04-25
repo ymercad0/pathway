@@ -387,7 +387,7 @@ def submit_review(company_to_review):
                 job_cat=form['jobCategory'],
                 education=form['education'],
                 pay=float(form['payAmount']),
-                location=location,
+                location=location, #trick to readjust date from YYYY-MM-DD -> MM-DD-YYYY
                 start_date=list(map(lambda x: f"{x[1]}-{x[2]}-{x[0]}", [form['startDate'].split("-")]))[0],
                 company_rating=int(form['companyRatingOptions']),
                 work_rat=workRat,
@@ -396,6 +396,8 @@ def submit_review(company_to_review):
                 bonuses=form['bonusesDescription'],
                 interview_desc=form['interviewDescription'],
                 intern_desc=form['internshipDescription'],
+                offer=form['offerOptions'] == "true",
+                accepted=form['acceptedOptions'] == "true" and form['offerOptions'] == "true",
                 title="Title"
             )
             try:
