@@ -36,7 +36,7 @@
         <div class="col-md-2">
           <div class="company-scrollable-img">
             <a href="https://www.google.com/" class="position-relative">
-              <img src={{review.company.logo_img}} class="card-img" alt="...">
+              <img src={{url_for('file', filename=review.company.logo_img)}}  class="card-img" alt="...">
               <span class="position-absolute top-10 start-90 translate-middle p-2
                         bg-{{ratingColor(review.company.company_rat)|trim}}
                         border border-light rounded-circle">
