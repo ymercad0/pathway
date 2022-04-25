@@ -223,7 +223,9 @@ p {
 }
 
 body.login,
-html.login {
+html.login,
+body.signup,
+html.signup {
     background-color: var(--sign-in-bg);
 }
 
