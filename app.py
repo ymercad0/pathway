@@ -338,7 +338,7 @@ def create_company():
 
 @app.route("/reviews", methods=["GET"])
 def reviews():
-    rev = db.reviews.find({})
+    rev = db.reviews.find().sort('date_posted', -1).limit(10)
     if 'username' in session:
         user = db.users.find_one({'username':session['username']})
     else:
