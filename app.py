@@ -346,7 +346,7 @@ def submit_review(company_to_review):
         comp = db.companies.find_one({'name':form['company']})
 
         if not comp:
-            flash(f"{comp} doesn't exist!", "danger")
+            flash(f"{form['company']} doesn't exist!", "danger")
 
         else:
             if form['location'] == 'N/A' or not form['city']:
@@ -357,7 +357,7 @@ def submit_review(company_to_review):
 
             review = model.Review(
                 user=session['username'],
-                company=model.to_company_obj(),
+                company=model.to_company_obj(comp),
                 position=form['position'],
                 job_cat=form['jobCategory'],
                 education=form['education'],
