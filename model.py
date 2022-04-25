@@ -520,10 +520,6 @@ class Review:
         if not position:
             raise ValueError("Position held at the company cannot be empty!")
 
-        for words in position.split():
-            if not words.isalpha():
-                raise ValueError("Special or empty characters cannot be present in the position title!")
-
         if type(company_rating) != int:
             raise TypeError("Company rating must be an integer!")
 
@@ -804,14 +800,21 @@ def start_db()->"Database":
     db = mongo.db
     return db
 
-def submit_review(review:Review):
+def submit_review(review:'Review')->None:
+    """Submits a review to the website backend by
+    utilizing the appropriate database collections.
+
+    Args:
+        review (Review): A review object of the review to submit.
+    """
     db = start_db()
     review.update_scores()
-    json = vars(review)
-    company_json = vars(json['company'])
-    json['company'] = company_json
-    db.reviews.insert_one(json)
-    db.companies.find_one_and_replace({"name":company_json['name']},company_json)
+    comp_json = review.company.to_json()
+    review_json = vars(review)
+    review_json['company'] = comp_json
+    db.reviews.insert_one(review_json)
+    # updates that company in the companies collection
+    db.companies.find_one_and_replace({"name":comp_json['name']},comp_json)
 
 def reset_comp_collection()->None:
     """Resets the Company collection by
@@ -891,4 +894,4 @@ local_reviews = [
     "Challenging but not out of this world. Managed to get optimals solutions with about 5 minutes spare.",5,True,True,
     "08-05-2021","Full-stack web development work. Worked closely with the Youtube team for new features,",5,5,
     ("New York City","New York"),40.00,"Paid flight and housing stipend. On campus gym and free food.")
-]    
+]

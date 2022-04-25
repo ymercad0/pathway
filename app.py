@@ -346,7 +346,7 @@ def submit_review(company_to_review):
             flash(f"{form['company']} doesn't exist!", "danger")
 
         else:
-            if form['location'] == 'N/A' or not form['city']:
+            if form['location'] == 'N/A':
                 location = ("None", "Remote")
 
             else:
