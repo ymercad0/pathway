@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from "macros.html" import ratingColor %}
 
 {% block htmlclass %}class="index"{% endblock %}
 
@@ -24,7 +25,8 @@
             </div>
             <div class="company-to-review">
                 <h3 class="card-title">{{company.name}}</h3>
-                <button type="button" class="btn btn-outline-success">Write a Review</button>
+                <a href={{url_for('submit_review', company_to_review=company.name)}} role="button"
+                    class="btn btn-outline-success shadow-none">Write a Review</a>
 
             </div>
             <h6 class="card-subtitle mb-2 text-muted">{{company.category}}</h6>
@@ -56,7 +58,59 @@
 </div>
 
 {% if reviews != None %}
+<div class="comp-recent-revs container">
+    <!-- Makes the rows and cols -->
+    <div class="row">
+        {% for review in reviews %}
+        <div class="reviews-card card mb-3 shadow-sm col-lg-4 offset-md-1">
+            <div class="row g-0">
+                <!-- Badge which displays a company's status -->
+                <div class="col-md-2">
+                    <div class="company-scrollable-img">
+                        <a href={{url_for('company_page', company_name=company.name.lower())}}
+                            class="position-relative">
+                            <img src={{url_for('file', filename=review.company.logo_img)}} class="card-img" alt="...">
+                            <span class="position-absolute top-10 start-90 translate-middle p-2
+                                bg-{{ratingColor(review.company.company_rat)|trim}}
+                                border border-light rounded-circle">
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title"><a href={{url_for('company_page', company_name=company.name.lower())}}
+                                class="company-link">{{review.company.name}}
+                        </h5>
+                        </a>
+                        <h6 class="card-subtitle mb-2 text-muted">{{review.position}}</h6>
+                        <p class="card-text text-truncate">{{review.interview_desc}}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer mt-auto">
+                <!-- "Tag" badges -->
+                {% if review.offer %}
+                <span class="badge bg-success">Offer</span>
+                <!-- Only show accepted/location if an offer was presented -->
+                {% if review.accepted %}
+                <span class="badge bg-success">Accepted</span>
+                <span class="badge bg-info">{{review.location[1]}}</span>
+                {% else %}
+                <span class="badge bg-danger">Offer declined</span>
+                {% endif %}
 
+                {% else %}
+                <span class="badge bg-secondary">No offer</span>
+                {% endif %}
+
+                <span class="badge bg-secondary">{{review.job_cat}}</span>
+                <a href="/reviews/{{review._id}}" class="review-links float-end">Read full review &#8594;</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% else %}
 <div class="empty-content">
     <h2>This company doesn't have any reviews yet. <br> Be the first to create one!</h2>

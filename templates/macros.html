@@ -1,0 +1,161 @@
+{% macro reviewCardContent(review) %}
+<dl class="row">
+    <dt class="col-sm-3">Job category</dt>
+    <dd class="col-sm-8 offset-sm-1">{{review.job_cat}}</dd>
+
+    <dt class="col-sm-3">Role</dt>
+    <dd class="col-sm-8 offset-sm-1">
+        <p>{{review.position}}</p>
+    </dd>
+
+    {% if review.pay %}
+    <dt class="col-sm-3">Pay</dt>
+    <dd class="col-sm-8 offset-sm-1">{{review.pay}}</dd>
+    {% endif %} {% if review.start_date %}
+    <dt class="col-sm-3">Start date</dt>
+    <dd class="col-sm-8 offset-sm-1">{{review.start_date}}</dd>
+    {% endif %} {% if review.work_rat %}
+    <dt class="col-sm-3">Work rating</dt>
+    <dd class="col-sm-8 offset-sm-1">{{review.work_rating}}</dd>
+    {% endif %}
+
+    <dt class="col-sm-3">Company Rating</dt>
+    <dd class="col-sm-8 offset-sm-1">{{review.company_rating}}</dd>
+
+    {% if review.culture_rating %}
+    <dt class="col-sm-3">Culture rating</dt>
+    <dd class="col-sm-8 offset-sm-1">{{review.culture_rating}}</dd>
+    {% endif %} {% if review.bonuses %}
+    <dt class="col-sm-3">Bonuses</dt>
+    <dd class="col-sm-8 offset-sm-1">{{review.bonuses}}</dd>
+    {% endif %}
+
+    <dt class="col-sm-3">Description</dt>
+    <dd class="col-sm-8 offset-sm-1">
+        <dl class="row">
+            <dd class="col-sm-12 text-truncate">{{review.interview_desc}}</dd>
+        </dl>
+    </dd>
+</dl>
+{% endmacro %}
+
+
+{% macro userProfileReviews(reviews) %}
+<div class="accordion" id="userReviewAccordion">
+    {% for review in reviews %}
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#collapse{{review._id}}" aria-expanded="false" aria-controls="collapse{{review._id}}">
+                <p class="col-sm-6 lead">{{review.company.name}}</p>
+                {% if review.offer %}
+                <span class="col-sm-2 badge bg-success">Offer</span>
+                {% else %}
+                <span class="col-sm-2 badge bg-danger">No offer</span>
+                {% endif %} {% if review.accepted %}
+                <span class="col-sm-2 badge bg-success">Accepted offer</span>
+                {% else %}
+                <span class="col-sm-2 badge bg-secondary">Not accepted</span>
+                {% endif %}
+            </button>
+        </h2>
+        <div id="collapse{{review._id}}" class="accordion-collapse collapse" aria-labelledby="headingOne"
+            data-bs-parent="#accordionExample">
+            <div class="accordion-body">
+                {{reviewCardContent(review)}}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro userSettings(user) %}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasSettings" aria-labelledby="offcanvasSettingsLabel">
+    <div class="offcanvas-header">
+        <h3 class="offcanvas-title" id="offcanvasSettingsLabel">Settings for <span
+                class="text-muted">{{user.username}}</span></h3>
+
+        <button type="button" class="btn-close text-reset shadow-none" data-bs-dismiss="offcanvas"
+            aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <h4 class="user-settings-header">Profile picture</h4>
+        <form method="POST" action="/change_pfp/{{user.username}}" enctype="multipart/form-data">
+            <input name="profile_image" id="imageUpload" type="file" accept=".png, .jpg, .webp" class="form-control"
+                required />
+            <button class="btn btn-warning user-settings-btn">Change profile pic</button>
+        </form>
+
+        <h4 class="user-settings-header">Reset password</h4>
+        <form method="POST" action="/change_password/{{user.username}}">
+            <div class="row">
+                <label for="currentPassword" class="form-label text-muted col-sm-6">Current password</label>
+                <input type="text" name="currentPassword" class="form-text col-sm-6 pswd_box" id="currentPassword"
+                    value="" onchange="if(this.checkValidity()) form.newPassword.pattern = this.value;" minlength="5"
+                    required />
+            </div>
+            <div class="row">
+                <label for="newPassword" class="form-label text-muted col-sm-6">New password</label>
+                <input type="text" name="newPassword" class="form-text col-sm-6 pswd_box" id="newPassword" value=""
+                    minlength="5"
+                    onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please enter the same password as above.' : '');"
+                    required />
+            </div>
+            <button class="btn btn-danger user-settings-btn" type="submit">Change password</button>
+        </form>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro reviewCard(review) %}
+<div class="card  mb-3">
+    <div class="row g-0">
+        <div class="col-md-4">
+            <img src={{url_for('file',filename=review.company.logo_img)}} class="img-fluid rounded-start">
+        </div>
+        <div class="col-md-8">
+            <div class="card-body">
+                <h5 class="card-title"><a href={{url_for('company_page', company_name=review.company.name.lower())}}
+                        class="company-link">{{review.company.name}}</a></h5>
+                <p class="card-text">
+                    {{reviewCardContent(review)}}
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <!-- "Tag" badges -->
+        {% if review.offer %}
+        <span class="badge bg-success">Offer</span>
+        <!-- Only show accepted/location if an offer was presented -->
+        {% if review.accepted %}
+        <span class="badge bg-success">Accepted</span>
+        <span class="badge bg-info">{{review.location[1]}}</span>
+        {% else %}
+        <span class="badge bg-danger">Offer declined</span>
+        {% endif %}
+
+        {% else %}
+        <span class="badge bg-secondary">No offer</span>
+        {% endif %}
+
+        <span class="badge bg-secondary">{{review.job_cat}}</span>
+        <a href="/reviews/{{review._id}}" class="review-links float-end">Read full review &#8594;</a>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro ratingColor(rating) %}
+{% if rating is none%}
+secondary
+{% elif rating is ge 4 %}
+success
+{% elif rating is ge 3 %}
+warning text-dark
+{% elif rating is ge 2 %}
+danger
+{% else %}
+dark
+{% endif %}
+{% endmacro %}

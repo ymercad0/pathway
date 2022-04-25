@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from "macros.html" import ratingColor %}
 
 {% block htmlclass %}class="index"{% endblock %}
 
@@ -31,13 +32,12 @@
     <div class="reviews-card card mb-3 shadow-sm col-lg-4">
       <div class="row g-0">
         <!-- Badge which displays a company's status -->
-        <!-- Status icon: REPLACE DUMMY LINKS-->
         <div class="col-md-2">
           <div class="company-scrollable-img">
-            <a href="https://www.google.com/" class="position-relative">
-              <img src={{review.company.logo_img}} class="card-img" alt="...">
+            <a href={{url_for('company_page', company_name=review.company.name.lower())}} class="position-relative">
+              <img src={{url_for('file', filename=review.company.logo_img)}} class="card-img" alt="...">
               <span class="position-absolute top-10 start-90 translate-middle p-2
-                        bg-{{review.company.category_badge(review.company.company_rat)}}
+                        bg-{{ratingColor(review.company.company_rat)|trim}}
                         border border-light rounded-circle">
               </span>
             </a>
@@ -45,7 +45,8 @@
         </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title"><a href="https://www.google.com/" class="company-link">{{review.company.name}}</h5>
+            <h5 class="card-title"><a href={{url_for('company_page', company_name=review.company.name.lower())}}
+                class="company-link">{{review.company.name}}</h5>
             </a>
             <h6 class="card-subtitle mb-2 text-muted">{{review.position}}</h6>
             <p class="card-text text-truncate">{{review.interview_desc}}</p>
@@ -69,8 +70,7 @@
         {% endif %}
 
         <span class="badge bg-secondary">{{review.job_cat}}</span>
-        <!-- Placeholder link! -->
-        <a href="https://www.google.com/" class="review-links float-end">Read full review &#8594;</a>
+        <a href="/reviews/{{review._id}}" class="review-links float-end">Read full review &#8594;</a>
       </div>
     </div>
     {% endfor %}
@@ -121,9 +121,9 @@
                     <!-- Each company rating -->
                     <div class="row">
                       {% for rating in [company.company_rat, company.work_rat, company.culture_rat] %}
-                      {% if rating != None %}
+                      {% if rating %}
                       <div class="col mx-auto">
-                        <span class="badge bg-{{company.category_badge(rating)}}">
+                        <span class="badge bg-{{ratingColor(rating)|trim}}">
                           {{'%0.1f'| format(rating | float)}}/5.0</span>
                       </div>
                       {% else %}

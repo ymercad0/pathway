@@ -9,11 +9,58 @@
 {% block bodyclass %}class="signup"{% endblock %}
 
 {% block main %}
-    <form class="form" method="POST" action="/create_user" enctype="multipart/form-data">
-        <input id = "usernameField" type="text" name="username">
-        <input id="passwordField" type="password" name="password">
-        <input id="emailField" type="text" name="email" aria-label="email">
-        <input id="imageUpload" type="file" name="profile_image">
-        <input type="submit">
-    </form>
+<section class="vh-100">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div id="sing-up-card" class="card shadow-2-strong">
+          <div class="card-body p-5 text-center">
+            <h3 class="title-text mb-5">Sign up</h3>
+            <form class="form" method="POST" action="/create_user" enctype="multipart/form-data">
+              <div class="form-outline mb-4">
+                <label class="form-label" for="usernameField">Username</label>
+                <input name="username" placeholder="Enter a username" type="text" id="usernameField"
+                  class="form-control form-control-lg" minlength="4" required />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="emailField">Email</label>
+                <input name="email" placeholder="Enter a valid email" type="email" id="emailField"
+                  class="form-control form-control-lg" required />
+              </div>
+
+              <!-- Password validation -->
+              <div class="form-outline mb-4">
+                <label class="form-label" for="passwordField">Enter Password</label>
+                <input name="password" placeholder="Enter a secure password" type="password" id="passwordField"
+                  class="form-control form-control-lg"
+                  onchange="if(this.checkValidity()) form.confirm_password_input.pattern = this.value;" minlength="5"
+                  required />
+              </div>
+
+              <div class="form-outline mb-4">
+                <label class="form-label" for="passwordField">Confirm Password</label>
+                <input name="confirm_password_input" type="password" id="passwordField"
+                  placeholder="Confirm your password" class="form-control form-control-lg" minlength="5"
+                  onchange="this.setCustomValidity(this.validity.patternMismatch ? 'Please enter the same password as above.' : '');"
+                  required />
+              </div>
+
+              <div class="form-group row">
+                <div class="form-outline mb-4">
+                  <label class="form-label" for="imageUpload">Profile picture</label>
+
+                  <input id="imageUpload" class="form-control" type="file" name="profile_image"
+                    accept=".png, .jpg, .webp">
+                </div>
+              </div>
+              <hr class="my-4">
+              <button class="login-btn btn btn-dark btn-lg btn-block" type="submit">Sign up</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 {% endblock %}
