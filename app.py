@@ -59,7 +59,7 @@ def index():
     else:
         # '.limit()' limits the amount of documents queried
         reviews = db.reviews.find().sort('date_posted', -1).limit(5)
-        reviews = [model.to_review_obj(rev) for rev in reviews]
+        # reviews = [model.to_review_obj(rev) for rev in reviews]
     # -1 sorts in descending order
     companies = db.companies.find().sort("company_rat", -1).limit(4)
     if 'username' in session:
