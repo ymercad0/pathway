@@ -50,7 +50,7 @@
           <a class="nav-link text-white" href="{{url_for('companies')}}">Companies</a>
           <a class="nav-link text-white" href="{{url_for('submit_review')}}">Write a Review</a>
           <!-- Only admins can access the company admin panel -->
-          {% if session['username'] == 'admin_acc_manager' %}
+          {% if session['username'] == 'admin_acc_managers' %}
           <a class="nav-link text-white" href="{{url_for('company_admin')}}">Add Companies</a>
           {% endif %}
         </div>
