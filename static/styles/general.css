@@ -32,11 +32,6 @@ html.index {
     background: linear-gradient(0.25turn, #e2dbf5, #e9e8e8);
 }
 
-body.reviews,
-html.reviews {
-    overflow-x: hidden;
-}
-
 body.submit,
 html.submit {
     background: linear-gradient(0.25turn, #74ebd5, #ACB6E5);
