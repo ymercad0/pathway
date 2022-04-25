@@ -222,7 +222,8 @@ p {
     justify-content: center;
 }
 
-.vh-100 {
+body.login,
+html.login {
     background-color: var(--sign-in-bg);
 }
 
