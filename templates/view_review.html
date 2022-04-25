@@ -94,7 +94,7 @@
 
                 {% if review.pay %}
                 <dt class="col-sm-3">Pay</dt>
-                <dd class="col-sm-9">${{review.pay}}/hr</dd>
+                <dd class="col-sm-9">${{'%0.2f'|format(review.pay)}}/hr</dd>
                 {% endif %}
 
                 {% if review.start_date %}
@@ -113,6 +113,15 @@
                         <dd class="col-sm-12">{{review.interview_desc}}</dd>
                     </dl>
                 </dd>
+
+                {% if review.work_desc %}
+                <dt class="col-sm-3">Work Description</dt>
+                <dd class="col-sm-9">
+                    <dl class="row">
+                        <dd class="col-sm-12">{{review.work_desc}}</dd>
+                    </dl>
+                </dd>
+                {% endif %}
             </dl>
         </div>
     </div>
