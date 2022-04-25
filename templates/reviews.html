@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% from "macros.html" import reviewCard %}
+
+{% block htmlclass %}class="reviews"{% endblock %}
+
+{% block head %}
+<title>Pathway - Reviews</title>
+{% endblock %}
+
+{% block bodyclass %}class="reviews"{% endblock %}
+
+{% block main %}
+<div class="row">
+    <div class="jumbotron card card-image">
+        <h3 class="display-1 text-white text-center">
+            <bold>Reviews</bold>
+        </h3>
+    </div>
+</div>
+<div id="recent-reviews-title" class="col-md-6 offset-md-1">
+    <h3 class="display-2 text-muted">Recent Reviews</h3>
+</div>
+<div class="row">
+    {% for review in reviews %}
+    <div class="col-sm-4 offset-sm-1">
+        {{reviewCard(review)}}
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,3 +1,4 @@
+from flask import current_app as app
 from flask_pymongo import PyMongo
 from datetime import datetime
 import bcrypt
@@ -147,6 +148,50 @@ def hash_profile_name(name:str)->str:
     hashed = bcrypt.hashpw(name.encode("utf-8"), salt)
     return hashed.decode("utf-8")
 
+
+def to_review_obj(json:dict)->'Review':
+    review = Review(
+        user=json.get('user'),
+        company=to_company_obj(json.get('company')),
+        position=json.get('position'),
+        job_cat=json.get('job_cat'),
+        education=json.get('education'),
+        pay=json.get('pay'),
+        location=tuple(json.get('location')),
+        start_date=json.get('start_date'),
+        company_rating=json.get('company_rating'),
+        work_rat=json.get('work_rat'),
+        culture_rat=json.get('culture_rat'),
+        interview_rat=json.get('interview_rat'),
+        bonuses=json.get('bonuses'),
+        interview_desc=json.get('interview_desc'),
+        intern_desc=json.get('intern_desc'),
+        title="Title"
+        )
+
+    return review
+
+def to_company_obj(json:dict)->'Company':
+    """Converts a JSON to a Company object
+       to facilitate processing on the website.
+
+    Args:
+        json (dict): A JSON file with dictionary-like attributes.
+
+    Returns:
+        Company: The Company object equivalent of the JSON.
+    """
+    obj = Company(json['name'], json['category'], json['logo_img'], json['description'], json['banner_img'])
+    # non instantiable public attributes must be set like this
+    obj.company_rat = json['company_rat']
+    obj.work_rat = json['work_rat']
+    obj.culture_rat = json['culture_rat']
+    obj.num_company_reviews = json['num_company_reviews']
+    obj.num_work_reviews = json['num_work_reviews']
+    obj.num_culture_reviews = json['num_culture_reviews']
+    obj.total_reviews = json['total_reviews']
+    return obj
+
 class Company:
     """Represents an existing and reviewable company.
         Contains internal information on the amount
@@ -202,12 +247,6 @@ class Company:
 
         if category not in company_categories:
             raise ValueError("Error: Invalid company category.")
-
-        if not is_url(logo_img):
-            raise ValueError("Error: Invalid URL given for company logo.")
-
-        if not is_url(banner_img) and banner_img != "":
-            raise ValueError("Error: Invalid URL given for banner image.")
 
         self.name = name
         self.category = category
@@ -267,6 +306,30 @@ class Company:
         # rating of 0-1.99
         return "dark"
 
+    def to_json(self)->dict:
+        """Converts the Company object with its current
+        attributes into JSON format, which is then handled
+        by the database.
+
+        Returns:
+            dict: Representing the company object attributes.
+        """
+        return {
+            "name": self.name,
+            "category": self.category,
+            "logo_img": self.logo_img,
+            "description": self.description,
+            "banner_img": self.banner_img,
+            "company_rat": self.company_rat,
+            "work_rat": self.work_rat,
+            "culture_rat": self.culture_rat,
+            "num_company_reviews": self.num_company_reviews,
+            "num_work_reviews": self.num_work_reviews,
+            "num_culture_reviews": self.num_culture_reviews,
+            "total_reviews": self.total_reviews,
+            "name_lower": self.name.lower()
+        }
+
 class User:
     """Represents a user class. Contains the user's information such as
        their username, email, password, and more.
@@ -278,7 +341,7 @@ class User:
             profile_pic: The filename of the user's profile pic.
             creation_time: A datetime object, containing the time the user account was created.
     """
-    def __init__(self, username:str, email:str, pswd:str, profile_pic:str="default.jpg")->None:
+    def __init__(self, username:str, email:str, pswd:str, profile_pic:str="../static/Images/Icons/default.jpg")->None:
         """Initializes a user given the information
            the user decides to input.
 
@@ -457,10 +520,6 @@ class Review:
         if not position:
             raise ValueError("Position held at the company cannot be empty!")
 
-        for words in position.split():
-            if not words.isalpha():
-                raise ValueError("Special or empty characters cannot be present in the position title!")
-
         if type(company_rating) != int:
             raise TypeError("Company rating must be an integer!")
 
@@ -479,11 +538,12 @@ class Review:
         if not interview_desc:
             raise ValueError("Interview description cannot be empty!")
 
-        if type(interview_rat) != int:
-            raise TypeError("Interview rating must be an integer!")
+        if interview_rat != None:
+            if type(interview_rat) != int:
+                raise TypeError("Interview rating must be an integer!")
 
-        if interview_rat < 0 or interview_rat > 5:
-            raise ValueError("Cannot rate an interview more than the max or min allowed score.")
+            if interview_rat < 0 or interview_rat > 5:
+                raise ValueError("Cannot rate an interview more than the max or min allowed score.")
 
         # optional params
         if type(offer) != bool:
@@ -536,10 +596,6 @@ class Review:
 
         if state not in states:
             raise ValueError("Invalid state! States must not be abbreviated.")
-
-        for words in city.split():
-            if not words.isalpha():
-                raise ValueError("City must only contain alphabetical characters.")
 
         if pay != None:
             if type(pay) not in [int, float]:
@@ -641,6 +697,29 @@ class Review:
 
                         self.company.num_culture_reviews += 1
 
+
+    def to_json(self) -> dict:
+        return {
+            "user":self.user,
+            "company":vars(self.company),
+            "job_cat":self.job_cat,
+            "position":self.position,
+            "company_rating":self.company_rating,
+            "education":self.education,
+            "interview_desc":self.interview_desc,
+            "interview_rat":self.interview_rat,
+            "offer":self.offer,
+            "accepted":self.accepted,
+            "start_date":self.start_date,
+            "intern_desc":self.intern_desc,
+            "work_rating":self.work_rating,
+            "culture_rating":self.culture_rating,
+            "location":self.location,
+            "pay":self.pay,
+            "bonuses":self.bonuses,
+            "date_posted":self.date_posted
+        }
+
 class PyMongoFixed(PyMongo):
     """A small magic trick Class that functions as a Wrapper for PyMongo.
     Overwrites a broken flask_pymongo 2.3.0 function to fetch image data from
@@ -708,4 +787,108 @@ class PyMongoFixed(PyMongo):
         response.make_conditional(request)
         return response
 
-local_companies = [Company("Microsoft", "Software", "https://bit.ly/3uWfYzK", banner_img="https://bit.ly/3xfolJs")]
+def start_db()->"Database":
+    """Starts a connection to the
+       website's MongoDB database.
+    Returns:
+        Database: A MongoDB database object.
+    """
+    mongo = PyMongoFixed(app)
+    db = mongo.db
+    return db
+
+def submit_review(review:'Review')->None:
+    """Submits a review to the website backend by
+    utilizing the appropriate database collections.
+
+    Args:
+        review (Review): A review object of the review to submit.
+    """
+    db = start_db()
+    review.update_scores()
+    comp_json = review.company.to_json()
+    review_json = vars(review)
+    review_json['company'] = comp_json
+    db.reviews.insert_one(review_json)
+    # updates that company in the companies collection
+    db.companies.find_one_and_replace({"name":comp_json['name']},comp_json)
+
+def reset_comp_collection()->None:
+    """Resets the Company collection by
+       clearing all its documents out
+       and re-uploading the locally stored
+       menu items.
+    """
+    #starts the db
+    db = start_db()
+    #access the menu collection
+    db_menu = db.companies
+    db_menu.delete_many({})
+
+    #inserts the menu field into the mongodb database
+    for comp_obj in local_companies:
+        db_menu.insert_one(comp_obj.to_json())
+
+def reset_review_collection()->None:
+    db = start_db()
+    reviews = db.reviews
+    reviews.delete_many({})
+    companies = db.companies
+
+    for review in local_reviews:
+        submit_review(review)
+
+local_companies = [Company("Microsoft", "Software", "../static/Images/Backup/microsoft.webp",
+                            description='''Microsoft Corporation is an American multinational technology corporation
+                                        which produces computer software, consumer electronics, personal computers,
+                                        and related services. Its best-known software products are the Microsoft
+                                        Windows line of operating systems, the Microsoft Office suite, and the
+                                        Internet Explorer and Edge web browsers.''',
+                            banner_img="../static/Images/Backup/microsoft-banner.jpg"),
+
+
+                   Company("Google", "Software", "../static/Images/Backup/google-logo.png",
+                            description='''American multinational technology company that focuses on artificial
+                                        intelligence,  search engine, online advertising, cloud computing,
+                                        computer software, quantum computing, e-commerce, and consumer electronics.
+                                        It has been referred to as the 'most powerful company in the world' and
+                                        one of the world's most valuable brands due to its market dominance,
+                                        data collection, and technological advantages in the
+                                        area of artificial intelligence.''',
+                            banner_img="../static/Images/Backup/google-banner.webp"),
+
+
+                    Company("Amazon", "Software", "../static/Images/Backup/amazon-logo.png",
+                            description='''Amazon was founded by Jeff Bezos from his garage in Bellevue, Washington,
+                                        on July 5, 1994. Initially an online marketplace for books, it has expanded
+                                        into a multitude of product categories: a strategy that has earned it the
+                                        moniker The Everything Store. It has multiple subsidiaries including
+                                        Amazon Web Services (cloud computing), Zoox (autonomous vehicles),
+                                        Kuiper Systems (satellite Internet), Amazon Lab126 (computer hardware R&D).''',
+                            banner_img="../static/Images/Backup/amazon-banner.jpg"),
+
+
+                    Company("Apple Inc.", "Software", "../static/Images/Backup/apple-logo.png",
+                            description='''Apple Inc. is an American multinational technology company that specializes
+                                        in consumer electronics, software and online services. Apple is the largest
+                                        information technology company by revenue, and, as of January 2021, it is the
+                                        world's most valuable company, the fourth-largest personal computer vendor
+                                        by unit sales and second-largest mobile phone manufacturer.''',
+                            banner_img="../static/Images/Backup/apple-banner.jpg")]
+
+local_reviews = [
+    Review("user1",local_companies[0],"Software Engineer","Software Engineering","Explore Intern",5,"B.S.",
+    "Interviews were tough but fair. Two rounds of approx. leetcode mediums.",4,True,True,"05-20-2021",
+    "Worked on Excel features and performance. Work was impactful and I learned a lot.",5,5,("Mountain View","California",),
+    34.00,"Free food"),
+    Review("user2",local_companies[1],"Data Scientist","Data Science","Data Science Intern",5,"B.S.",
+    "Interviews were quite difficult and required lots of practice.",3,culture_rat=5,pay=30.00),
+    Review("user1",local_companies[3], "Security Engineer", "Security Engineering", "Security Engineering Intern",4,
+    "B.S.","Interviewer was nice and made the experience fun. Grand variety of questions regarding security.",5,
+    True,True,"05-20-2022","Worked on internal tooling for vulnerability research on Apple products.",5,4,
+    ("Cupertino","California"),40.00,"Paid flight and housing stipend."),
+    Review("user3",local_companies[1],"Software Engineer", "Software Engineering", "STEP Intern",5,"B.S.",
+    "Challenging but not out of this world. Managed to get optimals solutions with about 5 minutes spare.",5,True,True,
+    "08-05-2021","Full-stack web development work. Worked closely with the Youtube team for new features,",5,5,
+    ("New York City","New York"),40.00,"Paid flight and housing stipend. On campus gym and free food.")
+]
