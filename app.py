@@ -147,16 +147,16 @@ def company_page(company_name):
         flash("Accessed an invalid URL.", "danger")
         return redirect(url_for('companies'))
 
-    # if db.reviews.count_documents({}) == 0:
-    #     reviews = None
-    # else:
-    #     reviews = db.reviews.find().sort('date_posted', -1).limit(5)
+    if db.reviews.count_documents({}) == 0:
+        reviews = None
+    else:
+        reviews = db.reviews.find({'company.name': comp['name']}).sort('date_posted', -1).limit(8)
 
     if 'username' in session:
         user = db.users.find_one({'username':session['username']})
     else:
         user = None
-    return render_template('company.html', company=model.to_company_obj(comp), reviews=None, user=user)
+    return render_template('company.html', company=model.to_company_obj(comp), reviews=reviews, user=user)
 
 @app.route('/search')
 def search():
@@ -321,8 +321,9 @@ def reviews():
 def view_review(review_id):
     review = db.reviews.find_one({"_id":ObjectId(review_id)})
     if not review:
+        #NOTE: should redirect with flag to indicate non-existing review
         flash("Review not found!",'danger')
-        return redirect(url_for("reviews")) #NOTE: should redirect with flag to indicate non-existing review
+        return redirect(url_for("reviews"))
     if 'username' in session:
         user = db.users.find_one({'username':session['username']})
     else:
