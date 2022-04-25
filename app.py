@@ -374,6 +374,12 @@ def submit_review(company_to_review):
             flash(f"{comp} doesn't exist!", "danger")
 
         else:
+            if form['location'] == 'N/A' or not form['city']:
+                location = ("None", "Remote")
+
+            else:
+                location = tuple((form['city'],form['location']))
+
             review = model.Review(
                 user=session['username'],
                 company=model.to_company_obj(),
@@ -381,7 +387,7 @@ def submit_review(company_to_review):
                 job_cat=form['jobCategory'],
                 education=form['education'],
                 pay=float(form['payAmount']),
-                location=tuple((form['city'],form['location'])),
+                location=location,
                 start_date=list(map(lambda x: f"{x[1]}-{x[2]}-{x[0]}", [form['startDate'].split("-")]))[0],
                 company_rating=int(form['companyRatingOptions']),
                 work_rat=int(form['workRatingOptions']),
