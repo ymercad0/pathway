@@ -35,7 +35,7 @@
         <!-- Status icon: REPLACE DUMMY LINKS-->
         <div class="col-md-2">
           <div class="company-scrollable-img">
-            <a href="https://www.google.com/" class="position-relative">
+            <a href={{url_for('company_page', company_name=review.company.name.lower())}} class="position-relative">
               <img src={{url_for('file', filename=review.company.logo_img)}}  class="card-img" alt="...">
               <span class="position-absolute top-10 start-90 translate-middle p-2
                         bg-{{ratingColor(review.company.company_rat)|trim}}
@@ -46,7 +46,7 @@
         </div>
         <div class="col-md-8">
           <div class="card-body">
-            <h5 class="card-title"><a href="https://www.google.com/" class="company-link">{{review.company.name}}</h5>
+            <h5 class="card-title"><a href={{url_for('company_page', company_name=review.company.name.lower())}} class="company-link">{{review.company.name}}</h5>
             </a>
             <h6 class="card-subtitle mb-2 text-muted">{{review.position}}</h6>
             <p class="card-text text-truncate">{{review.interview_desc}}</p>
