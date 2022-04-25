@@ -20,9 +20,6 @@ for collection in model.collections:
             with app.app_context():
                 model.reset_review_collection()
 
-with app.app_context():
-    model.reset_review_collection()
-
 @app.route("/")
 @app.route("/index")
 def index():
@@ -373,10 +370,12 @@ def submit_review(company_to_review):
                 intern_desc=form['internshipDescription'],
                 title="Title"
             )
-            review = vars(review)
-            review['company'] = vars(review['company'])
-            db.reviews.insert_one(review)
-            flash('Review submitted!', "success")
+            try:
+                model.submit_review(review)
+                flash('Review submitted!', "success")
+            except:
+                flash("Error submitting your review! Try again.",'danger')
+                return redirect(request.referrer)
 
     user = db.users.find_one({'username':session['username']})
     return render_template(

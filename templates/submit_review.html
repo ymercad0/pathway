@@ -77,7 +77,7 @@
                 <select id="location" class="form-select" name="location" required>
                   <option value="" disabled selected>Select a state</option>
                   {% for state in states %}
-                  <option>{{states[state]}}</option>
+                  <option value={{state}}>{{states[state]}} - {{state}}</option>
                   {% endfor %}
                 </select>
               </div>
